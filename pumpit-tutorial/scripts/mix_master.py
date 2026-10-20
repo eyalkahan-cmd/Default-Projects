@@ -161,7 +161,7 @@ def main():
     place(sb, clips["pop"], 57.05, -16)
     place(sb, clips["fabric_whoosh"], 62.3, -14)
     # switch on + fan + inflation
-    place(sb, clips["switch_click"], 67.22, -6)
+    place(sb, clips["switch_click"], 67.22, -13)
     fan = clips["fan_running"][: int(11.5 * SR)].copy()
     ramp = np.minimum(1, np.arange(len(fan)) / (1.2 * SR))
     tail = np.ones(len(fan))
@@ -186,7 +186,7 @@ def main():
     save(OUT / "mix_premaster.wav", mix)
 
     # ---- two-pass loudness normalisation to -15 LUFS integrated, -1 dBTP
-    tgt = "I=-15:TP=-1.0:LRA=11"
+    tgt = "I=-15:TP=-1.5:LRA=11"
     meas = subprocess.run(
         ["ffmpeg", "-hide_banner", "-i", str(OUT / "mix_premaster.wav"), "-af", f"loudnorm={tgt}:print_format=json", "-f", "null", "-"],
         capture_output=True,
@@ -195,7 +195,7 @@ def main():
     m = json.loads(meas[meas.rfind("{"): meas.rfind("}") + 1])
     lf = (
         f"loudnorm={tgt}:measured_I={m['input_i']}:measured_TP={m['input_tp']}:measured_LRA={m['input_lra']}"
-        f":measured_thresh={m['input_thresh']}:offset={m['target_offset']}:linear=true,aresample={SR}"
+        f":measured_thresh={m['input_thresh']}:offset={m['target_offset']}:linear=true,aresample={SR},alimiter=limit=0.79:attack=2:release=60:level=false"
     )
     subprocess.run(
         ["ffmpeg", "-v", "error", "-y", "-i", str(OUT / "mix_premaster.wav"), "-af", lf, "-ar", str(SR), "-c:a", "pcm_s24le", str(OUT / "Pumpit_Tutorial_Mix_Master.wav")],
