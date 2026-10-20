@@ -1,0 +1,302 @@
+[
+ {
+  "f": "00_BRAND/Pumpit_Logo_Alternate_Render_Not_Official.png",
+  "w": 1927,
+  "h": 816,
+  "mode": "RGBA",
+  "transp": 0.483,
+  "edge": 0.0134,
+  "sharp": 367.7,
+  "scale_to_1080": 1.32
+ },
+ {
+  "f": "00_BRAND/Pumpit_Logo_High_Resolution_Transparent.png",
+  "w": 2172,
+  "h": 724,
+  "mode": "RGBA",
+  "transp": 0.434,
+  "edge": 0.0162,
+  "sharp": 147.2,
+  "scale_to_1080": 1.49
+ },
+ {
+  "f": "00_BRAND/Pumpit_Logo_User_Supplied_Original.png",
+  "w": 396,
+  "h": 130,
+  "mode": "RGBA",
+  "transp": 0.0,
+  "edge": 0.0,
+  "sharp": 774.1,
+  "scale_to_1080": 8.31
+ },
+ {
+  "f": "01_COSTUMES_TRANSPARENT/01_Football_Inflatable.png",
+  "w": 265,
+  "h": 394,
+  "mode": "RGBA",
+  "transp": 0.501,
+  "edge": 0.0456,
+  "sharp": 1183.4,
+  "scale_to_1080": 2.74
+ },
+ {
+  "f": "01_COSTUMES_TRANSPARENT/02_Sumo_Wrestler.png",
+  "w": 257,
+  "h": 410,
+  "mode": "RGBA",
+  "transp": 0.47,
+  "edge": 0.0565,
+  "sharp": 687.6,
+  "scale_to_1080": 2.63
+ },
+ {
+  "f": "01_COSTUMES_TRANSPARENT/03_Rocket_Costume.png",
+  "w": 276,
+  "h": 404,
+  "mode": "RGBA",
+  "transp": 0.502,
+  "edge": 0.0494,
+  "sharp": 830.1,
+  "scale_to_1080": 2.67
+ },
+ {
+  "f": "01_COSTUMES_TRANSPARENT/04_Astronaut_Inflatable.png",
+  "w": 269,
+  "h": 385,
+  "mode": "RGBA",
+  "transp": 0.617,
+  "edge": 0.0499,
+  "sharp": 487.4,
+  "scale_to_1080": 2.81
+ },
+ {
+  "f": "01_COSTUMES_TRANSPARENT/05_Green_Alien_Abduction.png",
+  "w": 291,
+  "h": 379,
+  "mode": "RGBA",
+  "transp": 0.66,
+  "edge": 0.0513,
+  "sharp": 566.5,
+  "scale_to_1080": 2.85
+ },
+ {
+  "f": "01_COSTUMES_TRANSPARENT/06_Orange_T_Rex.png",
+  "w": 299,
+  "h": 378,
+  "mode": "RGBA",
+  "transp": 0.654,
+  "edge": 0.049,
+  "sharp": 2272.1,
+  "scale_to_1080": 2.86
+ },
+ {
+  "f": "01_COSTUMES_TRANSPARENT/07_Ride_On_Horse.png",
+  "w": 288,
+  "h": 378,
+  "mode": "RGBA",
+  "transp": 0.552,
+  "edge": 0.0671,
+  "sharp": 788.9,
+  "scale_to_1080": 2.86
+ },
+ {
+  "f": "01_COSTUMES_TRANSPARENT/08_Ride_On_Green_Dinosaur.png",
+  "w": 302,
+  "h": 358,
+  "mode": "RGBA",
+  "transp": 0.682,
+  "edge": 0.0694,
+  "sharp": 2400.9,
+  "scale_to_1080": 3.02
+ },
+ {
+  "f": "01_COSTUMES_TRANSPARENT/09_Ride_On_Peacock.png",
+  "w": 296,
+  "h": 395,
+  "mode": "RGBA",
+  "transp": 0.523,
+  "edge": 0.0586,
+  "sharp": 968.9,
+  "scale_to_1080": 2.73
+ },
+ {
+  "f": "01_COSTUMES_TRANSPARENT/10_Ride_On_Pink_Flamingo.png",
+  "w": 282,
+  "h": 392,
+  "mode": "RGBA",
+  "transp": 0.548,
+  "edge": 0.0641,
+  "sharp": 499.4,
+  "scale_to_1080": 2.76
+ },
+ {
+  "f": "01_COSTUMES_TRANSPARENT/11_Ride_On_Unicorn.png",
+  "w": 292,
+  "h": 406,
+  "mode": "RGBA",
+  "transp": 0.653,
+  "edge": 0.0609,
+  "sharp": 726.0,
+  "scale_to_1080": 2.66
+ },
+ {
+  "f": "01_COSTUMES_TRANSPARENT/12_Ride_On_Blue_Dinosaur.png",
+  "w": 273,
+  "h": 390,
+  "mode": "RGBA",
+  "transp": 0.56,
+  "edge": 0.0805,
+  "sharp": 617.2,
+  "scale_to_1080": 2.77
+ },
+ {
+  "f": "01_COSTUMES_TRANSPARENT/All_12_Transparent_Sprites.png",
+  "w": 1774,
+  "h": 887,
+  "mode": "RGBA",
+  "transp": 0.646,
+  "edge": 0.049,
+  "sharp": 1036.7,
+  "scale_to_1080": 1.22
+ },
+ {
+  "f": "02_AI_SCENES/01_Opening_Costume_Trio.png",
+  "w": 1672,
+  "h": 941,
+  "mode": "RGB",
+  "transp": 0.0,
+  "edge": 0.0,
+  "sharp": 666.8,
+  "scale_to_1080": 1.15
+ },
+ {
+  "f": "02_AI_SCENES/02_Brand_Carnival_Background.png",
+  "w": 1672,
+  "h": 941,
+  "mode": "RGB",
+  "transp": 0.0,
+  "edge": 0.0,
+  "sharp": 449.7,
+  "scale_to_1080": 1.15
+ },
+ {
+  "f": "02_AI_SCENES/03_Fun_Inflatable_Carnival.png",
+  "w": 1672,
+  "h": 941,
+  "mode": "RGB",
+  "transp": 0.0,
+  "edge": 0.0,
+  "sharp": 906.4,
+  "scale_to_1080": 1.15
+ },
+ {
+  "f": "02_AI_SCENES/04_Joyful_Alien_Trio.png",
+  "w": 1672,
+  "h": 941,
+  "mode": "RGB",
+  "transp": 0.0,
+  "edge": 0.0,
+  "sharp": 393.4,
+  "scale_to_1080": 1.15
+ },
+ {
+  "f": "02_AI_SCENES/05_Pumpit_Costumes_Showcase.png",
+  "w": 1254,
+  "h": 1254,
+  "mode": "RGB",
+  "transp": 0.0,
+  "edge": 0.0,
+  "sharp": 951.8,
+  "scale_to_1080": 0.86
+ },
+ {
+  "f": "02_AI_SCENES/06_Flying_Saucer_Alien.png",
+  "w": 1122,
+  "h": 1402,
+  "mode": "RGB",
+  "transp": 0.0,
+  "edge": 0.0,
+  "sharp": 1138.8,
+  "scale_to_1080": 0.77
+ },
+ {
+  "f": "02_AI_SCENES/07_Inflatable_Costume_Celebration_Vertical.png",
+  "w": 887,
+  "h": 1774,
+  "mode": "RGB",
+  "transp": 0.0,
+  "edge": 0.0,
+  "sharp": 822.7,
+  "scale_to_1080": 0.61
+ },
+ {
+  "f": "02_AI_SCENES/08_Alien_Costume_Selection.png",
+  "w": 1122,
+  "h": 1402,
+  "mode": "RGB",
+  "transp": 0.0,
+  "edge": 0.0,
+  "sharp": 1039.7,
+  "scale_to_1080": 0.77
+ },
+ {
+  "f": "02_AI_SCENES/09_Neon_Inflatable_Costume_Art.png",
+  "w": 1672,
+  "h": 941,
+  "mode": "RGB",
+  "transp": 0.0,
+  "edge": 0.0,
+  "sharp": 780.0,
+  "scale_to_1080": 1.15
+ },
+ {
+  "f": "03_TUTORIAL_REFERENCE/01_Installing_Fan_AA_Battery_Reference_AI.png",
+  "w": 1536,
+  "h": 1024,
+  "mode": "RGB",
+  "transp": 0.0,
+  "edge": 0.0,
+  "sharp": 259.3,
+  "scale_to_1080": 1.05
+ },
+ {
+  "f": "04_ADDITIONAL_TRANSPARENT_MONTAGES/Costume_Montage_1.png",
+  "w": 1785,
+  "h": 389,
+  "mode": "RGBA",
+  "transp": 0.0,
+  "edge": 0.0,
+  "sharp": 607.9,
+  "scale_to_1080": 2.78
+ },
+ {
+  "f": "04_ADDITIONAL_TRANSPARENT_MONTAGES/Costume_Montage_2.png",
+  "w": 1648,
+  "h": 330,
+  "mode": "RGBA",
+  "transp": 0.0,
+  "edge": 0.0,
+  "sharp": 463.1,
+  "scale_to_1080": 3.27
+ },
+ {
+  "f": "04_ADDITIONAL_TRANSPARENT_MONTAGES/Costume_Montage_3.png",
+  "w": 1677,
+  "h": 307,
+  "mode": "RGBA",
+  "transp": 0.0,
+  "edge": 0.0,
+  "sharp": 807.6,
+  "scale_to_1080": 3.52
+ },
+ {
+  "f": "04_ADDITIONAL_TRANSPARENT_MONTAGES/Costume_Montage_4.png",
+  "w": 1713,
+  "h": 330,
+  "mode": "RGBA",
+  "transp": 0.0,
+  "edge": 0.0,
+  "sharp": 511.1,
+  "scale_to_1080": 3.27
+ }
+]
