@@ -42,3 +42,8 @@ Sources: `assets_raw/fan_reference/*.png` (product listing photos, ~500px; refer
 ## From the YouTube reference thumbnails (video download blocked by YouTube bot check)
 - "Inflatable Alien Costume Setup: Step-by-step air blower instructions": the same **orange snail blower** and **orange battery box**, hand-held. An inset shows the orange intake grille **visible from outside on the back of the costume, at the lower hip/thigh**.
 - "AA batteries vs Power Bank": the same blower shape in **green** with a green 4×AA tray. **The color varies by model; the shape is the constant.** We keep orange for the T-Rex hero, consistent with the product photos.
+
+## From user-supplied reference videos (`assets_raw/ref_videos`, internal reference only)
+- **Shark (Duracell):** the orange battery box opens to show **4 × AA in a row**. The blower's USB plug goes into the **top edge** of the box. From **inside** the costume the blower shows as an orange-red domed motor housing mounted on the fabric, with the black cable running to the box held in hand.
+- **Ride-on dino ("How to Easily Inflate"):** the wearer steps in, holds the blower and box, then **clips the box to the waistband at the front**. The blower is on the costume body. Inflation runs from about 1:04 (switch on) to about 1:44 (full shape), so roughly **30–40 s**. This matches the "30–60 seconds" line.
+- **Alien:** the red battery box has a **belt clip**. The sequence is: unpack, step in, zip, inflate.
