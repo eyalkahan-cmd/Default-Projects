@@ -1,0 +1,72 @@
+[
+ {
+  "id": "S01_opening",
+  "start": 0.0,
+  "end": 6.35,
+  "startFrame": 0,
+  "endFrame": 190
+ },
+ {
+  "id": "S02_fan",
+  "start": 6.35,
+  "end": 11.91,
+  "startFrame": 190,
+  "endFrame": 357
+ },
+ {
+  "id": "S03a_aa",
+  "start": 11.91,
+  "end": 20.89,
+  "startFrame": 357,
+  "endFrame": 627
+ },
+ {
+  "id": "S03b_powerbank",
+  "start": 20.89,
+  "end": 25.85,
+  "startFrame": 627,
+  "endFrame": 776
+ },
+ {
+  "id": "S04_wear",
+  "start": 25.85,
+  "end": 41.65,
+  "startFrame": 776,
+  "endFrame": 1250
+ },
+ {
+  "id": "S05_most_important",
+  "start": 42.31,
+  "end": 50.51,
+  "startFrame": 1269,
+  "endFrame": 1515
+ },
+ {
+  "id": "S06_zip_elastic_straps",
+  "start": 50.51,
+  "end": 65.83,
+  "startFrame": 1515,
+  "endFrame": 1975
+ },
+ {
+  "id": "S07_inflate",
+  "start": 66.45,
+  "end": 77.93,
+  "startFrame": 1994,
+  "endFrame": 2338
+ },
+ {
+  "id": "S08_finale",
+  "start": 77.93,
+  "end": 86.67,
+  "startFrame": 2338,
+  "endFrame": 2600
+ },
+ {
+  "id": "S09_logo_tail",
+  "start": 86.67,
+  "end": 90.0,
+  "startFrame": 2600,
+  "endFrame": 2700
+ }
+]

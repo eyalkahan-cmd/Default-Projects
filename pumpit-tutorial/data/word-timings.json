@@ -1,0 +1,1125 @@
+{
+ "note": "Word times interpolated inside TurboScribe segments by character weight, with internal pauses (silencedetect -35dB/120ms) removed. Accuracy ~±0.15s; segment edges are measured.",
+ "words": [
+  {
+   "w": "קניתם",
+   "start": 0.49,
+   "end": 0.878,
+   "seg": 1,
+   "method": "interpolated"
+  },
+  {
+   "w": "תחפושת",
+   "start": 0.878,
+   "end": 1.331,
+   "seg": 1,
+   "method": "interpolated"
+  },
+  {
+   "w": "מתנפחת",
+   "start": 1.331,
+   "end": 1.784,
+   "seg": 1,
+   "method": "interpolated"
+  },
+  {
+   "w": "ואתם",
+   "start": 1.784,
+   "end": 2.107,
+   "seg": 1,
+   "method": "interpolated"
+  },
+  {
+   "w": "מוכנים",
+   "start": 2.107,
+   "end": 2.56,
+   "seg": 1,
+   "method": "interpolated"
+  },
+  {
+   "w": "לגנוב",
+   "start": 2.56,
+   "end": 2.948,
+   "seg": 1,
+   "method": "interpolated"
+  },
+  {
+   "w": "את",
+   "start": 2.948,
+   "end": 3.142,
+   "seg": 1,
+   "method": "interpolated"
+  },
+  {
+   "w": "ההצגה?",
+   "start": 3.142,
+   "end": 3.53,
+   "seg": 1,
+   "method": "interpolated"
+  },
+  {
+   "w": "כך",
+   "start": 4.113,
+   "end": 4.353,
+   "seg": 2,
+   "method": "interpolated"
+  },
+  {
+   "w": "תנפחו",
+   "start": 4.353,
+   "end": 4.832,
+   "seg": 2,
+   "method": "interpolated"
+  },
+  {
+   "w": "אותה",
+   "start": 4.832,
+   "end": 5.231,
+   "seg": 2,
+   "method": "interpolated"
+  },
+  {
+   "w": "בקלות!",
+   "start": 5.231,
+   "end": 5.71,
+   "seg": 2,
+   "method": "interpolated"
+  },
+  {
+   "w": "תחילה,",
+   "start": 6.386,
+   "end": 7.159,
+   "seg": 3,
+   "method": "interpolated"
+  },
+  {
+   "w": "ודאו",
+   "start": 7.159,
+   "end": 7.567,
+   "seg": 3,
+   "method": "interpolated"
+  },
+  {
+   "w": "שהמאוורר",
+   "start": 7.567,
+   "end": 8.303,
+   "seg": 3,
+   "method": "interpolated"
+  },
+  {
+   "w": "מותקן",
+   "start": 8.303,
+   "end": 8.793,
+   "seg": 3,
+   "method": "interpolated"
+  },
+  {
+   "w": "היטב",
+   "start": 8.793,
+   "end": 9.322,
+   "seg": 3,
+   "method": "interpolated"
+  },
+  {
+   "w": "בפתח",
+   "start": 9.322,
+   "end": 9.731,
+   "seg": 3,
+   "method": "interpolated"
+  },
+  {
+   "w": "הייעודי",
+   "start": 9.731,
+   "end": 10.385,
+   "seg": 3,
+   "method": "interpolated"
+  },
+  {
+   "w": "של",
+   "start": 10.385,
+   "end": 10.63,
+   "seg": 3,
+   "method": "interpolated"
+  },
+  {
+   "w": "התחפושת.",
+   "start": 10.63,
+   "end": 11.35,
+   "seg": 4,
+   "method": "interpolated"
+  },
+  {
+   "w": "הכניסו",
+   "start": 11.91,
+   "end": 12.47,
+   "seg": 5,
+   "method": "interpolated"
+  },
+  {
+   "w": "סוללות",
+   "start": 12.47,
+   "end": 13.03,
+   "seg": 5,
+   "method": "interpolated"
+  },
+  {
+   "w": "AA",
+   "start": 13.03,
+   "end": 13.51,
+   "seg": 5,
+   "method": "interpolated"
+  },
+  {
+   "w": "חדשות",
+   "start": 13.51,
+   "end": 13.99,
+   "seg": 5,
+   "method": "interpolated"
+  },
+  {
+   "w": "לקופסת",
+   "start": 13.99,
+   "end": 14.55,
+   "seg": 5,
+   "method": "interpolated"
+  },
+  {
+   "w": "הסוללות,",
+   "start": 14.55,
+   "end": 15.19,
+   "seg": 5,
+   "method": "interpolated"
+  },
+  {
+   "w": "בהתאם",
+   "start": 15.19,
+   "end": 15.67,
+   "seg": 5,
+   "method": "interpolated"
+  },
+  {
+   "w": "להוראות",
+   "start": 15.67,
+   "end": 16.31,
+   "seg": 5,
+   "method": "interpolated"
+  },
+  {
+   "w": "הדגם,",
+   "start": 16.31,
+   "end": 16.667,
+   "seg": 6,
+   "method": "interpolated"
+  },
+  {
+   "w": "או",
+   "start": 16.667,
+   "end": 17.345,
+   "seg": 6,
+   "method": "interpolated"
+  },
+  {
+   "w": "השתמשו",
+   "start": 17.345,
+   "end": 18.045,
+   "seg": 6,
+   "method": "interpolated"
+  },
+  {
+   "w": "בסוללת",
+   "start": 18.045,
+   "end": 18.544,
+   "seg": 6,
+   "method": "interpolated"
+  },
+  {
+   "w": "גיבוי",
+   "start": 18.544,
+   "end": 18.972,
+   "seg": 6,
+   "method": "interpolated"
+  },
+  {
+   "w": "ניידת,",
+   "start": 18.972,
+   "end": 19.401,
+   "seg": 6,
+   "method": "interpolated"
+  },
+  {
+   "w": "Power",
+   "start": 19.401,
+   "end": 20.319,
+   "seg": 6,
+   "method": "interpolated"
+  },
+  {
+   "w": "Bank,",
+   "start": 20.319,
+   "end": 20.89,
+   "seg": 6,
+   "method": "interpolated"
+  },
+  {
+   "w": "דרך",
+   "start": 21.25,
+   "end": 21.64,
+   "seg": 7,
+   "method": "interpolated"
+  },
+  {
+   "w": "כבל",
+   "start": 21.64,
+   "end": 22.029,
+   "seg": 7,
+   "method": "interpolated"
+  },
+  {
+   "w": "ה-USB",
+   "start": 22.029,
+   "end": 22.809,
+   "seg": 7,
+   "method": "interpolated"
+  },
+  {
+   "w": "של",
+   "start": 22.809,
+   "end": 23.101,
+   "seg": 7,
+   "method": "interpolated"
+  },
+  {
+   "w": "המאוורר,",
+   "start": 23.101,
+   "end": 23.88,
+   "seg": 7,
+   "method": "interpolated"
+  },
+  {
+   "w": "אם",
+   "start": 23.88,
+   "end": 24.503,
+   "seg": 7,
+   "method": "interpolated"
+  },
+  {
+   "w": "הדגם",
+   "start": 24.503,
+   "end": 24.99,
+   "seg": 7,
+   "method": "interpolated"
+  },
+  {
+   "w": "תומך",
+   "start": 24.99,
+   "end": 25.455,
+   "seg": 8,
+   "method": "interpolated"
+  },
+  {
+   "w": "בכך.",
+   "start": 25.455,
+   "end": 25.827,
+   "seg": 8,
+   "method": "interpolated"
+  },
+  {
+   "w": "לאחר",
+   "start": 26.44,
+   "end": 26.892,
+   "seg": 9,
+   "method": "interpolated"
+  },
+  {
+   "w": "מכן,",
+   "start": 26.892,
+   "end": 27.254,
+   "seg": 9,
+   "method": "interpolated"
+  },
+  {
+   "w": "ודאו",
+   "start": 27.254,
+   "end": 28.027,
+   "seg": 9,
+   "method": "interpolated"
+  },
+  {
+   "w": "שכבל",
+   "start": 28.027,
+   "end": 28.479,
+   "seg": 9,
+   "method": "interpolated"
+  },
+  {
+   "w": "המאוורר",
+   "start": 28.479,
+   "end": 29.202,
+   "seg": 9,
+   "method": "interpolated"
+  },
+  {
+   "w": "מחובר",
+   "start": 29.202,
+   "end": 29.745,
+   "seg": 9,
+   "method": "interpolated"
+  },
+  {
+   "w": "למקור",
+   "start": 29.745,
+   "end": 30.287,
+   "seg": 9,
+   "method": "interpolated"
+  },
+  {
+   "w": "החשמל,",
+   "start": 30.287,
+   "end": 30.83,
+   "seg": 9,
+   "method": "interpolated"
+  },
+  {
+   "w": "היכנסו",
+   "start": 31.409,
+   "end": 31.948,
+   "seg": 10,
+   "method": "interpolated"
+  },
+  {
+   "w": "לתוך",
+   "start": 31.948,
+   "end": 32.333,
+   "seg": 10,
+   "method": "interpolated"
+  },
+  {
+   "w": "התחפושת,",
+   "start": 32.333,
+   "end": 32.948,
+   "seg": 10,
+   "method": "interpolated"
+  },
+  {
+   "w": "והניחו",
+   "start": 32.948,
+   "end": 33.711,
+   "seg": 10,
+   "method": "interpolated"
+  },
+  {
+   "w": "את",
+   "start": 33.711,
+   "end": 33.942,
+   "seg": 10,
+   "method": "interpolated"
+  },
+  {
+   "w": "קופסת",
+   "start": 33.942,
+   "end": 34.403,
+   "seg": 10,
+   "method": "interpolated"
+  },
+  {
+   "w": "הסוללות",
+   "start": 34.403,
+   "end": 35.019,
+   "seg": 10,
+   "method": "interpolated"
+  },
+  {
+   "w": "או",
+   "start": 35.019,
+   "end": 35.25,
+   "seg": 10,
+   "method": "interpolated"
+  },
+  {
+   "w": "סוללת",
+   "start": 35.25,
+   "end": 35.705,
+   "seg": 11,
+   "method": "interpolated"
+  },
+  {
+   "w": "הגיבוי",
+   "start": 35.705,
+   "end": 36.235,
+   "seg": 11,
+   "method": "interpolated"
+  },
+  {
+   "w": "בכיס",
+   "start": 36.235,
+   "end": 36.614,
+   "seg": 11,
+   "method": "interpolated"
+  },
+  {
+   "w": "הפנימי,",
+   "start": 36.614,
+   "end": 37.144,
+   "seg": 11,
+   "method": "interpolated"
+  },
+  {
+   "w": "או",
+   "start": 37.144,
+   "end": 37.917,
+   "seg": 11,
+   "method": "interpolated"
+  },
+  {
+   "w": "הצמידו",
+   "start": 37.917,
+   "end": 38.661,
+   "seg": 11,
+   "method": "interpolated"
+  },
+  {
+   "w": "אותה",
+   "start": 38.661,
+   "end": 39.04,
+   "seg": 11,
+   "method": "interpolated"
+  },
+  {
+   "w": "לחגורה",
+   "start": 39.04,
+   "end": 39.57,
+   "seg": 11,
+   "method": "interpolated"
+  },
+  {
+   "w": "בעזרת",
+   "start": 39.57,
+   "end": 40.09,
+   "seg": 12,
+   "method": "interpolated"
+  },
+  {
+   "w": "הקליפס,",
+   "start": 40.09,
+   "end": 40.697,
+   "seg": 12,
+   "method": "interpolated"
+  },
+  {
+   "w": "בהתאם",
+   "start": 40.697,
+   "end": 41.217,
+   "seg": 12,
+   "method": "interpolated"
+  },
+  {
+   "w": "לדגם.",
+   "start": 41.217,
+   "end": 41.65,
+   "seg": 12,
+   "method": "interpolated"
+  },
+  {
+   "w": "עכשיו",
+   "start": 42.341,
+   "end": 42.918,
+   "seg": 13,
+   "method": "interpolated"
+  },
+  {
+   "w": "מגיע",
+   "start": 42.918,
+   "end": 43.399,
+   "seg": 13,
+   "method": "interpolated"
+  },
+  {
+   "w": "השלב",
+   "start": 43.399,
+   "end": 43.88,
+   "seg": 13,
+   "method": "interpolated"
+  },
+  {
+   "w": "החשוב",
+   "start": 43.88,
+   "end": 44.457,
+   "seg": 13,
+   "method": "interpolated"
+  },
+  {
+   "w": "ביותר!",
+   "start": 44.457,
+   "end": 45.034,
+   "seg": 13,
+   "method": "interpolated"
+  },
+  {
+   "w": "כדי",
+   "start": 45.664,
+   "end": 46.022,
+   "seg": 14,
+   "method": "interpolated"
+  },
+  {
+   "w": "שהתחפושת",
+   "start": 46.022,
+   "end": 46.826,
+   "seg": 14,
+   "method": "interpolated"
+  },
+  {
+   "w": "תתנפח",
+   "start": 46.826,
+   "end": 47.363,
+   "seg": 14,
+   "method": "interpolated"
+  },
+  {
+   "w": "כמו",
+   "start": 47.363,
+   "end": 47.72,
+   "seg": 14,
+   "method": "interpolated"
+  },
+  {
+   "w": "שצריך,",
+   "start": 47.72,
+   "end": 48.59,
+   "seg": 14,
+   "method": "interpolated"
+  },
+  {
+   "w": "חשוב",
+   "start": 48.59,
+   "end": 49.037,
+   "seg": 14,
+   "method": "interpolated"
+  },
+  {
+   "w": "לצמצם",
+   "start": 49.037,
+   "end": 49.574,
+   "seg": 14,
+   "method": "interpolated"
+  },
+  {
+   "w": "בריחת",
+   "start": 49.574,
+   "end": 50.11,
+   "seg": 14,
+   "method": "interpolated"
+  },
+  {
+   "w": "אוויר.",
+   "start": 50.11,
+   "end": 50.494,
+   "seg": 15,
+   "method": "interpolated"
+  },
+  {
+   "w": "לכן,",
+   "start": 51.143,
+   "end": 51.482,
+   "seg": 16,
+   "method": "interpolated"
+  },
+  {
+   "w": "סגרו",
+   "start": 51.482,
+   "end": 52.236,
+   "seg": 16,
+   "method": "interpolated"
+  },
+  {
+   "w": "את",
+   "start": 52.236,
+   "end": 52.49,
+   "seg": 16,
+   "method": "interpolated"
+  },
+  {
+   "w": "הרוכסן",
+   "start": 52.49,
+   "end": 53.082,
+   "seg": 16,
+   "method": "interpolated"
+  },
+  {
+   "w": "עד",
+   "start": 53.082,
+   "end": 53.467,
+   "seg": 16,
+   "method": "interpolated"
+  },
+  {
+   "w": "הסוף,",
+   "start": 53.467,
+   "end": 53.89,
+   "seg": 16,
+   "method": "interpolated"
+  },
+  {
+   "w": "ודאו",
+   "start": 54.33,
+   "end": 54.716,
+   "seg": 17,
+   "method": "interpolated"
+  },
+  {
+   "w": "שהגומיות",
+   "start": 54.716,
+   "end": 55.411,
+   "seg": 17,
+   "method": "interpolated"
+  },
+  {
+   "w": "סביב",
+   "start": 55.411,
+   "end": 55.797,
+   "seg": 17,
+   "method": "interpolated"
+  },
+  {
+   "w": "פתחי",
+   "start": 55.797,
+   "end": 56.183,
+   "seg": 17,
+   "method": "interpolated"
+  },
+  {
+   "w": "התחפושת",
+   "start": 56.183,
+   "end": 56.801,
+   "seg": 17,
+   "method": "interpolated"
+  },
+  {
+   "w": "יושבות",
+   "start": 56.801,
+   "end": 57.523,
+   "seg": 17,
+   "method": "interpolated"
+  },
+  {
+   "w": "בצורה",
+   "start": 57.523,
+   "end": 57.987,
+   "seg": 17,
+   "method": "interpolated"
+  },
+  {
+   "w": "צמודה",
+   "start": 57.987,
+   "end": 58.45,
+   "seg": 17,
+   "method": "interpolated"
+  },
+  {
+   "w": "ונוחה.",
+   "start": 58.45,
+   "end": 58.85,
+   "seg": 18,
+   "method": "interpolated"
+  },
+  {
+   "w": "ואם",
+   "start": 59.77,
+   "end": 60.062,
+   "seg": 19,
+   "method": "interpolated"
+  },
+  {
+   "w": "קיימים",
+   "start": 60.062,
+   "end": 60.574,
+   "seg": 19,
+   "method": "interpolated"
+  },
+  {
+   "w": "שרוכים",
+   "start": 60.574,
+   "end": 61.085,
+   "seg": 19,
+   "method": "interpolated"
+  },
+  {
+   "w": "או",
+   "start": 61.085,
+   "end": 61.304,
+   "seg": 19,
+   "method": "interpolated"
+  },
+  {
+   "w": "רצועות",
+   "start": 61.304,
+   "end": 61.816,
+   "seg": 19,
+   "method": "interpolated"
+  },
+  {
+   "w": "הידוק,",
+   "start": 61.816,
+   "end": 62.392,
+   "seg": 19,
+   "method": "interpolated"
+  },
+  {
+   "w": "התאימו",
+   "start": 62.392,
+   "end": 62.904,
+   "seg": 19,
+   "method": "interpolated"
+  },
+  {
+   "w": "אותם",
+   "start": 62.904,
+   "end": 63.269,
+   "seg": 19,
+   "method": "interpolated"
+  },
+  {
+   "w": "בעדינות,",
+   "start": 63.269,
+   "end": 63.851,
+   "seg": 20,
+   "method": "interpolated"
+  },
+  {
+   "w": "בלי",
+   "start": 63.851,
+   "end": 64.36,
+   "seg": 20,
+   "method": "interpolated"
+  },
+  {
+   "w": "להדק",
+   "start": 64.36,
+   "end": 64.724,
+   "seg": 20,
+   "method": "interpolated"
+  },
+  {
+   "w": "יתר",
+   "start": 64.724,
+   "end": 65.015,
+   "seg": 20,
+   "method": "interpolated"
+  },
+  {
+   "w": "על",
+   "start": 65.015,
+   "end": 65.233,
+   "seg": 20,
+   "method": "interpolated"
+  },
+  {
+   "w": "המידה.",
+   "start": 65.233,
+   "end": 65.67,
+   "seg": 20,
+   "method": "interpolated"
+  },
+  {
+   "w": "לבסוף,",
+   "start": 66.45,
+   "end": 66.912,
+   "seg": 21,
+   "method": "interpolated"
+  },
+  {
+   "w": "הפעילו",
+   "start": 66.912,
+   "end": 67.742,
+   "seg": 21,
+   "method": "interpolated"
+  },
+  {
+   "w": "את",
+   "start": 67.742,
+   "end": 67.974,
+   "seg": 21,
+   "method": "interpolated"
+  },
+  {
+   "w": "המאוורר.",
+   "start": 67.974,
+   "end": 68.59,
+   "seg": 21,
+   "method": "interpolated"
+  },
+  {
+   "w": "הוא",
+   "start": 69.22,
+   "end": 69.486,
+   "seg": 22,
+   "method": "interpolated"
+  },
+  {
+   "w": "יתחיל",
+   "start": 69.486,
+   "end": 69.886,
+   "seg": 22,
+   "method": "interpolated"
+  },
+  {
+   "w": "להזרים",
+   "start": 69.886,
+   "end": 70.352,
+   "seg": 22,
+   "method": "interpolated"
+  },
+  {
+   "w": "אוויר",
+   "start": 70.352,
+   "end": 70.751,
+   "seg": 22,
+   "method": "interpolated"
+  },
+  {
+   "w": "אל",
+   "start": 70.751,
+   "end": 70.951,
+   "seg": 22,
+   "method": "interpolated"
+  },
+  {
+   "w": "תוך",
+   "start": 70.951,
+   "end": 71.217,
+   "seg": 22,
+   "method": "interpolated"
+  },
+  {
+   "w": "התחפושת,",
+   "start": 71.217,
+   "end": 71.991,
+   "seg": 22,
+   "method": "interpolated"
+  },
+  {
+   "w": "ובדרך",
+   "start": 71.991,
+   "end": 72.39,
+   "seg": 22,
+   "method": "interpolated"
+  },
+  {
+   "w": "כלל",
+   "start": 72.39,
+   "end": 72.744,
+   "seg": 23,
+   "method": "interpolated"
+  },
+  {
+   "w": "תוך",
+   "start": 72.744,
+   "end": 73.227,
+   "seg": 23,
+   "method": "interpolated"
+  },
+  {
+   "w": "כחצי",
+   "start": 73.228,
+   "end": 73.67,
+   "seg": 23,
+   "method": "interpolated"
+  },
+  {
+   "w": "דקה",
+   "start": 73.671,
+   "end": 74.025,
+   "seg": 23,
+   "method": "interpolated"
+  },
+  {
+   "w": "עד",
+   "start": 74.025,
+   "end": 74.291,
+   "seg": 23,
+   "method": "interpolated"
+  },
+  {
+   "w": "דקה,",
+   "start": 74.291,
+   "end": 74.645,
+   "seg": 23,
+   "method": "interpolated"
+  },
+  {
+   "w": "או",
+   "start": 74.645,
+   "end": 75.096,
+   "seg": 23,
+   "method": "interpolated"
+  },
+  {
+   "w": "מעט",
+   "start": 75.096,
+   "end": 75.45,
+   "seg": 23,
+   "method": "interpolated"
+  },
+  {
+   "w": "יותר,",
+   "start": 75.45,
+   "end": 75.819,
+   "seg": 24,
+   "method": "interpolated"
+  },
+  {
+   "w": "היא",
+   "start": 75.819,
+   "end": 76.48,
+   "seg": 24,
+   "method": "interpolated"
+  },
+  {
+   "w": "תתנפח",
+   "start": 76.481,
+   "end": 77.044,
+   "seg": 24,
+   "method": "interpolated"
+  },
+  {
+   "w": "למלוא",
+   "start": 77.044,
+   "end": 77.487,
+   "seg": 24,
+   "method": "interpolated"
+  },
+  {
+   "w": "גודלה!",
+   "start": 77.487,
+   "end": 77.93,
+   "seg": 24,
+   "method": "interpolated"
+  },
+  {
+   "w": "וזהו!",
+   "start": 77.93,
+   "end": 79.069,
+   "seg": 25,
+   "method": "interpolated"
+  },
+  {
+   "w": "אתם",
+   "start": 79.457,
+   "end": 79.745,
+   "seg": 26,
+   "method": "interpolated"
+  },
+  {
+   "w": "מוכנים",
+   "start": 79.745,
+   "end": 80.249,
+   "seg": 26,
+   "method": "interpolated"
+  },
+  {
+   "w": "לגנוב",
+   "start": 80.249,
+   "end": 80.681,
+   "seg": 26,
+   "method": "interpolated"
+  },
+  {
+   "w": "את",
+   "start": 80.681,
+   "end": 80.897,
+   "seg": 26,
+   "method": "interpolated"
+  },
+  {
+   "w": "ההצגה!",
+   "start": 80.897,
+   "end": 81.329,
+   "seg": 26,
+   "method": "interpolated"
+  },
+  {
+   "w": "רק",
+   "start": 81.99,
+   "end": 82.208,
+   "seg": 27,
+   "method": "interpolated"
+  },
+  {
+   "w": "זכרו",
+   "start": 82.208,
+   "end": 82.572,
+   "seg": 27,
+   "method": "interpolated"
+  },
+  {
+   "w": "להשאיר",
+   "start": 82.572,
+   "end": 83.08,
+   "seg": 27,
+   "method": "interpolated"
+  },
+  {
+   "w": "את",
+   "start": 83.08,
+   "end": 83.298,
+   "seg": 27,
+   "method": "interpolated"
+  },
+  {
+   "w": "המאוורר",
+   "start": 83.298,
+   "end": 83.88,
+   "seg": 27,
+   "method": "interpolated"
+  },
+  {
+   "w": "פועל",
+   "start": 83.88,
+   "end": 84.401,
+   "seg": 27,
+   "method": "interpolated"
+  },
+  {
+   "w": "כל",
+   "start": 84.401,
+   "end": 84.619,
+   "seg": 27,
+   "method": "interpolated"
+  },
+  {
+   "w": "זמן",
+   "start": 84.619,
+   "end": 84.91,
+   "seg": 27,
+   "method": "interpolated"
+  },
+  {
+   "w": "שאתם",
+   "start": 84.91,
+   "end": 85.184,
+   "seg": 28,
+   "method": "interpolated"
+  },
+  {
+   "w": "לובשים",
+   "start": 85.184,
+   "end": 85.567,
+   "seg": 28,
+   "method": "interpolated"
+  },
+  {
+   "w": "את",
+   "start": 85.567,
+   "end": 85.732,
+   "seg": 28,
+   "method": "interpolated"
+  },
+  {
+   "w": "התחפושת.",
+   "start": 85.732,
+   "end": 86.17,
+   "seg": 28,
+   "method": "interpolated"
+  }
+ ]
+}
