@@ -27,3 +27,14 @@ Sources: `assets_raw/fan_reference/*.png` (product listing photos, ~500px; refer
 - `03_TUTORIAL_REFERENCE/01_Installing_Fan_AA_Battery_Reference_AI.png` shows a black axial fan and a black open AA holder: **wrong hardware. DO NOT USE.**
 - All fan and battery close-ups are built as accurate vector or 2.5D illustrations in Remotion from this spec.
 - Kling shots must not feature the fan in close-up. If the fan appears and is distorted, the shot is replaced.
+
+## Placement on the costume (user-supplied reference: `fan_placement_trex_exterior.png`)
+- On the full inflatable T-Rex, the blower's **round intake grille faces outward**. It sits on the **lower back/side of the body, just above the hip and tail base**.
+- From outside you see only the round orange-red spoke grille, flush with the fabric. The housing is inside the costume.
+- The listing uses a **circular magnifier callout** (zoom bubble with a pointer line) to show it. We reuse this device in Scene 02.
+
+## Hero costume decision
+- Hero costume for the tutorial is the **orange T-Rex**, replacing the green alien.
+  - There is an exact fan-placement reference for it.
+  - It is the brand's flagship model, and it is real product imagery (site collage 1254px, product photo, cutout).
+  - It is the iconic "inflation" silhouette.
