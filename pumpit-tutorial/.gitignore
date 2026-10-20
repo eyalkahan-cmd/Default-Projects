@@ -8,3 +8,5 @@ kling/out/
 preprod/ref_*.jpg
 preprod/*.mp4
 preprod/K6_start_frame_*.jpg
+remotion/public/audio/
+remotion/out/
