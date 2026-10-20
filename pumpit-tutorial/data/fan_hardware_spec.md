@@ -38,3 +38,7 @@ Sources: `assets_raw/fan_reference/*.png` (product listing photos, ~500px; refer
   - There is an exact fan-placement reference for it.
   - It is the brand's flagship model, and it is real product imagery (site collage 1254px, product photo, cutout).
   - It is the iconic "inflation" silhouette.
+
+## From the YouTube reference thumbnails (video download blocked by YouTube bot check)
+- "Inflatable Alien Costume Setup: Step-by-step air blower instructions": the same **orange snail blower** and **orange battery box**, hand-held. An inset shows the orange intake grille **visible from outside on the back of the costume, at the lower hip/thigh**.
+- "AA batteries vs Power Bank": the same blower shape in **green** with a green 4×AA tray. **The color varies by model; the shape is the constant.** We keep orange for the T-Rex hero, consistent with the product photos.
