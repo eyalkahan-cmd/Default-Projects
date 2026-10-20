@@ -6,3 +6,22 @@ Starting balance: **1567** credits.
 | # | Scene | Model / mode | Settings | Est. | Balance before | Balance after | Actual | Result | Remaining of 750 |
 |---|---|---|---|---|---|---|---|---|---|
 | 1 | K6 keyframe: inflated T-Rex (2 variants) | Kling Image 3.0 Omni, image-to-image | 2K, 16:9 | ~2–4 | 1567 | 1563 | **4** (verified) | awaiting QA (download blocked) | 746 |
+
+## Verified rates (from eyalkahan-cmd/kling, measured on this account)
+- kling-video-v4_0, 1080p, first/tail frames: **13.5 credits/s** (6 s ≈ 81, 8 s = 108)
+- kling-video-v3_0, 1080p, no audio: **8 credits/s**
+- kling-video-v3_0_omni, 1080p, with audio: ~12 credits/s
+- Kling Image 3.0 Omni, 2K: 2 credits/image (measured here: 2 images = 4)
+
+## Revised plan within the 750 ceiling (6 s default per user rule)
+| Shot | Model | Duration | Est. | Retake reserve |
+|---|---|---|---|---|
+| K6 inflation (deflated → inflated) | v4.0 | 8 s | 108 | 108 |
+| K3 stepping into the costume | v4.0 | 6 s | 81 | 81 |
+| K1 opening | v4.0 | 6 s | 81 | 0 |
+| K7 celebration | v4.0 | 6 s | 81 | 0 |
+| K5 zipper macro | v3.0, no audio | 5 s | 40 | 40 |
+| Keyframe images | Image 3.0 Omni | | ~30 | |
+| **Total** | | | **min ~421 · max ~650** | |
+
+Process (user rule from the Kling repo): before each video submission, show the full prompt and settings in Hebrew and wait for approval.
