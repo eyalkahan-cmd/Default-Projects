@@ -3,3 +3,6 @@ audio/
 **/DOWNLOADED_SITE_ORIGINALS/
 audio_build/
 preprod/*.m4a
+kling/refs/
+kling/out/
+preprod/ref_*.jpg
