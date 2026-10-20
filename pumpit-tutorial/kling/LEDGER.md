@@ -5,7 +5,7 @@ Starting balance: **1567** credits.
 
 | # | Scene | Model / mode | Settings | Est. | Balance before | Balance after | Actual | Result | Remaining of 750 |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | K6 keyframe: inflated T-Rex (2 variants) | Kling Image 3.0 Omni, image-to-image | 2K, 16:9 | ~2–4 | 1567 | 1563 | **4** (verified) | awaiting QA (download blocked) | 746 |
+| 1 | K6 keyframe: inflated T-Rex (2 variants) | Kling Image 3.0 Omni, image-to-image | 2K, 16:9 | ~2–4 | 1567 | 1563 | **4** (verified) | ✅ v2 selected (faithful to product) | 746 |
 
 ## Verified rates (from eyalkahan-cmd/kling, measured on this account)
 - kling-video-v4_0, 1080p, first/tail frames: **13.5 credits/s** (6 s ≈ 81, 8 s = 108)
@@ -24,4 +24,6 @@ Starting balance: **1567** credits.
 | Keyframe images | Image 3.0 Omni | | ~30 | |
 | **Total** | | | **min ~421 · max ~650** | |
 
-Process (user rule from the Kling repo): before each video submission, show the full prompt and settings in Hebrew and wait for approval.
+Process: work autonomously within the 750 ceiling (user: "I trust you"). Stop and report on any charge anomaly, an extra retake beyond plan, or an error.
+| 2 | K6 keyframe: deflated T-Rex (edit of v2, 2 variants) | Kling Image 3.0 Omni, image-to-image | 2K, 16:9 | 4 | 1563 | 1559 | 4 | ❌ rejected: print pattern lost, shape not credible | 742 |
+| 3 | K6 inflation: generate DEFLATION from inflated v2, reverse in edit | Kling 4.0, image-to-video, first frame only | 1080p, 8 s | 108 | 1559 | | 108 (reported, matches 13.5/s) | pending | 634 |
