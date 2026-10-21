@@ -80,7 +80,9 @@ export const Studio: React.FC<{
         shadow-camera-bottom={-9}
         shadow-camera-far={40}
       />
-      <directionalLight position={rimPos} intensity={1.6} color="#7fc4ff" />
+      <directionalLight position={rimPos} intensity={1.6} color={look().id === "daylight" ? "#dbeaff" : "#7fc4ff"} />
+      {/* kicker from behind and above: separates products from the bright cyclorama */}
+      {look().id === "daylight" ? <directionalLight position={[-1.5, 4, -5]} intensity={1.4} color="#ffffff" /> : null}
       <pointLight position={[-3, 1, 3]} intensity={6} distance={12} color="#ffcf9a" />
       {floor && floorStyle === "glossy" ? (
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, floorY, 0]} receiveShadow>

@@ -81,7 +81,7 @@ export const OpeningV2: React.FC = () => {
           <PuffyBlob x={640} y={560} r={360} color="#d9ecff" scale={blob} squash={1 + Math.sin(frame / 7) * 0.012} />
           <Img
             src={staticFile("img/trex_cutout_v2.png")}
-            style={{ position: "absolute", left: 640, bottom: 70, height: 900, transform: `translateX(-50%) scale(${hero})`, transformOrigin: "50% 100%" }}
+            style={{ position: "absolute", left: 640, bottom: 70, height: 900, transform: `translateX(-50%) scale(${hero * (1 - 0.006 * Math.sin(frame / 11))}, ${hero * (1 + 0.009 * Math.sin(frame / 11))})`, transformOrigin: "50% 100%" }}
           />
           <div style={{ position: "absolute", right: 140, top: 300, direction: "rtl", fontFamily: HEEBO, color: L.text }}>
             {["איך מנפחים", "תחפושת מתנפחת"].map((w, i) => (

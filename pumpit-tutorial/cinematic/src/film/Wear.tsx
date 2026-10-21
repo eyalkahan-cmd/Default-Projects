@@ -143,7 +143,7 @@ export const WearPack: React.FC = () => {
             </group>
           ) : null}
           <group position={[packX, packY, 0]} rotation={[0, rotY, 0]} scale={0.85}>
-            <BatteryPack />
+            <BatteryPack clip />
           </group>
         </ThreeCanvas>
       </Preload>

@@ -157,11 +157,11 @@ export const StepBar: React.FC<{ step: number; start: number; end: number }> = (
       <div style={{ display: "flex", gap: 8, paddingRight: 16 }}>
         {STEPS.map((_, i) => {
           const n = i + 1;
-          const w = n === step ? 64 : 28;
+          const w = n === step ? 84 : 40;
           const f = n < step ? 1 : n === step ? fill : 0;
           return (
-            <div key={i} style={{ width: w, height: 10, borderRadius: 5, background: "rgba(11,31,77,0.12)", overflow: "hidden" }}>
-              <div style={{ width: `${f * 100}%`, height: "100%", borderRadius: 5, background: C.blue }} />
+            <div key={i} style={{ width: w, height: 14, borderRadius: 7, background: "rgba(11,31,77,0.16)", boxShadow: "inset 0 1px 2px rgba(11,31,77,0.15)", overflow: "hidden" }}>
+              <div style={{ width: `${f * 100}%`, height: "100%", borderRadius: 7, background: `linear-gradient(180deg, #5bbcff, ${C.blue})` }} />
             </div>
           );
         })}
@@ -204,10 +204,42 @@ export const ShotFx: React.FC<{ len: number; inFx?: "whip" | "zoom" | "none"; ou
     sc *= 1 + tOut * 0.6;
     blur = Math.max(blur, tOut * 22);
   }
+  // a bright streak sweeps with the move so the blurred frames read as intentional light, not mud
+  const streak = Math.max(inFx === "none" ? 0 : 1 - tIn, outFx === "none" ? 0 : tOut);
+  const sx = inFx !== "none" && 1 - tIn >= tOut ? (1 - tIn) * 100 * dir : -tOut * 100 * dir;
   return (
-    <AbsoluteFill style={{ transform: `translateX(${tx}px) scale(${sc})`, filter: blur > 0.3 ? `blur(${blur}px)` : undefined, overflow: "hidden" }}>
-      {children}
+    <AbsoluteFill style={{ overflow: "hidden" }}>
+      <AbsoluteFill style={{ transform: `translateX(${tx}px) scale(${sc})`, filter: blur > 0.3 ? `blur(${blur}px)` : undefined }}>{children}</AbsoluteFill>
+      {streak > 0.02 ? (
+        <AbsoluteFill
+          style={{
+            pointerEvents: "none",
+            opacity: Math.min(1, streak * 1.4),
+            background: `linear-gradient(100deg, rgba(255,255,255,0) ${35 + sx}%, rgba(255,255,255,0.9) ${50 + sx}%, rgba(255,255,255,0) ${65 + sx}%)`,
+            mixBlendMode: "screen",
+          }}
+        />
+      ) : null}
     </AbsoluteFill>
+  );
+};
+
+/**
+ * Lens depth of field (cheap, convincing): everything outside a soft ellipse around the focus
+ * point is blurred, as with a long lens wide open. Use on macro and product shots.
+ */
+export const LensBlur: React.FC<{ focus: { x: number; y: number }; rx?: number; ry?: number; strength?: number }> = ({ focus, rx = 520, ry = 360, strength = 7 }) => {
+  const mask = `radial-gradient(ellipse ${rx}px ${ry}px at ${focus.x}px ${focus.y}px, transparent 45%, black 100%)`;
+  return (
+    <AbsoluteFill
+      style={{
+        pointerEvents: "none",
+        backdropFilter: `blur(${strength}px)`,
+        WebkitBackdropFilter: `blur(${strength}px)`,
+        maskImage: mask,
+        WebkitMaskImage: mask,
+      }}
+    />
   );
 };
 

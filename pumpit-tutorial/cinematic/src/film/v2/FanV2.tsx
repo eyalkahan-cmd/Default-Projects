@@ -28,7 +28,7 @@ const WhereIsTheFan: React.FC<{ len: number }> = ({ len }) => {
       <Backdrop x={0.5} y={0.45} />
       <AbsoluteFill style={{ transform: `scale(${push})`, transformOrigin: `${fx}px ${fy}px` }}>
         <PuffyBlob x={fx - 40} y={560} r={330} color="#dcedff" scale={puff(frame, 0, 120)} />
-        <Img src={staticFile("img/trex_cutout_v2.png")} style={{ position: "absolute", left, top, height: h }} />
+        <Img src={staticFile("img/trex_cutout_v2.png")} style={{ position: "absolute", left, top, height: h, transform: `scale(${1 - 0.006 * Math.sin(frame / 11)}, ${1 + 0.009 * Math.sin(frame / 11)})`, transformOrigin: "50% 100%" }} />
         <svg width="100%" height="100%" style={{ position: "absolute", inset: 0 }}>
           {[0, 1, 2].map((k) => {
             const t = pulse(k);

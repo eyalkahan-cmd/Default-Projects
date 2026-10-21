@@ -9,7 +9,7 @@ import { Cable, UsbPlug } from "../../three/models/Cable";
 import { BatteryPack, PowerBank } from "../../three/models/PowerSources";
 import { project } from "../../three/rig";
 import { CameraDriver, Studio } from "../../three/Studio";
-import { ClickRing, clamp, KineticWord, multiCam, puff, StepBar } from "../motion";
+import { ClickRing, clamp, KineticWord, LensBlur, multiCam, puff, StepBar } from "../motion";
 import { useFrame } from "../time";
 
 const smooth = (t: number) => t * t * (3 - 2 * t);
@@ -45,13 +45,13 @@ export const PowerV2: React.FC = () => {
   const frame = useFrame();
   const { width, height } = useVideoConfig();
   const L = look();
-  const { cam } = CAMS(frame);
+  const { cam, shot } = CAMS(frame);
   const cells = [0, 1, 2, 3].map((i) => smooth(interpolate(frame, [10 + i * 17, 26 + i * 17], [0, 1], clamp)));
   const seatFrames = [26, 43, 60, 77];
   // the plug descends from above the frame, then seats
   const drop = smooth(interpolate(frame, [S.usb + 2, S.usb + 44], [0, 1], clamp));
   const seat = smooth(interpolate(frame, [S.usb + 48, S.usb + 68], [0, 1], clamp));
-  const plugY = BANK_PORT_TOP - 0.1 + 0.32 + (1 - seat) * 0.3 + (1 - drop) * 1.6;
+  const plugY = BANK_PORT_TOP - 0.1 + 0.32 + (1 - seat) * 0.3 + (1 - drop) * 0.95;
   // the cable hangs straight up out of the plug: off-frame until the plug itself enters
   const cable: [number, number, number][] = [
     [2.42, plugY + 2.6, -0.05],
@@ -85,6 +85,10 @@ export const PowerV2: React.FC = () => {
           ) : null}
         </ThreeCanvas>
       </Preload>
+      {/* shallow depth of field on the close shots: focus on the subject, the rest falls away */}
+      {shot === 0 || shot === 1 ? <LensBlur focus={pCells} rx={560} ry={420} strength={6} /> : null}
+      {shot === 4 ? <LensBlur focus={pBank} rx={620} ry={520} strength={5} /> : null}
+      {shot === 5 ? <LensBlur focus={pPort} rx={600} ry={460} strength={6} /> : null}
 
       {seatFrames.map((f) => (
         <ClickRing key={f} at={pCells} start={f} />

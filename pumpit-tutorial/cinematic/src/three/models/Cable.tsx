@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import * as THREE from "three";
-import { METAL_NICKEL, RUBBER_BLACK } from "../materials";
+import { labelTex, METAL_NICKEL, RUBBER_BLACK } from "../materials";
 
 /** A USB-A male plug: overmoulded black boot + nickel shell with the plastic tongue. Points along +Y. */
 export const UsbPlug: React.FC<{ position?: THREE.Vector3; quaternion?: THREE.Quaternion; shadow?: boolean }> = ({ position, quaternion, shadow = true }) => (
@@ -13,6 +13,21 @@ export const UsbPlug: React.FC<{ position?: THREE.Vector3; quaternion?: THREE.Qu
       <cylinderGeometry args={[0.03, 0.05, 0.08, 16]} />
       <meshPhysicalMaterial {...RUBBER_BLACK} />
     </mesh>
+    {/* moulded grip ridges and the USB trident on both faces */}
+    {[0.05, 0.075, 0.1].map((y) =>
+      [-1, 1].map((sd) => (
+        <mesh key={`${y}${sd}`} position={[0, y, sd * 0.047]}>
+          <boxGeometry args={[0.13, 0.008, 0.006]} />
+          <meshPhysicalMaterial {...RUBBER_BLACK} roughness={0.5} />
+        </mesh>
+      )),
+    )}
+    {[-1, 1].map((sd) => (
+      <mesh key={`logo${sd}`} position={[0, 0.145, sd * 0.0455]} rotation={[0, sd < 0 ? Math.PI : 0, Math.PI]}>
+        <planeGeometry args={[0.07, 0.035]} />
+        <meshBasicMaterial map={labelTex([{ text: "⭠ USB ⭢", size: 64, weight: 700, color: "#6d7178" }], { w: 256, h: 128 })} transparent toneMapped={false} />
+      </mesh>
+    ))}
     <mesh position={[0, 0.25, 0]} castShadow={shadow}>
       <boxGeometry args={[0.12, 0.14, 0.045]} />
       <meshStandardMaterial {...METAL_NICKEL} />
