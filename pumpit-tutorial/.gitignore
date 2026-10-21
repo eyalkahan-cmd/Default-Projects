@@ -11,3 +11,4 @@ preprod/K6_start_frame_*.jpg
 remotion/public/audio/
 remotion/out/
 deliver/
+__pycache__/
