@@ -18,13 +18,25 @@ const roundedRect = (w: number, h: number, r: number) => {
 
 /** One AA cell (14.5 × 50 mm): steel can, sleeve, raised + terminal. Points +Y at `up`. */
 
+/** "AA 1.5V" printed along the length of the cell (texture turned 90° on the sleeve), like real batteries */
+let cellLabel: THREE.Texture | null = null;
+const getCellLabel = () => {
+  if (!cellLabel) {
+    cellLabel = labelTex([{ text: "AA 1.5V", size: 150, weight: 800, color: "#e9edf5" }], { w: 1024, h: 512, bg: "#1c2230", radius: 0 }).clone();
+    cellLabel.center.set(0.5, 0.5);
+    cellLabel.rotation = Math.PI / 2;
+    cellLabel.repeat.set(1, 1);
+    cellLabel.needsUpdate = true;
+  }
+  return cellLabel;
+};
 const AACell: React.FC<{ position: [number, number, number]; up: boolean }> = ({ position, up }) => (
   <group position={position} rotation={[0, 0, up ? 0 : Math.PI]}>
     <mesh castShadow>
       <cylinderGeometry args={[0.072, 0.072, 0.47, 32]} />
-      {/* printed sleeve: "AA 1.5V" wrapping around the can */}
+      {/* printed sleeve: "AA 1.5V" along the can */}
       <meshPhysicalMaterial
-        map={labelTex([{ text: "AA  1.5V    AA  1.5V", size: 92, weight: 800, color: "#e9edf5" }], { w: 1024, h: 256, bg: "#1c2230", radius: 0 })}
+        map={getCellLabel()}
         roughness={0.35}
         clearcoat={0.6}
       />
