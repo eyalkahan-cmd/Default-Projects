@@ -15,7 +15,7 @@ SFX = [
     # 02: cells seat (local 26 + 17 i), "או" pop, power bank, USB plug seats (local 362)
     ("battery_click", 12.83, -21, 0.35), ("battery_click", 13.40, -21, 0.35), ("battery_click", 13.97, -21, 0.35), ("battery_click", 14.53, -21, 0.35),
     ("pop", 16.7, -24, None), ("whoosh", 18.7, -24, None), ("whoosh", 21.2, -24, None),
-    ("battery_click", 24.03, -15, 0.5),
+    ("battery_click", 23.5, -15, 0.5),
     # connect: whip from the blower to the box, plug seats
     ("whoosh", 25.4, -22, None), ("whoosh", 27.1, -22, None), ("battery_click", 29.67, -14, 0.5),
 ]

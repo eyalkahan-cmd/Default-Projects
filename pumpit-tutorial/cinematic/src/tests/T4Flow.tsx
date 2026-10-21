@@ -43,9 +43,9 @@ export const T4Flow: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys, 
     [-0.75, FLOOR + 0.02, 0.4],
     [-0.42, FLOOR + 0.22, 0.3],
     // rise beside the box, arc over and drop straight into the top of the plug boot
-    [-0.3, plugY + 0.3, 0.12],
-    [-0.08, plugY + 0.36, 0.02],
-    [0, plugY + 0.16, 0],
+    [-0.26, plugY + 0.12, 0.1],
+    [-0.08, plugY + 0.2, 0.02],
+    [0, plugY + 0.1, 0],
     [0, plugY, 0],
   ];
   const bankPlugY = BANK_PORT_TOP - 0.1 + 0.32;

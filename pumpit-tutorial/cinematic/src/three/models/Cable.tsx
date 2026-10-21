@@ -3,9 +3,9 @@ import * as THREE from "three";
 import { METAL_NICKEL, RUBBER_BLACK } from "../materials";
 
 /** A USB-A male plug: overmoulded black boot + nickel shell with the plastic tongue. Points along +Y. */
-export const UsbPlug: React.FC<{ position?: THREE.Vector3; quaternion?: THREE.Quaternion }> = ({ position, quaternion }) => (
+export const UsbPlug: React.FC<{ position?: THREE.Vector3; quaternion?: THREE.Quaternion; shadow?: boolean }> = ({ position, quaternion, shadow = true }) => (
   <group position={position} quaternion={quaternion}>
-    <mesh position={[0, 0.09, 0]} castShadow>
+    <mesh position={[0, 0.09, 0]} castShadow={shadow}>
       <boxGeometry args={[0.16, 0.18, 0.09]} />
       <meshPhysicalMaterial {...RUBBER_BLACK} />
     </mesh>
@@ -13,7 +13,7 @@ export const UsbPlug: React.FC<{ position?: THREE.Vector3; quaternion?: THREE.Qu
       <cylinderGeometry args={[0.03, 0.05, 0.08, 16]} />
       <meshPhysicalMaterial {...RUBBER_BLACK} />
     </mesh>
-    <mesh position={[0, 0.25, 0]} castShadow>
+    <mesh position={[0, 0.25, 0]} castShadow={shadow}>
       <boxGeometry args={[0.12, 0.14, 0.045]} />
       <meshStandardMaterial {...METAL_NICKEL} />
     </mesh>
@@ -28,11 +28,12 @@ export const UsbPlug: React.FC<{ position?: THREE.Vector3; quaternion?: THREE.Qu
  * Flexible cable along a centripetal Catmull-Rom path. `reveal` (0..1) grows the cable
  * along its length so the camera can follow it being "drawn" into the next shot.
  */
-export const Cable: React.FC<{ points: [number, number, number][]; radius?: number; reveal?: number; plug?: boolean }> = ({
+export const Cable: React.FC<{ points: [number, number, number][]; radius?: number; reveal?: number; plug?: boolean; shadow?: boolean }> = ({
   points,
   radius = 0.022,
   reveal = 1,
   plug = false,
+  shadow = true,
 }) => {
   const curve = useMemo(() => new THREE.CatmullRomCurve3(points.map((p) => new THREE.Vector3(...p)), false, "centripetal"), [points]);
   const geo = useMemo(() => new THREE.TubeGeometry(curve, 240, radius, 14, false), [curve, radius]);
@@ -45,7 +46,7 @@ export const Cable: React.FC<{ points: [number, number, number][]; radius?: numb
   geo.setDrawRange(0, count);
   return (
     <group>
-      <mesh geometry={geo} castShadow receiveShadow>
+      <mesh geometry={geo} castShadow={shadow} receiveShadow>
         <meshPhysicalMaterial {...RUBBER_BLACK} />
       </mesh>
       {plug && reveal >= 0.999 ? <UsbPlug position={end} quaternion={q} /> : null}

@@ -32,7 +32,7 @@ const CAMS = multiCam([
   // wide on both options for "או"
   { from: S.split, keys: [{ f: 0, pos: [1.2, 0.75, 5.2], target: [1.2, 0.2, 0.2], fov: 35 }, { f: 72, pos: [1.2, 0.65, 4.6], target: [1.2, 0.22, 0.2], fov: 35 }] },
   // orbit around the power bank
-  { from: S.bank, keys: [{ f: 0, pos: [3.9, 0.7, 1.4], target: [2.4, 0.25, 0], fov: 32 }, { f: 74, pos: [2.0, 0.85, 2.3], target: [2.4, 0.3, 0], fov: 32 }] },
+  { from: S.bank, keys: [{ f: 0, pos: [4.4, 0.75, 2.2], target: [2.15, 0.3, 0], fov: 32 }, { f: 74, pos: [2.9, 0.9, 3.4], target: [2.0, 0.3, 0], fov: 32 }] },
   // high three-quarter over the port: the plug comes in from above the frame and seats
   { from: S.usb, keys: [{ f: 0, pos: [3.05, 1.75, 1.75], target: [2.4, 0.8, 0], fov: 30 }, { f: 130, pos: [2.85, 1.55, 1.5], target: [2.4, 0.78, 0], fov: 30 }] },
 ]);
@@ -49,14 +49,14 @@ export const PowerV2: React.FC = () => {
   const cells = [0, 1, 2, 3].map((i) => smooth(interpolate(frame, [10 + i * 17, 26 + i * 17], [0, 1], clamp)));
   const seatFrames = [26, 43, 60, 77];
   // the plug descends from above the frame, then seats
-  const drop = smooth(interpolate(frame, [S.usb + 8, S.usb + 62], [0, 1], clamp));
-  const seat = smooth(interpolate(frame, [S.usb + 62, S.usb + 84], [0, 1], clamp));
+  const drop = smooth(interpolate(frame, [S.usb + 2, S.usb + 44], [0, 1], clamp));
+  const seat = smooth(interpolate(frame, [S.usb + 48, S.usb + 68], [0, 1], clamp));
   const plugY = BANK_PORT_TOP - 0.1 + 0.32 + (1 - seat) * 0.3 + (1 - drop) * 1.6;
+  // the cable hangs straight up out of the plug: off-frame until the plug itself enters
   const cable: [number, number, number][] = [
-    [1.55, plugY + 1.9, -0.35],
-    [2.05, plugY + 1.0, -0.15],
-    [2.32, plugY + 0.45, -0.02],
-    [2.4, plugY + 0.18, 0],
+    [2.42, plugY + 2.6, -0.05],
+    [2.41, plugY + 1.3, -0.02],
+    [2.4, plugY + 0.45, 0],
     [2.4, plugY, 0],
   ];
   const showUsb = frame >= S.usb;
@@ -78,8 +78,9 @@ export const PowerV2: React.FC = () => {
           <PowerBank position={BANK} />
           {showUsb ? (
             <>
-              <Cable points={cable} />
-              <UsbPlug position={new THREE.Vector3(2.4, plugY, 0)} quaternion={DOWN} />
+              {/* no cast shadow: the floor behind is out of shot, its shadow would read as a stray line */}
+              <Cable points={cable} shadow={false} />
+              <UsbPlug position={new THREE.Vector3(2.4, plugY, 0)} quaternion={DOWN} shadow={false} />
             </>
           ) : null}
         </ThreeCanvas>
@@ -121,9 +122,9 @@ export const PowerV2: React.FC = () => {
         </>
       ) : null}
       {frame >= S.split && frame < S.bank ? <Callout at={pBank} dx={-160} dy={-230} start={S.split + 22} end={S.bank} title="Power Bank" sub="סוללת גיבוי ניידת" accent={L.air} /> : null}
-      {frame >= S.bank && frame < S.usb ? <KineticWord text="Power Bank" sub="סוללת גיבוי ניידת" start={S.bank + 6} end={S.usb - 2} x={620} y={300} size={130} /> : null}
-      <ClickRing at={pPort} start={S.usb + 84} />
-      {showUsb ? <Callout at={pPlug} dx={-300} dy={-60} start={S.usb + 70} title="כבל ה-USB של המאוורר" sub="רק אם הדגם תומך בכך" accent={L.air} /> : null}
+      {frame >= S.bank && frame < S.usb ? <KineticWord text="Power Bank" sub="סוללת גיבוי ניידת" start={S.bank + 6} end={S.usb - 2} x={560} y={260} size={120} /> : null}
+      <ClickRing at={pPort} start={S.usb + 68} />
+      {showUsb ? <Callout at={pPlug} dx={-300} dy={-60} start={S.usb + 56} title="כבל ה-USB של המאוורר" sub="רק אם הדגם תומך בכך" accent={L.air} /> : null}
       <StepBar step={2} start={4} end={S.end + 200} />
       <LensFinish />
     </AbsoluteFill>
