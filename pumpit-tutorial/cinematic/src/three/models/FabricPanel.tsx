@@ -53,8 +53,14 @@ export const FabricPanel: React.FC<{
   clip?: THREE.Plane[];
   position?: [number, number, number];
   rotation?: [number, number, number];
-}> = ({ width = 5.6, height = 3.6, hole = 0.315, clip = [], position = [0, 0, 0], rotation = [0, 0, 0] }) => {
-  const mat = useNylon(clip);
+  /** < 1 ghosts the nylon ("x-ray") to show what sits behind it; the elastic binding stays solid */
+  opacity?: number;
+}> = ({ width = 5.6, height = 3.6, hole = 0.315, clip = [], position = [0, 0, 0], rotation = [0, 0, 0], opacity = 1 }) => {
+  // one print tile across the panel: the seam stays at the panel edges, never in shot
+  const mat = useNylon(clip, 1);
+  mat.transparent = opacity < 0.999;
+  mat.opacity = opacity;
+  mat.depthWrite = opacity >= 0.999;
   const alpha = useMemo(() => {
     const c = document.createElement("canvas");
     c.width = 2048;
@@ -93,7 +99,7 @@ export const FabricPanel: React.FC<{
     return g;
   }, [height, hole, width]);
   mat.alphaMap = alpha;
-  mat.alphaTest = 0.5;
+  mat.alphaTest = 0.5 * opacity; // scales with ghosting so the hole mask still cuts but the ghosted nylon survives
   return (
     <group position={position} rotation={rotation}>
       <mesh geometry={geo} material={mat} castShadow receiveShadow />
