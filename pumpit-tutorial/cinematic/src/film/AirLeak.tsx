@@ -5,7 +5,6 @@ import * as THREE from "three";
 import { Backdrop, Callout, Chapter, LensFinish } from "../overlay/Overlay";
 import { C, HEEBO, look } from "../theme";
 import { Preload } from "../three/materials";
-import { Airflow } from "../three/models/Airflow";
 import { deflate, DeflatingCostume, IMG_H, IMG_W } from "../three/models/DeflatingCostume";
 import { CamKey, makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
@@ -47,6 +46,12 @@ export const AirLeak: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys,
   );
   const cam = rig(frame);
   const pLeak = project(leaks[0][1], cam, width, height);
+  // air escaping, drawn as soft curling wisps in screen space (start + direction from the 3D path)
+  const wisps = leaks.map((w) => {
+    const a = project(w[0], cam, width, height);
+    const b = project(w[3], cam, width, height);
+    return { a, b };
+  });
   return (
     <AbsoluteFill>
       <Backdrop x={0.5} y={0.42} />
@@ -55,9 +60,40 @@ export const AirLeak: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys,
           <CameraDriver state={cam} />
           <Studio lights={false} />
           <DeflatingCostume pressure={p} height={H} />
-          <Airflow paths={leaks} t={frame / 30} opacity={leakO} color={C.pink} pulse="#d10b55" />
         </ThreeCanvas>
       </Preload>
+      {leakO > 0.01 ? (
+        <svg width={width} height={height} style={{ position: "absolute", inset: 0, opacity: leakO, pointerEvents: "none" }}>
+          <defs>
+            <filter id="wispBlur" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="3.2" />
+            </filter>
+          </defs>
+          {wisps.map(({ a, b }, i) =>
+            [0, 1, 2].map((k) => {
+              const dx = b.x - a.x;
+              const dy = b.y - a.y;
+              const len = Math.hypot(dx, dy) || 1;
+              const nx = -dy / len;
+              const ny = dx / len;
+              const ph = frame / 6 + k * 2.1 + i;
+              const pts = new Array(13).fill(0).map((_, j) => {
+                const t = j / 12;
+                const amp = 10 + 26 * t;
+                const off = Math.sin(ph + t * 7) * amp + (k - 1) * 12 * t;
+                return `${a.x + dx * t * (1.1 + 0.15 * k) + nx * off},${a.y + dy * t * (1.1 + 0.15 * k) + ny * off}`;
+              });
+              const travel = ((frame * 4 + k * 37 + i * 23) % 220) - 220;
+              return (
+                <g key={`${i}${k}`}>
+                  <polyline points={pts.join(" ")} fill="none" stroke={C.pink} strokeOpacity={0.55} strokeWidth={9 - k * 2} strokeLinecap="round" strokeDasharray="70 150" strokeDashoffset={travel} filter="url(#wispBlur)" />
+                  <polyline points={pts.join(" ")} fill="none" stroke="#ffffff" strokeOpacity={0.85} strokeWidth={2.5} strokeLinecap="round" strokeDasharray="70 150" strokeDashoffset={travel} />
+                </g>
+              );
+            }),
+          )}
+        </svg>
+      ) : null}
       {/* emphasis card: the one moment the film raises its voice, still clean and quiet */}
       <AbsoluteFill style={{ background: `rgba(238,244,252,${0.72 * card})` }} />
       <div
