@@ -60,7 +60,8 @@ export const Callout: React.FC<{
   const w = Math.max(title.length * 31, (sub ?? "").length * 17) + 58;
   const offRight = Math.min(1920 - ex + 30, 1920 - SAFE - w);
   const offLeft = Math.min(ex + 30, 1920 - SAFE - w);
-  const top = Math.min(Math.max(ey, SAFE + 60), 1080 - SAFE - 60);
+  // vertical: keep the plate centre clear of the top edge and the chapter pill row
+  const top = Math.min(Math.max(ey, SAFE + 120), 1080 - SAFE - 70);
   return (
     <AbsoluteFill style={{ pointerEvents: "none", opacity: out }}>
       <svg width="100%" height="100%" style={{ position: "absolute", inset: 0 }}>

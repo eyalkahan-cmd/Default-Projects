@@ -95,7 +95,10 @@ export const Film: React.FC = () => {
         <Power />
       </Sequence>
       <Sequence from={c.connect} durationInFrames={len(c.connect, c.wearIn)}>
-        <T4Flow />
+        {/* enter the cable track part-way, so the shot reaches the box sooner */}
+        <Retime src={[0, len(c.connect, c.wearIn)]} dst={[42, 150]}>
+          <T4Flow />
+        </Retime>
       </Sequence>
       <Sequence from={c.wearIn} durationInFrames={len(c.wearIn, c.wearPack)}>
         <WearIn />

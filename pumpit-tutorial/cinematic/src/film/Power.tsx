@@ -100,7 +100,7 @@ export const Power: React.FC = () => {
         או
       </div>
 
-      <Chapter n="02" title="מקור חשמל" start={6} end={408} />
+      <Chapter n="02" title="מקור חשמל" start={6} end={430} />
       <LensFinish />
     </AbsoluteFill>
   );
