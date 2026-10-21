@@ -33,6 +33,6 @@ Process: work autonomously within the 750 ceiling (user: "I trust you"). Stop an
 Context: the 3.0 brief barred Kling; the user explicitly re-authorised this single test after reviewing the plan, prompt and cost.
 | # | Shot | Model / mode | Settings | Est. | Balance before | Balance after | Actual | Result |
 |---|---|---|---|---|---|---|---|---|
-| 5 | Inflation test: first = kf_deflated_nbp_v1, tail = kf_inflated_v2 reframed 1.12× (push-in) | Kling 4.0, image-to-video, first + tail frames | 1080p, 6 s, 1 video | 81 | 1431 | 1350 | **81** (verified) | ✅ print and identity held, real push-in, natural head lift; arms gesture mid-shot; start already fairly full (inflation range moderate). Awaiting user review |
+| 5 | Inflation test: first = kf_deflated_nbp_v1, tail = kf_inflated_v2 reframed 1.12× (push-in) | Kling 4.0, image-to-video, first + tail frames | 1080p, 6 s, 1 video | 81 | 1431 | 1350 | **81** (verified) | ✅ print and identity held, real push-in, natural head lift; arms gesture mid-shot; start already fairly full (inflation range moderate). **Test closed by user at 81 cr; kept as an option, no retake.** |
 
 Note: balance before #5 was 1431, 20 above the 1411 recorded after #4 (likely refund of the unfinished Nano Banana Pro v2).
