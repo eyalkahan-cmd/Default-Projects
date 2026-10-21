@@ -1,6 +1,7 @@
 import { ThreeCanvas } from "@remotion/three";
 import React, { useMemo } from "react";
-import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, interpolate, useVideoConfig } from "remotion";
+import { useFrame } from "../film/time";
 import { Backdrop, Callout, Chapter, LensFinish } from "../overlay/Overlay";
 import { Preload } from "../three/materials";
 import { Blower } from "../three/models/Blower";
@@ -29,7 +30,7 @@ const CABLE: [number, number, number][] = [
  * The camera stays in front of the fabric so its edges are never seen; no floor in this macro.
  */
 export const T1Fan: React.FC = () => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const { width, height } = useVideoConfig();
   const rig = useMemo(
     () =>

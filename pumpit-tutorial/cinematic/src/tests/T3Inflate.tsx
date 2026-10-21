@@ -1,6 +1,7 @@
 import { ThreeCanvas } from "@remotion/three";
 import React, { useMemo } from "react";
-import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, interpolate, useVideoConfig } from "remotion";
+import { useFrame } from "../film/time";
 import * as THREE from "three";
 import { Backdrop, Callout, Chapter, LensFinish } from "../overlay/Overlay";
 import { Preload } from "../three/materials";
@@ -39,7 +40,7 @@ const FAN_UV: [number, number] = [0.69, 0.37];
  * to the exact, untouched product photograph. Camera: macro on the blower, then a pull-back crane.
  */
 export const T3Inflate: React.FC = () => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const { width, height, fps } = useVideoConfig();
   const p = pressure(frame);
   const e = 1 - Math.min(1, p);
@@ -96,12 +97,27 @@ export const T3Inflate: React.FC = () => {
       <Callout at={pFan} dx={170} dy={-150} start={8} end={74} title="מפעילים את המאוורר" />
       <Callout at={pBody} dx={-400} dy={-30} start={66} end={150} title="האוויר זורם פנימה" sub="וממלא את התחפושת" accent={look().air} />
 
-      <div style={{ position: "absolute", left: 110, bottom: 110, fontFamily: HEEBO, color: look().text, direction: "rtl", opacity: timeO }}>
-        <div style={{ fontSize: 26, fontWeight: 500, color: look().sub }}>זמן ניפוח משוער</div>
-        <div style={{ fontSize: 60, fontWeight: 800, letterSpacing: 0.5 }}>
-          30–60 <span style={{ fontSize: 34, fontWeight: 500 }}>שניות</span>
+      <div
+        style={{
+          position: "absolute",
+          left: 110,
+          bottom: 110,
+          fontFamily: HEEBO,
+          color: look().text,
+          direction: "rtl",
+          opacity: timeO,
+          background: look().plate,
+          boxShadow: look().plateShadow,
+          borderRadius: 18,
+          padding: "18px 32px 20px",
+          borderInlineStart: `5px solid ${look().air}`,
+        }}
+      >
+        <div style={{ fontSize: 34, fontWeight: 600, color: look().sub }}>זמן ניפוח משוער</div>
+        <div style={{ fontSize: 88, fontWeight: 900, letterSpacing: 0.5, lineHeight: 1.05 }}>
+          30–60 <span style={{ fontSize: 46, fontWeight: 600 }}>שניות</span>
         </div>
-        <div style={{ fontSize: 22, fontWeight: 400, color: look().sub }}>משתנה לפי הדגם</div>
+        <div style={{ fontSize: 30, fontWeight: 500, color: look().sub }}>או מעט יותר · משתנה לפי הדגם</div>
       </div>
       <div
         style={{
@@ -115,8 +131,8 @@ export const T3Inflate: React.FC = () => {
           translate: `0 ${(1 - heroO) * 16}px`,
         }}
       >
-        <div style={{ fontSize: 30, fontWeight: 500, color: look().accent, letterSpacing: 1 }}>ניפוח מלא</div>
-        <div style={{ fontSize: 72, fontWeight: 800, lineHeight: 1.05 }}>למלוא גודלה</div>
+        <div style={{ fontSize: 40, fontWeight: 600, color: look().accent, letterSpacing: 1 }}>ניפוח מלא</div>
+        <div style={{ fontSize: 104, fontWeight: 900, lineHeight: 1.05 }}>למלוא גודלה</div>
       </div>
 
       <Chapter n="05" title="ניפוח" start={6} end={270} />

@@ -44,12 +44,14 @@ const AACell: React.FC<{ position: [number, number, number]; up: boolean }> = ({
  * a removable lid, a USB-A socket on the top edge and a slide switch at the bottom.
  * `explode` (0..1) lifts the lid off toward the camera and raises the cells slightly.
  */
-export const BatteryPack: React.FC<{ position?: [number, number, number]; rotation?: [number, number, number]; explode?: number; switchOn?: boolean }> = ({
-  position = [0, 0, 0],
-  rotation = [0, 0, 0],
-  explode = 0,
-  switchOn = false,
-}) => {
+export const BatteryPack: React.FC<{
+  position?: [number, number, number];
+  rotation?: [number, number, number];
+  explode?: number;
+  switchOn?: boolean;
+  /** per-cell insertion 0 (lifted out, in front of the tray) → 1 (seated); default all seated */
+  cells?: number[];
+}> = ({ position = [0, 0, 0], rotation = [0, 0, 0], explode = 0, switchOn = false, cells = [1, 1, 1, 1] }) => {
   const body = useMemo(() => {
     const s = roundedRect(0.7, 0.9, 0.09);
     const hole = new THREE.Path();
@@ -97,7 +99,9 @@ export const BatteryPack: React.FC<{ position?: [number, number, number]; rotati
         const x = -0.225 + i * 0.15;
         return (
           <group key={i}>
-            <AACell position={[x, 0, 0.2 + explode * 0.12]} up={up} />
+            {cells[i] > 0.001 ? (
+              <AACell position={[x, (1 - cells[i]) * 0.12, 0.2 + explode * 0.12 + (1 - cells[i]) * 0.6]} up={up} />
+            ) : null}
             {/* spring at the negative end, flat tab at the positive end */}
             <mesh geometry={springGeo} position={[x, up ? -0.36 : 0.31, 0.2]} rotation={[0, 0, 0]}>
               <meshStandardMaterial {...METAL_NICKEL} />
@@ -122,6 +126,21 @@ export const BatteryPack: React.FC<{ position?: [number, number, number]; rotati
         <mesh position={[0, 0.006, 0]}>
           <boxGeometry args={[0.12, 0.03, 0.045]} />
           <meshStandardMaterial color="#0b0b0d" roughness={0.6} />
+        </mesh>
+      </group>
+      {/* spring belt clip on the back: a flat tongue hinged near the top, its tip curling away */}
+      <group position={[0, 0.3, -0.135]}>
+        <mesh position={[0, -0.27, -0.02]} castShadow>
+          <boxGeometry args={[0.3, 0.56, 0.022]} />
+          <meshPhysicalMaterial color="#2a2c32" roughness={0.45} clearcoat={0.3} />
+        </mesh>
+        <mesh position={[0, 0.0, 0.0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.035, 0.035, 0.32, 20]} />
+          <meshPhysicalMaterial color="#2a2c32" roughness={0.45} clearcoat={0.3} />
+        </mesh>
+        <mesh position={[0, -0.56, -0.05]} rotation={[0.6, 0, 0]}>
+          <boxGeometry args={[0.3, 0.08, 0.022]} />
+          <meshPhysicalMaterial color="#2a2c32" roughness={0.45} clearcoat={0.3} />
         </mesh>
       </group>
       {/* slide switch on the bottom edge */}

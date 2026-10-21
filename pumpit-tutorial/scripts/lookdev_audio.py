@@ -117,13 +117,16 @@ def build(name, dur, mstart, vo, sfx):
     return mix
 
 
-def loudnorm(raw, out):
-    args = "I=-16:TP=-1.5:LRA=11"
+def loudnorm(raw, out, target=-16.0):
+    args = f"I={target}:TP=-1.5:LRA=11"
     m = subprocess.run(["ffmpeg", "-v", "info", "-f", "f32le", "-ar", str(SR), "-ac", "2", "-i", raw, "-af", f"loudnorm={args}:print_format=json", "-f", "null", "-"], capture_output=True, text=True).stderr
     j = json.loads(m[m.rindex("{") : m.rindex("}") + 1])
     af = (f"loudnorm={args}:measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}"
           f":measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true,alimiter=limit=0.8:level=false")
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "2", "-i", raw, "-af", af, "-ar", str(SR), out], check=True)
+
+
+loudnorm_to = loudnorm
 
 
 def main(silent_dir, out_dir):

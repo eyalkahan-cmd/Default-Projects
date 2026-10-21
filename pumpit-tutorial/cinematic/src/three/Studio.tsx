@@ -72,12 +72,13 @@ export const Studio: React.FC<{
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
-        shadow-radius={6}
+        shadow-radius={8}
         shadow-bias={-0.0004}
-        shadow-camera-left={-4}
-        shadow-camera-right={4}
-        shadow-camera-top={4}
-        shadow-camera-bottom={-4}
+        shadow-camera-left={-9}
+        shadow-camera-right={9}
+        shadow-camera-top={9}
+        shadow-camera-bottom={-9}
+        shadow-camera-far={40}
       />
       <directionalLight position={rimPos} intensity={1.6} color="#7fc4ff" />
       <pointLight position={[-3, 1, 3]} intensity={6} distance={12} color="#ffcf9a" />
@@ -90,7 +91,8 @@ export const Studio: React.FC<{
       {floor ? (
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, floorY + 0.001, 0]} receiveShadow>
           <planeGeometry args={[60, 60]} />
-          <shadowMaterial opacity={0.35} />
+          {/* lighter on the bright cyclorama, where a dark shadow would read as a floating stain */}
+          <shadowMaterial opacity={look().id === "daylight" ? 0.2 : 0.35} />
         </mesh>
       ) : null}
     </>

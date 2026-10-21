@@ -1,6 +1,7 @@
 import { ThreeCanvas } from "@remotion/three";
 import React, { useMemo } from "react";
-import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, interpolate, useVideoConfig } from "remotion";
+import { useFrame } from "../film/time";
 import * as THREE from "three";
 import { Backdrop, Callout, Chapter, LensFinish } from "../overlay/Overlay";
 import { Preload } from "../three/materials";
@@ -28,7 +29,7 @@ const DOWN = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1),
  * power bank, qualified as model-dependent. No cuts.
  */
 export const T4Flow: React.FC = () => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const { width, height } = useVideoConfig();
   const plugIn = interpolate(frame, [96, 132], [0, 1], { ...clamp, easing: smooth });
   const plugY = PORT_TOP - 0.1 + 0.32 + (1 - plugIn) * 0.38;

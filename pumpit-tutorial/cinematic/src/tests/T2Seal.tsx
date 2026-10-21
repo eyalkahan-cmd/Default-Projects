@@ -1,13 +1,14 @@
 import { ThreeCanvas } from "@remotion/three";
 import React, { useMemo } from "react";
-import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, interpolate, useVideoConfig } from "remotion";
+import { useFrame } from "../film/time";
 import { Backdrop, Callout, Chapter, LensFinish } from "../overlay/Overlay";
 import { Preload } from "../three/materials";
 import { Drawstring, LOCK_X, lockYFor } from "../three/models/Drawstring";
 import { Zipper } from "../three/models/Zipper";
 import { makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
-import { C, HEEBO, look } from "../theme";
+import { HEEBO, look } from "../theme";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 const smooth = (t: number) => t * t * (3 - 2 * t);
@@ -20,7 +21,7 @@ const OPENING: [number, number, number] = [0, 3.62, 0.0];
  * the cord lock is slid up gently and a fit ring shows the comfortable target.
  */
 export const T2Seal: React.FC = () => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const { width, height } = useVideoConfig();
   const slider = interpolate(frame, [18, 118], [-1.7, 2.03], { ...clamp, easing: smooth });
   const tighten = interpolate(frame, [182, 236], [0, 1], { ...clamp, easing: smooth });
@@ -38,6 +39,7 @@ export const T2Seal: React.FC = () => {
   const cam = rig(frame);
   const pSlider = project([0.06, slider, 0.06], cam, width, height);
   const pTop = project([0.0, 2.1, 0.02], cam, width, height);
+  const pElastic = project([OPENING[0] - 0.66, OPENING[1] + 0.12, 0.06], cam, width, height);
   const pLock = project([OPENING[0] + LOCK_X, OPENING[1] + lockYFor(tighten), 0.1], cam, width, height);
 
   // fit ring: the comfortable target size, drawn once the cord lock moves
@@ -62,14 +64,15 @@ export const T2Seal: React.FC = () => {
       </Preload>
 
       <Callout at={pSlider} dx={-210} dy={-120} start={34} end={112} title="סוגרים את הרוכסן" sub="עד הסוף, בלי רווחים" />
-      <Callout at={pTop} dx={-200} dy={-90} start={116} end={168} title="עד הסוף" accent={C.yellow} />
+      <Callout at={pTop} dx={-200} dy={-90} start={116} end={140} title="עד הסוף" />
+      <Callout at={pElastic} dx={-220} dy={-130} start={140} end={180} title="הגומיות סביב הפתחים" sub="יושבות צמוד ונוח" />
 
       {/* comfortable fit ring (cyan = technical/airflow family) */}
       <svg width={width} height={height} style={{ position: "absolute", inset: 0, opacity: ringO }}>
         <polyline
           points={ringPts.map((p) => `${p.x},${p.y}`).join(" ")}
           fill="none"
-          stroke="#7fd6ff"
+          stroke={look().air}
           strokeWidth={2.2}
           strokeDasharray="10 9"
         />

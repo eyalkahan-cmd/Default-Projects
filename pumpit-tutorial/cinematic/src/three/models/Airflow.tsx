@@ -7,7 +7,7 @@ import { look } from "../../theme";
  * along the tail, each carrying evenly spaced pulses that travel with `t` (seconds).
  * Cyan is reserved for air/technical information across the whole film.
  */
-export const Airflow: React.FC<{ paths: THREE.Vector3[][]; t: number; opacity: number }> = ({ paths, t, opacity }) => {
+export const Airflow: React.FC<{ paths: THREE.Vector3[][]; t: number; opacity: number; color?: string; pulse?: string }> = ({ paths, t, opacity, color, pulse }) => {
   const curves = useMemo(() => paths.map((pts) => new THREE.CatmullRomCurve3(pts, false, "centripetal")), [paths]);
   const lineGeos = useMemo(() => curves.map((c) => new THREE.TubeGeometry(c, 160, 0.005, 6, false)), [curves]);
   const pulseGeo = useMemo(() => new THREE.CapsuleGeometry(0.014, 0.1, 4, 8), []);
@@ -18,7 +18,7 @@ export const Airflow: React.FC<{ paths: THREE.Vector3[][]; t: number; opacity: n
     <group>
       {lineGeos.map((g, i) => (
         <mesh key={`l${i}`} geometry={g}>
-          <meshBasicMaterial color={L.air} transparent opacity={(L.airAdditive ? 0.28 : 0.45) * opacity} depthWrite={false} blending={blending} />
+          <meshBasicMaterial color={color ?? L.air} transparent opacity={(L.airAdditive ? 0.28 : 0.45) * opacity} depthWrite={false} blending={blending} />
         </mesh>
       ))}
       {curves.map((c, i) =>
@@ -30,7 +30,7 @@ export const Airflow: React.FC<{ paths: THREE.Vector3[][]; t: number; opacity: n
           const fade = Math.sin(Math.PI * u);
           return (
             <mesh key={`p${i}-${k}`} geometry={pulseGeo} position={p} quaternion={q}>
-              <meshBasicMaterial color={L.airPulse} transparent opacity={0.75 * opacity * fade} depthWrite={false} blending={blending} />
+              <meshBasicMaterial color={pulse ?? L.airPulse} transparent opacity={0.75 * opacity * fade} depthWrite={false} blending={blending} />
             </mesh>
           );
         }),

@@ -1,5 +1,6 @@
 import React from "react";
-import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
+import { AbsoluteFill, interpolate } from "remotion";
+import { useFrame } from "../film/time";
 import { HEEBO, look } from "../theme";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
@@ -16,7 +17,7 @@ export const Backdrop: React.FC<{ x?: number; y?: number }> = ({ x = 0.55, y = 0
 
 /** Lens finish on top of everything: vignette + a fine animated film grain. */
 export const LensFinish: React.FC = () => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
       <AbsoluteFill style={{ background: `radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 55%, ${look().vignette} 100%)` }} />
@@ -47,7 +48,7 @@ export const Callout: React.FC<{
 }> = ({ at, dx, dy, start, end = 1e9, title, sub, accent: accentProp }) => {
   const L = look();
   const accent = accentProp ?? L.accent;
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const draw = easeOut(interpolate(frame, [start, start + 12], [0, 1], clamp));
   const text = easeOut(interpolate(frame, [start + 8, start + 20], [0, 1], clamp));
   const out = interpolate(frame, [end - 8, end], [1, 0], clamp);
@@ -96,7 +97,7 @@ export const Callout: React.FC<{
 
 /** Chapter marker, top-right, RTL: "01 · התקנת המאוורר", on a soft pill. Clear but never a giant headline. */
 export const Chapter: React.FC<{ n: string; title: string; start: number; end: number }> = ({ n, title, start, end }) => {
-  const frame = useCurrentFrame();
+  const frame = useFrame();
   const p = easeOut(interpolate(frame, [start, start + 14], [0, 1], clamp));
   const out = interpolate(frame, [end - 10, end], [1, 0], clamp);
   return (
