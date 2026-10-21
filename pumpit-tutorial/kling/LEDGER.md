@@ -28,3 +28,11 @@ Process: work autonomously within the 750 ceiling (user: "I trust you"). Stop an
 | 2 | K6 keyframe: deflated T-Rex (edit of v2, 2 variants) | Kling Image 3.0 Omni, image-to-image | 2K, 16:9 | 4 | 1563 | 1559 | 4 | ❌ rejected: print pattern lost, shape not credible | 742 |
 | 3 | K6 inflation: generate DEFLATION from inflated v2, reverse in edit | Kling 4.0, image-to-video, first frame only | 1080p, 8 s | 108 | 1559 | 1451 | **108** (verified) | ⚠️ identity and print held, but the costume collapses flat to the floor with nobody inside (not realistic with a wearer). Awaiting decision | 634 |
 | 4 | K6 retake: realistic deflated start frame (2 variants) | **Nano Banana Pro**, image-to-image | 2K, 16:9 | ~4–8 (estimated) | 1451 | 1411 | **40** (verified). ⚠️ ANOMALY: 20/image, ~10× the estimate | v1 ✅ print preserved, half-deflated pose. v2 still in queue | 486 |
+
+## Cinematic rebuild 3.0: Kling inflation test (user approval 2026-10-21: 81 cr, max 162 with one retake)
+Context: the 3.0 brief barred Kling; the user explicitly re-authorised this single test after reviewing the plan, prompt and cost.
+| # | Shot | Model / mode | Settings | Est. | Balance before | Balance after | Actual | Result |
+|---|---|---|---|---|---|---|---|---|
+| 5 | Inflation test: first = kf_deflated_nbp_v1, tail = kf_inflated_v2 reframed 1.12× (push-in) | Kling 4.0, image-to-video, first + tail frames | 1080p, 6 s, 1 video | 81 | 1431 | 1350 | **81** (verified) | pending review |
+
+Note: balance before #5 was 1431, 20 above the 1411 recorded after #4 (likely refund of the unfinished Nano Banana Pro v2).
