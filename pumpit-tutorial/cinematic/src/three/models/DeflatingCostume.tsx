@@ -100,7 +100,7 @@ export const DeflatingCostume: React.FC<{ pressure: number; height?: number; pos
   geo.computeVertexNormals();
   return (
     <mesh geometry={geo} position={position}>
-      <meshLambertMaterial map={getTex("img/trex_cutout.png")} transparent alphaTest={0.02} vertexColors toneMapped={false} side={THREE.DoubleSide} />
+      <meshBasicMaterial map={getTex("img/trex_cutout_clean.png")} transparent alphaTest={0.02} vertexColors toneMapped={false} side={THREE.DoubleSide} />
     </mesh>
   );
 };

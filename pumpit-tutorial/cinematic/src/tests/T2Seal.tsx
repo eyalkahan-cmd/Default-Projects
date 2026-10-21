@@ -7,7 +7,7 @@ import { Drawstring, LOCK_X, lockYFor } from "../three/models/Drawstring";
 import { Zipper } from "../three/models/Zipper";
 import { makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
-import { C, HEEBO } from "../theme";
+import { C, HEEBO, look } from "../theme";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 const smooth = (t: number) => t * t * (3 - 2 * t);
@@ -74,7 +74,7 @@ export const T2Seal: React.FC = () => {
           strokeDasharray="10 9"
         />
       </svg>
-      <Callout at={pLock} dx={-230} dy={40} start={186} title="מהדקים בעדינות" sub="צמוד ונוח, בלי להדק יתר על המידה" accent="#7fd6ff" />
+      <Callout at={pLock} dx={-230} dy={40} start={186} title="מהדקים בעדינות" sub="צמוד ונוח, בלי להדק יתר על המידה" accent={look().air} />
       <div
         style={{
           position: "absolute",
@@ -83,7 +83,7 @@ export const T2Seal: React.FC = () => {
           fontFamily: HEEBO,
           fontWeight: 700,
           fontSize: 28,
-          color: "#7fd6ff",
+          color: look().air,
           direction: "rtl",
           opacity: okO,
         }}

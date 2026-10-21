@@ -9,6 +9,7 @@ import { Cable } from "../three/models/Cable";
 import { FabricPanel } from "../three/models/FabricPanel";
 import { makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
+import { look } from "../theme";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
@@ -66,7 +67,7 @@ export const T1Fan: React.FC = () => {
 
       <Callout at={pGrille} dx={-230} dy={-95} start={42} end={128} title="הפתח הייעודי" sub="המאוורר נכנס לפתח בתחפושת" />
       <Callout at={pHousing} dx={170} dy={-170} start={128} end={200} title="המאוורר" sub="מותקן היטב וצמוד לבד" />
-      <Callout at={pCable} dx={-170} dy={-120} start={176} title="כבל המאוורר" sub="ממשיך אל מקור החשמל" accent="#7fd6ff" />
+      <Callout at={pCable} dx={-170} dy={-120} start={176} title="כבל המאוורר" sub="ממשיך אל מקור החשמל" accent={look().air} />
 
       <Chapter n="01" title="התקנת המאוורר" start={8} end={210} />
       <LensFinish />

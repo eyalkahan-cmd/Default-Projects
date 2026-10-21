@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import * as THREE from "three";
+import { look } from "../../theme";
 
 /**
  * Restrained airflow visualisation: a few streamlines from the intake into the envelope and
@@ -11,11 +12,13 @@ export const Airflow: React.FC<{ paths: THREE.Vector3[][]; t: number; opacity: n
   const lineGeos = useMemo(() => curves.map((c) => new THREE.TubeGeometry(c, 160, 0.005, 6, false)), [curves]);
   const pulseGeo = useMemo(() => new THREE.CapsuleGeometry(0.014, 0.1, 4, 8), []);
   if (opacity <= 0.001) return null;
+  const L = look();
+  const blending = L.airAdditive ? THREE.AdditiveBlending : THREE.NormalBlending;
   return (
     <group>
       {lineGeos.map((g, i) => (
         <mesh key={`l${i}`} geometry={g}>
-          <meshBasicMaterial color="#7fd6ff" transparent opacity={0.28 * opacity} depthWrite={false} blending={THREE.AdditiveBlending} />
+          <meshBasicMaterial color={L.air} transparent opacity={(L.airAdditive ? 0.28 : 0.45) * opacity} depthWrite={false} blending={blending} />
         </mesh>
       ))}
       {curves.map((c, i) =>
@@ -27,7 +30,7 @@ export const Airflow: React.FC<{ paths: THREE.Vector3[][]; t: number; opacity: n
           const fade = Math.sin(Math.PI * u);
           return (
             <mesh key={`p${i}-${k}`} geometry={pulseGeo} position={p} quaternion={q}>
-              <meshBasicMaterial color="#bff0ff" transparent opacity={0.75 * opacity * fade} depthWrite={false} blending={THREE.AdditiveBlending} />
+              <meshBasicMaterial color={L.airPulse} transparent opacity={0.75 * opacity * fade} depthWrite={false} blending={blending} />
             </mesh>
           );
         }),

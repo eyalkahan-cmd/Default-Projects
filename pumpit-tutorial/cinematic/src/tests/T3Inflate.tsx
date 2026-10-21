@@ -9,7 +9,7 @@ import { Blower } from "../three/models/Blower";
 import { deflate, DeflatingCostume, IMG_H, IMG_W } from "../three/models/DeflatingCostume";
 import { makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
-import { C, HEEBO, look } from "../theme";
+import { HEEBO, look } from "../theme";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 const H = 3;
@@ -79,9 +79,10 @@ export const T3Inflate: React.FC = () => {
         <ThreeCanvas width={width} height={height} gl={{ alpha: true, antialias: true }}>
           <CameraDriver state={cam} />
           <Studio lights={false} />
-          <ambientLight intensity={0.88} />
+          {/* the costume is a photo: keep it close to its true colours (cool rim only in the night look) */}
+          <ambientLight intensity={look().id === "night" ? 0.88 : 1.0} />
           <directionalLight position={[-2, 3, 4]} intensity={0.22} />
-          <directionalLight position={[3, 2, 2]} intensity={0.6} color="#9fd2ff" />
+          <directionalLight position={[3, 2, 2]} intensity={look().id === "night" ? 0.6 : 0.12} color={look().id === "night" ? "#9fd2ff" : "#ffffff"} />
           <mesh position={[0.05, FLOOR + 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[1 + 0.15 * (1 - e), 0.35, 1]}>
             <circleGeometry args={[1.05, 48]} />
             <meshBasicMaterial color="#000000" transparent opacity={0.32} depthWrite={false} />
@@ -93,7 +94,7 @@ export const T3Inflate: React.FC = () => {
       </Preload>
 
       <Callout at={pFan} dx={170} dy={-150} start={8} end={74} title="מפעילים את המאוורר" />
-      <Callout at={pBody} dx={-230} dy={-120} start={66} end={150} title="האוויר זורם פנימה" sub="וממלא את התחפושת" accent="#7fd6ff" />
+      <Callout at={pBody} dx={-400} dy={-30} start={66} end={150} title="האוויר זורם פנימה" sub="וממלא את התחפושת" accent={look().air} />
 
       <div style={{ position: "absolute", left: 110, bottom: 110, fontFamily: HEEBO, color: look().text, direction: "rtl", opacity: timeO }}>
         <div style={{ fontSize: 26, fontWeight: 500, color: look().sub }}>זמן ניפוח משוער</div>

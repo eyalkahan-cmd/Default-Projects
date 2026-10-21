@@ -9,7 +9,7 @@ import { Cable, UsbPlug } from "../three/models/Cable";
 import { BatteryPack, PowerBank } from "../three/models/PowerSources";
 import { makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
-import { C, HEEBO } from "../theme";
+import { C, HEEBO, look } from "../theme";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 const smooth = (t: number) => t * t * (3 - 2 * t);
@@ -95,7 +95,7 @@ export const T4Flow: React.FC = () => {
 
       <Callout at={pPlug} dx={-210} dy={-110} start={104} end={150} title="מחברים לקופסת הסוללות" sub="כבל ה-USB של המאוורר" />
       <Callout at={pCells} dx={-150} dy={-210} start={170} title="סוללות AA" sub="סוג וכמות בהתאם לדגם" />
-      <Callout at={pBank} dx={-150} dy={-250} start={240} title="Power Bank" sub="רק אם הדגם תומך בכך" accent="#7fd6ff" />
+      <Callout at={pBank} dx={-150} dy={-250} start={240} title="Power Bank" sub="רק אם הדגם תומך בכך" accent={look().air} />
 
       {/* "or" marker on the split between the two power options */}
       <div

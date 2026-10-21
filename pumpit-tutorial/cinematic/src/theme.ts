@@ -55,6 +55,10 @@ export type Look = {
   leader: string;
   vignette: string;
   grain: number;
+  /** air / technical information colour, and whether it glows (additive) or is printed (normal) */
+  air: string;
+  airPulse: string;
+  airAdditive: boolean;
 };
 export const LOOKS: Record<LookId, Look> = {
   night: {
@@ -70,6 +74,9 @@ export const LOOKS: Record<LookId, Look> = {
     leader: "rgba(255,255,255,0.85)",
     vignette: "rgba(0,4,16,0.55)",
     grain: 0.07,
+    air: "#7fd6ff",
+    airPulse: "#bff0ff",
+    airAdditive: true,
   },
   // Clean bright studio: soft white-blue cyclorama, brand colours carried by the objects and accents.
   daylight: {
@@ -81,10 +88,14 @@ export const LOOKS: Record<LookId, Look> = {
     hemi: 0.9,
     text: "#0B1F4D",
     sub: "rgba(11,31,77,0.68)",
-    accent: C.pink,
+    // Pumpit blue: the complement of the costume/hardware orange, balanced contrast without clashing
+    accent: C.blue,
     leader: "rgba(11,31,77,0.7)",
     vignette: "rgba(40,60,100,0.16)",
     grain: 0.035,
+    air: "#1099EA",
+    airPulse: "#0B6FC2",
+    airAdditive: false,
   },
   // Brand colour: a saturated blue → violet → pink light field (Pumpit palette), still clean and premium.
   color: {
@@ -101,6 +112,9 @@ export const LOOKS: Record<LookId, Look> = {
     leader: "rgba(255,255,255,0.9)",
     vignette: "rgba(20,0,60,0.32)",
     grain: 0.05,
+    air: "#bff0ff",
+    airPulse: "#ffffff",
+    airAdditive: true,
   },
 };
 let current: Look = LOOKS.night;
