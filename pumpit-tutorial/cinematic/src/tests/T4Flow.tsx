@@ -8,7 +8,7 @@ import { Preload } from "../three/materials";
 import { Blower } from "../three/models/Blower";
 import { Cable, UsbPlug } from "../three/models/Cable";
 import { BatteryPack, PowerBank } from "../three/models/PowerSources";
-import { makeRig, project } from "../three/rig";
+import { CamKey, makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
 import { C, HEEBO, look } from "../theme";
 
@@ -28,7 +28,7 @@ const DOWN = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1),
  * the lid lifts in an exploded view of the 4 × AA, then trucks right to the alternative: a
  * power bank, qualified as model-dependent. No cuts.
  */
-export const T4Flow: React.FC = () => {
+export const T4Flow: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys, chrome = true }) => {
   const frame = useFrame();
   const { width, height } = useVideoConfig();
   const plugIn = interpolate(frame, [96, 132], [0, 1], { ...clamp, easing: smooth });
@@ -41,9 +41,12 @@ export const T4Flow: React.FC = () => {
     [-2.6, FLOOR + 0.02, 0.05],
     [-1.7, FLOOR + 0.02, 0.45],
     [-0.75, FLOOR + 0.02, 0.4],
-    [-0.28, FLOOR + 0.25, 0.12],
-    [-0.08, plugY - 0.2, 0.02],
-    [0, plugY + 0.012, 0],
+    [-0.42, FLOOR + 0.22, 0.3],
+    // rise beside the box, arc over and drop straight into the top of the plug boot
+    [-0.3, plugY + 0.3, 0.12],
+    [-0.08, plugY + 0.36, 0.02],
+    [0, plugY + 0.16, 0],
+    [0, plugY, 0],
   ];
   const bankPlugY = BANK_PORT_TOP - 0.1 + 0.32;
   const cable2: [number, number, number][] = [
@@ -56,7 +59,7 @@ export const T4Flow: React.FC = () => {
 
   const rig = useMemo(
     () =>
-      makeRig([
+      makeRig(keys ?? [
         { f: 0, pos: [-2.2, 0.3, 1.5], target: [-2.95, -0.3, -0.15], fov: 32 },
         { f: 62, pos: [-1.25, -0.05, 1.45], target: [-1.45, -0.45, 0.35], fov: 32 },
         { f: 122, pos: [0.6, 0.85, 1.55], target: [0.0, 0.45, 0.1], fov: 32 },
@@ -64,7 +67,7 @@ export const T4Flow: React.FC = () => {
         { f: 240, pos: [1.25, 0.65, 5.0], target: [1.2, 0.25, 0.2], fov: 35 },
         { f: 300, pos: [1.2, 0.65, 5.25], target: [1.2, 0.27, 0.2], fov: 35 },
       ]),
-    [],
+    [keys],
   );
   const cam = rig(frame);
   const pPlug = project([0, plugY - 0.12, 0.05], cam, width, height);
@@ -129,7 +132,9 @@ export const T4Flow: React.FC = () => {
         או
       </div>
 
+      {chrome ? (
       <Chapter n="02" title="מקור חשמל" start={6} end={300} />
+      ) : null}
       <LensFinish />
     </AbsoluteFill>
   );

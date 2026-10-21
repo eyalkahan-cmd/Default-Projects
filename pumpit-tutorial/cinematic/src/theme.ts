@@ -20,14 +20,20 @@ export const C = {
   fanLight: "#FF9A3C",
 };
 
-// Heebo bundled locally (public/fonts, from @fontsource/heebo): the render browser has no web access.
-export const HEEBO = "Heebo";
+// Fonts bundled locally (public/fonts, from @fontsource): the render browser has no web access.
+// Rubik is the display + UI face (rounded, echoes the inflated letters of the Pumpit logo);
+// Heebo stays as the fallback. The constant keeps its historical name.
+export const HEEBO = "Rubik, Heebo";
 const HEBREW_RANGE = "U+0307-0308, U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F";
 const LATIN_RANGE =
   "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD";
 for (const weight of ["400", "500", "700", "800", "900"]) {
-  loadFont({ family: HEEBO, url: staticFile(`fonts/heebo-hebrew-${weight}-normal.woff2`), weight, unicodeRange: HEBREW_RANGE });
-  loadFont({ family: HEEBO, url: staticFile(`fonts/heebo-latin-${weight}-normal.woff2`), weight, unicodeRange: LATIN_RANGE });
+  loadFont({ family: "Heebo", url: staticFile(`fonts/heebo-hebrew-${weight}-normal.woff2`), weight, unicodeRange: HEBREW_RANGE });
+  loadFont({ family: "Heebo", url: staticFile(`fonts/heebo-latin-${weight}-normal.woff2`), weight, unicodeRange: LATIN_RANGE });
+}
+for (const weight of ["400", "500", "600", "700", "800", "900"]) {
+  loadFont({ family: "Rubik", url: staticFile(`fonts/rubik-hebrew-${weight}-normal.woff2`), weight, unicodeRange: HEBREW_RANGE });
+  loadFont({ family: "Rubik", url: staticFile(`fonts/rubik-latin-${weight}-normal.woff2`), weight, unicodeRange: LATIN_RANGE });
 }
 
 export const FPS = 30;

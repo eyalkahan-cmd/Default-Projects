@@ -7,7 +7,7 @@ import { Preload } from "../three/materials";
 import { Blower } from "../three/models/Blower";
 import { Cable } from "../three/models/Cable";
 import { FabricPanel } from "../three/models/FabricPanel";
-import { makeRig, project } from "../three/rig";
+import { CamKey, makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
 import { look } from "../theme";
 
@@ -29,18 +29,18 @@ const CABLE: [number, number, number][] = [
  * nylon ghosts ("x-ray") to reveal how the housing sits behind it → tilt down along the cable.
  * The camera stays in front of the fabric so its edges are never seen; no floor in this macro.
  */
-export const T1Fan: React.FC = () => {
+export const T1Fan: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys, chrome = true }) => {
   const frame = useFrame();
   const { width, height } = useVideoConfig();
   const rig = useMemo(
     () =>
-      makeRig([
+      makeRig(keys ?? [
         { f: 0, pos: [0.6, 0.4, 3.2], target: [0, 0, 0], fov: 28 },
         { f: 70, pos: [0.3, 0.15, 1.6], target: [0, 0, -0.05], fov: 28 },
         { f: 135, pos: [0.95, 0.12, 1.35], target: [0.05, -0.05, -0.15], fov: 30 },
         { f: 210, pos: [1.05, -0.3, 1.5], target: [0.35, -0.5, -0.25], fov: 32 },
       ]),
-    [],
+    [keys],
   );
   const cam = rig(frame);
   // x-ray: the nylon ghosts during the arc so the housing behind it reads, then stays ghosted
@@ -68,7 +68,9 @@ export const T1Fan: React.FC = () => {
       <Callout at={pHousing} dx={170} dy={-170} start={124} end={190} title="המאוורר" sub="מותקן היטב וצמוד לבד" />
       <Callout at={pCable} dx={-170} dy={-120} start={168} title="כבל המאוורר" sub="ממשיך אל מקור החשמל" accent={look().air} />
 
+      {chrome ? (
       <Chapter n="01" title="התקנת המאוורר" start={8} end={210} />
+      ) : null}
       <LensFinish />
     </AbsoluteFill>
   );

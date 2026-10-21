@@ -8,6 +8,7 @@ import { Opening } from "./film/Opening";
 import { Power } from "./film/Power";
 import { AirLeak } from "./film/AirLeak";
 import { Film, FILM_FRAMES } from "./film/Film";
+import { FilmV2Test, V2 } from "./film/v2/FilmV2";
 import { WearIn, WearPack } from "./film/Wear";
 import { EndCard, KeepRunning, Lineup } from "./film/Finale";
 
@@ -25,6 +26,7 @@ const SC = { fps: 30, width: 1920, height: 1080, defaultProps: { look: "daylight
 
 export const RemotionRoot: React.FC = () => (
   <>
+    <Composition id="FilmV2Test" component={withLook(FilmV2Test)} durationInFrames={V2.end} {...SC} />
     <Composition id="Film" component={withLook(Film)} durationInFrames={FILM_FRAMES} {...SC} />
     <Composition id="LD4-Flow" component={withLook(T4Flow)} durationInFrames={300} {...LD} />
     <Composition id="LD3-Inflate" component={withLook(T3Inflate)} durationInFrames={270} {...LD} />

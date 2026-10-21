@@ -46,16 +46,18 @@ SFX = [
 ]
 
 
-def main(silent, out):
-    n = int(DUR * SR)
-    music = L.fade(L.load(L.MUSIC, MUSIC_IN, DUR)[:n], 0.35, 2.4)
+def main(silent, out, sfx=None, dur=None, tail_fade=2.4):
+    sfx = SFX if sfx is None else sfx
+    dur = DUR if dur is None else dur
+    n = int(dur * SR)
+    music = L.fade(L.load(L.MUSIC, MUSIC_IN, dur)[:n], 0.35, tail_fade)
     if len(music) < n:
         music = np.pad(music, ((0, n - len(music)), (0, 0)))
     voice = np.zeros((n, 2), np.float32)
     v = L.load(VOICE)[:n]
     voice[: len(v)] = v
     fx = np.zeros((n, 2), np.float32)
-    for f, at, g, mx in SFX:
+    for f, at, g, mx in sfx:
         s = L.load(f"{L.SFX}/{f}.wav", 0, mx)
         L.place(fx, L.fade(s, 0.01, min(0.4, len(s) / SR / 3)), at, g)
     env = np.sqrt(np.convolve(voice[:, 0] ** 2, np.ones(1440) / 1440, "same"))
@@ -70,6 +72,9 @@ def main(silent, out):
     lift = np.clip((np.arange(n) / SR - FULL_SIZE) / 0.3, 0, 1) * np.clip((FULL_SIZE + 1.6 - np.arange(n) / SR) / 0.6, 0, 1)
     mg = 10 ** ((-16 - 6 * duck + 3 * lift) / 20)
     mix = music * mg[:, None] + voice + fx
+    # end of a partial cut: fade everything out over the last 0.6 s
+    if dur < DUR - 0.01:
+        mix = L.fade(mix, 0, 0.6)
     raw = out.rsplit(".", 1)[0] + ".f32"
     mix.astype(np.float32).tofile(raw)
     wav = out.rsplit(".", 1)[0] + ".wav"

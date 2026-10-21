@@ -1,6 +1,7 @@
 import React from "react";
 import { AbsoluteFill, interpolate } from "remotion";
 import { useFrame } from "../film/time";
+import { puff } from "../film/motion";
 import { HEEBO, look } from "../theme";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
@@ -57,7 +58,7 @@ export const Callout: React.FC<{
   const right = dx < 0; // label sits on the far side of the leader
   // keep the plate inside a 60 px safe area (width estimated from Heebo 800/500 metrics)
   const SAFE = 60;
-  const w = Math.max(title.length * 31, (sub ?? "").length * 17) + 58;
+  const w = Math.max(title.length * 36, (sub ?? "").length * 19) + 70; // Rubik metrics
   const offRight = Math.min(1920 - ex + 30, 1920 - SAFE - w);
   const offLeft = Math.min(ex + 30, 1920 - SAFE - w);
   // vertical: keep the plate centre clear of the top edge and the chapter pill row
@@ -80,12 +81,14 @@ export const Callout: React.FC<{
           textAlign: right ? "right" : "left",
           fontFamily: HEEBO,
           color: L.text,
-          opacity: text,
-          translate: `${(1 - text) * (right ? 14 : -14)}px -50%`,
+          opacity: Math.min(1, text * 2),
+          translate: "0 -50%",
+          transform: `scale(${puff(frame, start + 8)})`,
+          transformOrigin: right ? "100% 50%" : "0% 50%",
           background: L.plate,
           boxShadow: L.plateShadow,
-          borderRadius: 16,
-          padding: "14px 26px 16px",
+          borderRadius: 22,
+          padding: "14px 28px 16px",
           borderInlineStart: `5px solid ${accent}`,
         }}
       >
