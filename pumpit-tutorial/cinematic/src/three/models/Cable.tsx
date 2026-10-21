@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import * as THREE from "three";
-import { labelTex, METAL_NICKEL, RUBBER_BLACK } from "../materials";
+import { GRAIN_NORMAL, labelTex, METAL_NICKEL, RUBBER_BLACK } from "../materials";
 
 /** A USB-A male plug: overmoulded black boot + nickel shell with the plastic tongue. Points along +Y. */
 export const UsbPlug: React.FC<{ position?: THREE.Vector3; quaternion?: THREE.Quaternion; shadow?: boolean }> = ({ position, quaternion, shadow = true }) => (
@@ -62,7 +62,8 @@ export const Cable: React.FC<{ points: [number, number, number][]; radius?: numb
   return (
     <group>
       <mesh geometry={geo} castShadow={shadow} receiveShadow>
-        <meshPhysicalMaterial {...RUBBER_BLACK} />
+        {/* soft-touch PVC jacket: fine grain + a gentle sheen along the length */}
+        <meshPhysicalMaterial {...RUBBER_BLACK} roughness={0.5} sheen={0.35} sheenColor={new THREE.Color("#5a6070")} normalMap={GRAIN_NORMAL} normalScale={new THREE.Vector2(0.25, 0.25)} />
       </mesh>
       {plug && reveal >= 0.999 ? <UsbPlug position={end} quaternion={q} /> : null}
     </group>

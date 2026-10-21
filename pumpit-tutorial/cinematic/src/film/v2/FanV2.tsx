@@ -10,7 +10,7 @@ import { Retime, useFrame } from "../time";
 // where the blower sits on the costume photo (fraction of the image box), measured on trex_cutout_v2
 const IMG_W = 914;
 const IMG_H = 1311;
-const FAN = { u: 0.78, v: 0.6 };
+const FAN = { u: 0.76, v: 0.6 };
 
 /** Shot A: the whole costume; the camera pushes toward the hip while a ring pulses on the fan opening. */
 const WhereIsTheFan: React.FC<{ len: number }> = ({ len }) => {

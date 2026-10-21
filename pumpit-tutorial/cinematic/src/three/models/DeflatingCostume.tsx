@@ -59,8 +59,9 @@ export const deflate = (u: number, v: number, e: number) => {
   return { u: u + du, v: v + dv, crease: e * crease };
 };
 
-export const IMG_W = 1005;
-export const IMG_H = 1317;
+// clean GrabCut cutout with the full feet and claws (scripts/cutout_trex.py)
+export const IMG_W = 914;
+export const IMG_H = 1311;
 
 /**
  * The real, fully inflated T-Rex (alpha cutout) on a dense mesh, deformed by `deflate`.
@@ -100,7 +101,7 @@ export const DeflatingCostume: React.FC<{ pressure: number; height?: number; pos
   geo.computeVertexNormals();
   return (
     <mesh geometry={geo} position={position}>
-      <meshBasicMaterial map={getTex("img/trex_cutout_clean.png")} transparent alphaTest={0.02} vertexColors toneMapped={false} side={THREE.DoubleSide} />
+      <meshBasicMaterial map={getTex("img/trex_cutout_v2.png")} transparent alphaTest={0.02} vertexColors toneMapped={false} side={THREE.DoubleSide} />
     </mesh>
   );
 };

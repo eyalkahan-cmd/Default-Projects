@@ -91,7 +91,8 @@ export const KineticWord: React.FC<{ text: string; sub?: string; start: number; 
         position: "absolute",
         left: x,
         top: y,
-        transform: `translate(${tx}, -50%) scale(${p * o})`,
+        // puff in, then keep breathing forward a little while it holds
+        transform: `translate(${tx}, -50%) scale(${p * o * (1 + 0.0009 * (frame - start))})`,
         transformOrigin: "50% 60%",
         direction: "rtl",
         textAlign: align,
@@ -255,4 +256,27 @@ export const ClickRing: React.FC<{ at: { x: number; y: number }; start: number; 
       <circle cx={at.x} cy={at.y} r={r * 0.55} fill="none" stroke="#ffffff" strokeWidth={5 * (1 - t)} opacity={(1 - t) * 0.9} />
     </svg>
   );
+};
+
+/** film beat grid: beats of the underscore slice fall at 0.3 + n · BEAT frames */
+export const beatSnap = (filmFrame: number) => Math.round(Math.round((filmFrame - 0.3) / BEAT) * BEAT + 0.3);
+/** snap a scene-local cut (scene starting at `sceneStart` on the film) to the nearest beat */
+export const cutOnBeat = (sceneStart: number, local: number) => beatSnap(sceneStart + local) - sceneStart;
+
+/**
+ * Restrict a piecewise-linear retime map (src → dst) to the window [a, b] of `src`, re-based
+ * to start at 0 — so one long authored take can be split into several shots.
+ */
+export const subMap = (src: number[], dst: number[], a: number, b: number) => {
+  const at = (x: number) => {
+    for (let i = 0; i < src.length - 1; i++) {
+      if (x <= src[i + 1]) {
+        const t = (x - src[i]) / Math.max(1e-6, src[i + 1] - src[i]);
+        return dst[i] + (dst[i + 1] - dst[i]) * Math.min(1, Math.max(0, t));
+      }
+    }
+    return dst[dst.length - 1];
+  };
+  const s = [a, ...src.filter((x) => x > a && x < b), b];
+  return { src: s.map((x) => x - a), dst: s.map(at) };
 };

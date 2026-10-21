@@ -24,7 +24,8 @@ const noise = (x: number, y: number) => {
 /** Costume nylon in the real T-Rex print: woven ripstop normal, soft sheen, satin highlights. */
 export const useNylon = (clip: THREE.Plane[] = [], repeat = 1.6) => {
   return useMemo(() => {
-    const print = getTex("tex/trex_print.jpg", repeat);
+    // photo-matched print (black tapered strokes + spot clusters, like the real costume)
+    const print = getTex("tex/trex_print_real.jpg", repeat);
     const weave = getTex("tex/ripstop_normal.png", repeat * 9, false);
     return new THREE.MeshPhysicalMaterial({
       map: print,

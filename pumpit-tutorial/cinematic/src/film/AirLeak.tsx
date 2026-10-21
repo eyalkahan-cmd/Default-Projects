@@ -7,7 +7,7 @@ import { C, HEEBO, look } from "../theme";
 import { Preload } from "../three/materials";
 import { Airflow } from "../three/models/Airflow";
 import { deflate, DeflatingCostume, IMG_H, IMG_W } from "../three/models/DeflatingCostume";
-import { makeRig, project } from "../three/rig";
+import { CamKey, makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
 import { useFrame } from "./time";
 
@@ -28,7 +28,7 @@ const wisp = (u: number, v: number, du: number, dv: number, e: number) =>
  * over the costume → "…חשוב לצמצם בריחת אוויר" — the costume can't reach full pressure: short
  * pink wisps show air escaping at the cuffs and along an open zipper.
  */
-export const AirLeak: React.FC = () => {
+export const AirLeak: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys, chrome = true }) => {
   const frame = useFrame();
   const { width, height } = useVideoConfig();
   const L = look();
@@ -39,14 +39,14 @@ export const AirLeak: React.FC = () => {
   const card = easeOut(interpolate(frame, [6, 24], [0, 1], clamp)) * interpolate(frame, [80, 96], [1, 0], clamp);
   const rig = useMemo(
     () =>
-      makeRig([
+      makeRig(keys ?? [
         { f: 0, pos: [0.1, 0.05, 6.4], target: [0.05, -0.05, 0], fov: 34 },
         { f: 246, pos: [0.4, -0.05, 5.4], target: [0.15, -0.2, 0], fov: 34 },
       ]),
-    [],
+    [keys],
   );
   const cam = rig(frame);
-  const pLeak = project(leaks[2][1], cam, width, height);
+  const pLeak = project(leaks[0][1], cam, width, height);
   return (
     <AbsoluteFill>
       <Backdrop x={0.5} y={0.42} />
@@ -78,7 +78,9 @@ export const AirLeak: React.FC = () => {
         <div style={{ fontSize: 120, fontWeight: 900, lineHeight: 1.05 }}>השלב החשוב ביותר</div>
       </div>
       <Callout at={pLeak} dx={-300} dy={-160} start={120} title="בריחת אוויר" sub="בפתחים וברוכסן פתוח" accent={C.pink} />
+      {chrome ? (
       <Chapter n="04" title="אטימה" start={100} end={246} />
+      ) : null}
       <LensFinish />
     </AbsoluteFill>
   );

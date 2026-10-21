@@ -8,7 +8,7 @@ import { Preload } from "../three/materials";
 import { Airflow } from "../three/models/Airflow";
 import { Blower } from "../three/models/Blower";
 import { deflate, DeflatingCostume, IMG_H, IMG_W } from "../three/models/DeflatingCostume";
-import { makeRig, project } from "../three/rig";
+import { CamKey, makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
 import { HEEBO, look } from "../theme";
 
@@ -30,7 +30,8 @@ const toWorld = (u: number, v: number, e: number, z = 0.12) => {
   return new THREE.Vector3((d.u - 0.5) * Wd, (d.v - 0.5) * H, z);
 };
 
-const FAN_UV: [number, number] = [0.69, 0.37];
+// rear hip above the tail base (same spot as the fan ring in chapter 01)
+const FAN_UV: [number, number] = [0.76, 0.4];
 
 /**
  * LOOK-DEV 3 — AIRFLOW & INFLATION (9 s)
@@ -39,7 +40,7 @@ const FAN_UV: [number, number] = [0.69, 0.37];
  * the hip and travelling to the head, legs and tail → the fabric fills and pulls taut → it snaps
  * to the exact, untouched product photograph. Camera: macro on the blower, then a pull-back crane.
  */
-export const T3Inflate: React.FC = () => {
+export const T3Inflate: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys, chrome = true }) => {
   const frame = useFrame();
   const { width, height, fps } = useVideoConfig();
   const p = pressure(frame);
@@ -50,21 +51,21 @@ export const T3Inflate: React.FC = () => {
   const fan = toWorld(FAN_UV[0], FAN_UV[1], e, 0.02);
   // streamlines follow the current fabric shape (rebuilt every frame from the deflation field)
   const flows: THREE.Vector3[][] = [
-    [[0.69, 0.37], [0.58, 0.46], [0.47, 0.6], [0.36, 0.76], [0.22, 0.88]].map(([u, v]) => toWorld(u, v, e)),
-    [[0.69, 0.37], [0.66, 0.27], [0.78, 0.17], [0.92, 0.1]].map(([u, v]) => toWorld(u, v, e)),
-    [[0.69, 0.37], [0.55, 0.3], [0.45, 0.17], [0.4, 0.06]].map(([u, v]) => toWorld(u, v, e)),
+    [[0.76, 0.4], [0.6, 0.48], [0.47, 0.6], [0.36, 0.76], [0.22, 0.88]].map(([u, v]) => toWorld(u, v, e)),
+    [[0.76, 0.4], [0.7, 0.27], [0.78, 0.17], [0.92, 0.1]].map(([u, v]) => toWorld(u, v, e)),
+    [[0.76, 0.4], [0.58, 0.3], [0.45, 0.17], [0.4, 0.06]].map(([u, v]) => toWorld(u, v, e)),
   ];
   const flowO = interpolate(frame, [40, 62, 150, 186], [0, 1, 1, 0], clamp);
 
   const rig = useMemo(
     () =>
-      makeRig([
+      makeRig(keys ?? [
         { f: 0, pos: [0.85, -0.2, 3.1], target: [0.42, -0.35, 0], fov: 30 },
         { f: 70, pos: [0.6, -0.1, 4.1], target: [0.3, -0.2, 0], fov: 32 },
         { f: 190, pos: [0.15, 0.05, 6.4], target: [0.05, -0.05, 0], fov: 34 },
         { f: 270, pos: [0.05, 0.1, 6.0], target: [0.02, -0.02, 0], fov: 34 },
       ]),
-    [],
+    [keys],
   );
   const cam = rig(frame);
   const pFan = project(fan, cam, width, height);
@@ -135,7 +136,9 @@ export const T3Inflate: React.FC = () => {
         <div style={{ fontSize: 104, fontWeight: 900, lineHeight: 1.05 }}>למלוא גודלה</div>
       </div>
 
+      {chrome ? (
       <Chapter n="05" title="ניפוח" start={6} end={270} />
+      ) : null}
       <LensFinish />
     </AbsoluteFill>
   );

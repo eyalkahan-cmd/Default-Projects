@@ -6,7 +6,7 @@ import { Backdrop, Callout, Chapter, LensFinish } from "../overlay/Overlay";
 import { Preload } from "../three/materials";
 import { Drawstring, LOCK_X, lockYFor } from "../three/models/Drawstring";
 import { Zipper } from "../three/models/Zipper";
-import { makeRig, project } from "../three/rig";
+import { CamKey, makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
 import { HEEBO, look } from "../theme";
 
@@ -20,21 +20,21 @@ const OPENING: [number, number, number] = [0, 3.62, 0.0];
  * closed zipper (directional continuity) and cranes up onto the drawstring opening, where
  * the cord lock is slid up gently and a fit ring shows the comfortable target.
  */
-export const T2Seal: React.FC = () => {
+export const T2Seal: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys, chrome = true }) => {
   const frame = useFrame();
   const { width, height } = useVideoConfig();
   const slider = interpolate(frame, [18, 118], [-1.7, 2.03], { ...clamp, easing: smooth });
   const tighten = interpolate(frame, [182, 236], [0, 1], { ...clamp, easing: smooth });
   const rig = useMemo(
     () =>
-      makeRig([
+      makeRig(keys ?? [
         { f: 0, pos: [0.75, -2.2, 0.62], target: [0, -1.6, 0.0], fov: 30 },
         { f: 64, pos: [0.62, -0.3, 0.6], target: [0, 0.15, 0.0], fov: 30 },
         { f: 120, pos: [0.55, 1.45, 0.7], target: [0, 1.95, 0.0], fov: 31 },
         { f: 172, pos: [0.5, 2.85, 2.35], target: [0.15, 3.38, 0.0], fov: 34 },
         { f: 270, pos: [0.95, 2.9, 2.3], target: [0.2, 3.34, 0.0], fov: 34 },
       ]),
-    [],
+    [keys],
   );
   const cam = rig(frame);
   const pSlider = project([0.06, slider, 0.06], cam, width, height);
@@ -94,7 +94,9 @@ export const T2Seal: React.FC = () => {
         ✓ נוח
       </div>
 
+      {chrome ? (
       <Chapter n="04" title="אטימה" start={6} end={270} />
+      ) : null}
       <LensFinish />
     </AbsoluteFill>
   );

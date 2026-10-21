@@ -7,7 +7,7 @@ import { HEEBO, look } from "../theme";
 import { Preload } from "../three/materials";
 import { Airflow } from "../three/models/Airflow";
 import { Blower } from "../three/models/Blower";
-import { makeRig, project } from "../three/rig";
+import { CamKey, makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
 import { Photo } from "./Opening";
 import { useFrame } from "./time";
@@ -60,16 +60,16 @@ export const Lineup: React.FC = () => {
 };
 
 /** "רק זכרו להשאיר את המאוורר פועל…" — the blower running, air drawn in, one clear reminder. */
-export const KeepRunning: React.FC = () => {
+export const KeepRunning: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys, chrome = true }) => {
   const frame = useFrame();
   const { width, height } = useVideoConfig();
   const rig = useMemo(
     () =>
-      makeRig([
+      makeRig(keys ?? [
         { f: 0, pos: [1.25, 0.35, 1.9], target: [0.05, -0.02, 0], fov: 30 },
         { f: 140, pos: [0.85, 0.28, 1.65], target: [0.05, -0.02, 0], fov: 30 },
       ]),
-    [],
+    [keys],
   );
   const cam = rig(frame);
   const paths = useMemo(

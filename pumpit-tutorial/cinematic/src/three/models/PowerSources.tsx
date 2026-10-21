@@ -22,7 +22,12 @@ const AACell: React.FC<{ position: [number, number, number]; up: boolean }> = ({
   <group position={position} rotation={[0, 0, up ? 0 : Math.PI]}>
     <mesh castShadow>
       <cylinderGeometry args={[0.072, 0.072, 0.47, 32]} />
-      <meshPhysicalMaterial color="#1c2230" roughness={0.35} clearcoat={0.6} />
+      {/* printed sleeve: "AA 1.5V" wrapping around the can */}
+      <meshPhysicalMaterial
+        map={labelTex([{ text: "AA  1.5V    AA  1.5V", size: 92, weight: 800, color: "#e9edf5" }], { w: 1024, h: 256, bg: "#1c2230", radius: 0 })}
+        roughness={0.35}
+        clearcoat={0.6}
+      />
     </mesh>
     <mesh position={[0, 0.17, 0]}>
       <cylinderGeometry args={[0.0725, 0.0725, 0.12, 32]} />

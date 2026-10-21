@@ -4,11 +4,11 @@ import { AbsoluteFill, interpolate, useVideoConfig } from "remotion";
 import * as THREE from "three";
 import { Backdrop, Callout, Chapter, LensFinish } from "../overlay/Overlay";
 import { look } from "../theme";
-import { Preload } from "../three/materials";
+import { getTex, Preload } from "../three/materials";
 import { useNylon } from "../three/models/FabricPanel";
 import { DeflatingCostume } from "../three/models/DeflatingCostume";
 import { BatteryPack } from "../three/models/PowerSources";
-import { makeRig, project } from "../three/rig";
+import { CamKey, makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
 import { useFrame } from "./time";
 
@@ -19,16 +19,16 @@ const smooth = (t: number) => t * t * (3 - 2 * t);
  * WEAR A (30.58–34.6 s): "היכנסו לתוך התחפושת…" — the real costume, still empty and slack, on the
  * light studio floor. (Placeholder for the live-action/Kling wearer shot planned for later.)
  */
-export const WearIn: React.FC = () => {
+export const WearIn: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys, chrome = true }) => {
   const frame = useFrame();
   const { width, height } = useVideoConfig();
   const rig = useMemo(
     () =>
-      makeRig([
+      makeRig(keys ?? [
         { f: 0, pos: [0.25, 0.1, 6.4], target: [0.05, -0.1, 0], fov: 34 },
         { f: 130, pos: [0.1, 0.05, 5.5], target: [0.05, -0.05, 0], fov: 34 },
       ]),
-    [],
+    [keys],
   );
   const cam = rig(frame);
   const p = project([0.15, 0.35, 0.1], cam, width, height);
@@ -42,8 +42,10 @@ export const WearIn: React.FC = () => {
           <DeflatingCostume pressure={0.18} height={3} />
         </ThreeCanvas>
       </Preload>
-      <Callout at={p} dx={-330} dy={-60} start={12} title="נכנסים לתחפושת" sub="המאוורר עדיין כבוי" />
+      {chrome ? <Callout at={p} dx={-330} dy={-60} start={12} title="נכנסים לתחפושת" sub="המאוורר עדיין כבוי" /> : null}
+      {chrome ? (
       <Chapter n="03" title="לובשים" start={4} end={130} />
+      ) : null}
       <LensFinish />
     </AbsoluteFill>
   );
@@ -82,20 +84,40 @@ const Pocket: React.FC = () => {
   );
 };
 
-/** A length of grey webbing belt. */
-const Belt: React.FC<{ y: number }> = ({ y }) => (
-  <mesh position={[0, y, 0.135]} castShadow receiveShadow>
-    <boxGeometry args={[2.4, 0.26, 0.016]} />
-    <meshPhysicalMaterial color="#5a6478" roughness={0.85} sheen={0.4} sheenColor={new THREE.Color("#a0b0d0")} />
-  </mesh>
-);
+/** A real waist belt: a curved band of navy webbing (section of a ~1.6 m-girth loop) with stitched edges. */
+const Belt: React.FC<{ y: number }> = ({ y }) => {
+  const R = 1.55;
+  const geo = useMemo(() => new THREE.CylinderGeometry(R, R, 0.22, 96, 1, true, -0.62, 1.24), []);
+  const stitch = useMemo(() => {
+    const pts: THREE.Vector3[] = [];
+    for (let i = 0; i <= 80; i++) {
+      const a = -0.6 + (1.2 * i) / 80;
+      pts.push(new THREE.Vector3(Math.sin(a) * (R + 0.004), 0, Math.cos(a) * (R + 0.004)));
+    }
+    return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 160, 0.004, 5, false);
+  }, []);
+  const weave = getTex("tex/tape_normal.png", 1, false);
+  weave.repeat.set(40, 2);
+  return (
+    <group position={[0, y, 0.135 - R]}>
+      <mesh geometry={geo} castShadow receiveShadow>
+        <meshPhysicalMaterial color="#26304a" roughness={0.8} sheen={0.5} sheenColor={new THREE.Color("#7f8fb5")} normalMap={weave} normalScale={new THREE.Vector2(0.6, 0.6)} side={THREE.DoubleSide} />
+      </mesh>
+      {[-0.085, 0.085].map((dy) => (
+        <mesh key={dy} geometry={stitch} position={[0, dy, 0]}>
+          <meshStandardMaterial color="#c9d2e6" roughness={0.7} />
+        </mesh>
+      ))}
+    </group>
+  );
+};
 
 /**
  * WEAR B (34.6–42.04 s): "…בכיס הפנימי" — the pack (lid on) slides down into the inner pocket →
  * "או הצמידו אותה לחגורה בעזרת הקליפס" — it rises out, turns to show the belt clip on its back,
  * and clips onto a belt. One continuous camera.
  */
-export const WearPack: React.FC = () => {
+export const WearPack: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys, chrome = true }) => {
   const frame = useFrame();
   const { width, height } = useVideoConfig();
   const L = look();
@@ -112,13 +134,13 @@ export const WearPack: React.FC = () => {
 
   const rig = useMemo(
     () =>
-      makeRig([
+      makeRig(keys ?? [
         { f: 0, pos: [0.55, 0.45, 3.2], target: [0, 0.25, 0], fov: 32 },
         { f: 95, pos: [0.4, 0.2, 2.8], target: [0, 0.0, 0], fov: 32 },
         { f: 150, pos: [1.6, 0.95, 3.6], target: [1.25, 0.8, -0.1], fov: 32 },
         { f: 240, pos: [1.8, 0.75, 2.7], target: [1.3, 0.55, 0], fov: 32 },
       ]),
-    [],
+    [keys],
   );
   const cam = rig(frame);
   const pPocket = project([0, -0.2, 0.2], cam, width, height);
@@ -149,7 +171,9 @@ export const WearPack: React.FC = () => {
       </Preload>
       <Callout at={pPocket} dx={-300} dy={-120} start={40} end={104} title="בכיס הפנימי" sub="קופסת הסוללות או סוללת הגיבוי" />
       <Callout at={pClip} dx={-260} dy={-170} start={176} title="קליפס לחגורה" sub="בהתאם לדגם" accent={L.air} />
+      {chrome ? (
       <Chapter n="03" title="לובשים" start={0} end={226} />
+      ) : null}
       <LensFinish />
     </AbsoluteFill>
   );
