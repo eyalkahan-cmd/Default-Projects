@@ -9,7 +9,7 @@ import { Blower } from "../three/models/Blower";
 import { deflate, DeflatingCostume, IMG_H, IMG_W } from "../three/models/DeflatingCostume";
 import { makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
-import { C, HEEBO } from "../theme";
+import { C, HEEBO, look } from "../theme";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 const H = 3;
@@ -95,12 +95,12 @@ export const T3Inflate: React.FC = () => {
       <Callout at={pFan} dx={170} dy={-150} start={8} end={74} title="מפעילים את המאוורר" />
       <Callout at={pBody} dx={-230} dy={-120} start={66} end={150} title="האוויר זורם פנימה" sub="וממלא את התחפושת" accent="#7fd6ff" />
 
-      <div style={{ position: "absolute", left: 110, bottom: 110, fontFamily: HEEBO, color: C.white, direction: "rtl", opacity: timeO }}>
-        <div style={{ fontSize: 26, fontWeight: 500, color: "rgba(220,232,255,0.8)" }}>זמן ניפוח משוער</div>
+      <div style={{ position: "absolute", left: 110, bottom: 110, fontFamily: HEEBO, color: look().text, direction: "rtl", opacity: timeO }}>
+        <div style={{ fontSize: 26, fontWeight: 500, color: look().sub }}>זמן ניפוח משוער</div>
         <div style={{ fontSize: 60, fontWeight: 800, letterSpacing: 0.5 }}>
           30–60 <span style={{ fontSize: 34, fontWeight: 500 }}>שניות</span>
         </div>
-        <div style={{ fontSize: 22, fontWeight: 400, color: "rgba(220,232,255,0.7)" }}>משתנה לפי הדגם</div>
+        <div style={{ fontSize: 22, fontWeight: 400, color: look().sub }}>משתנה לפי הדגם</div>
       </div>
       <div
         style={{
@@ -108,13 +108,13 @@ export const T3Inflate: React.FC = () => {
           right: 130,
           top: 470,
           fontFamily: HEEBO,
-          color: C.white,
+          color: look().text,
           direction: "rtl",
           opacity: heroO,
           translate: `0 ${(1 - heroO) * 16}px`,
         }}
       >
-        <div style={{ fontSize: 30, fontWeight: 500, color: C.yellow, letterSpacing: 1 }}>ניפוח מלא</div>
+        <div style={{ fontSize: 30, fontWeight: 500, color: look().accent, letterSpacing: 1 }}>ניפוח מלא</div>
         <div style={{ fontSize: 72, fontWeight: 800, lineHeight: 1.05 }}>למלוא גודלה</div>
       </div>
 

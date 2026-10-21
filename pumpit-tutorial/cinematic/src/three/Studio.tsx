@@ -2,6 +2,7 @@ import { useThree } from "@react-three/fiber";
 import React, { useLayoutEffect, useMemo } from "react";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { look } from "../theme";
 import { applyCam, CamState } from "./rig";
 
 /** Drives the R3F default camera from a rig state (called every rendered frame). */
@@ -45,10 +46,25 @@ export const Studio: React.FC<{
     gl.shadowMap.enabled = true;
     gl.shadowMap.type = THREE.PCFSoftShadowMap;
   }, [env, envIntensity, gl, scene]);
+  // radial alpha falloff so the glossy floor melts into the CSS cyclorama (no hard horizon line)
+  const floorFade = useMemo(() => {
+    const n = 256;
+    const d = new Uint8Array(n * n * 4);
+    for (let j = 0; j < n; j++)
+      for (let i = 0; i < n; i++) {
+        const r = Math.hypot(i / (n - 1) - 0.5, j / (n - 1) - 0.5) * 2;
+        const t = Math.min(1, Math.max(0, (r - 0.3) / 0.7));
+        const a = Math.round(255 * (1 - t * t * (3 - 2 * t)));
+        d.set([a, a, a, 255], (j * n + i) * 4);
+      }
+    const tex = new THREE.DataTexture(d, n, n);
+    tex.needsUpdate = true;
+    return tex;
+  }, []);
   if (!lights) return null;
   return (
     <>
-      <hemisphereLight args={["#cfe3ff", "#0a1430", 0.25]} />
+      <hemisphereLight args={[look().hemiSky, look().hemiGround, look().hemi]} />
       <directionalLight
         position={keyPos}
         intensity={keyIntensity}
@@ -67,8 +83,8 @@ export const Studio: React.FC<{
       <pointLight position={[-3, 1, 3]} intensity={6} distance={12} color="#ffcf9a" />
       {floor && floorStyle === "glossy" ? (
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, floorY, 0]} receiveShadow>
-          <circleGeometry args={[40, 128]} />
-          <meshPhysicalMaterial color="#0a2560" roughness={0.42} metalness={0} clearcoat={0.35} clearcoatRoughness={0.3} envMapIntensity={0.5} />
+          <circleGeometry args={[11, 128]} />
+          <meshPhysicalMaterial color={look().floor} roughness={0.42} metalness={0} clearcoat={0.35} clearcoatRoughness={0.3} envMapIntensity={0.5} alphaMap={floorFade} transparent depthWrite={false} />
         </mesh>
       ) : null}
       {floor ? (

@@ -34,3 +34,77 @@ export const FPS = 30;
 
 /** Seconds → frames */
 export const f = (sec: number) => Math.round(sec * FPS);
+
+/**
+ * Art-direction "looks" for the style-frame comparison. One look per render, set by <WithLook>
+ * before the scene renders (a module value rather than React context, so it also reaches
+ * components inside the WebGL canvas).
+ */
+export type LookId = "night" | "daylight" | "color";
+export type Look = {
+  id: LookId;
+  /** CSS background of the cyclorama behind the transparent canvas ({x},{y} = light centre in %). */
+  bg: (x: number, y: number) => string;
+  floor: string;
+  hemiSky: string;
+  hemiGround: string;
+  hemi: number;
+  text: string;
+  sub: string;
+  accent: string;
+  leader: string;
+  vignette: string;
+  grain: number;
+};
+export const LOOKS: Record<LookId, Look> = {
+  night: {
+    id: "night",
+    bg: (x, y) => `radial-gradient(ellipse 75% 85% at ${x}% ${y}%, #0f3f99 0%, #062a6d 38%, #031640 72%, #010a20 100%)`,
+    floor: "#0a2560",
+    hemiSky: "#cfe3ff",
+    hemiGround: "#0a1430",
+    hemi: 0.25,
+    text: "#FFFFFF",
+    sub: "rgba(220,232,255,0.8)",
+    accent: C.yellow,
+    leader: "rgba(255,255,255,0.85)",
+    vignette: "rgba(0,4,16,0.55)",
+    grain: 0.07,
+  },
+  // Clean bright studio: soft white-blue cyclorama, brand colours carried by the objects and accents.
+  daylight: {
+    id: "daylight",
+    bg: (x, y) => `radial-gradient(ellipse 80% 90% at ${x}% ${y}%, #ffffff 0%, #eef4fc 40%, #d9e5f5 75%, #c3d3ea 100%)`,
+    floor: "#e4ebf5",
+    hemiSky: "#ffffff",
+    hemiGround: "#b9c8de",
+    hemi: 0.9,
+    text: "#0B1F4D",
+    sub: "rgba(11,31,77,0.68)",
+    accent: C.pink,
+    leader: "rgba(11,31,77,0.7)",
+    vignette: "rgba(40,60,100,0.16)",
+    grain: 0.035,
+  },
+  // Brand colour: a saturated blue → violet → pink light field (Pumpit palette), still clean and premium.
+  color: {
+    id: "color",
+    bg: (x, y) =>
+      `radial-gradient(ellipse 55% 60% at ${x}% ${y}%, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 60%), linear-gradient(120deg, #1099EA 0%, #3b5bf0 38%, #7a3cf0 66%, #FF0F67 100%)`,
+    floor: "#2c2f8f",
+    hemiSky: "#e6f0ff",
+    hemiGround: "#3a1f70",
+    hemi: 0.45,
+    text: "#FFFFFF",
+    sub: "rgba(255,255,255,0.85)",
+    accent: C.yellow,
+    leader: "rgba(255,255,255,0.9)",
+    vignette: "rgba(20,0,60,0.32)",
+    grain: 0.05,
+  },
+};
+let current: Look = LOOKS.night;
+export const look = () => current;
+export const setLook = (id: LookId = "night") => {
+  current = LOOKS[id];
+};

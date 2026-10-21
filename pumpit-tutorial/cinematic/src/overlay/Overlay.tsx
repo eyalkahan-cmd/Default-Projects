@@ -1,6 +1,6 @@
 import React from "react";
 import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
-import { C, HEEBO } from "../theme";
+import { C, HEEBO, look } from "../theme";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
@@ -9,7 +9,7 @@ const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 export const Backdrop: React.FC<{ x?: number; y?: number }> = ({ x = 0.55, y = 0.42 }) => (
   <AbsoluteFill
     style={{
-      background: `radial-gradient(ellipse 75% 85% at ${x * 100}% ${y * 100}%, #0f3f99 0%, #062a6d 38%, #031640 72%, #010a20 100%)`,
+      background: look().bg(x * 100, y * 100),
     }}
   />
 );
@@ -19,8 +19,8 @@ export const LensFinish: React.FC = () => {
   const frame = useCurrentFrame();
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
-      <AbsoluteFill style={{ background: "radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,4,16,0.55) 100%)" }} />
-      <svg width="100%" height="100%" style={{ position: "absolute", inset: 0, opacity: 0.07, mixBlendMode: "overlay" }}>
+      <AbsoluteFill style={{ background: `radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 55%, ${look().vignette} 100%)` }} />
+      <svg width="100%" height="100%" style={{ position: "absolute", inset: 0, opacity: look().grain, mixBlendMode: "overlay" }}>
         <filter id="grain">
           <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed={frame % 12} />
           <feColorMatrix type="saturate" values="0" />
@@ -44,7 +44,9 @@ export const Callout: React.FC<{
   title: string;
   sub?: string;
   accent?: string;
-}> = ({ at, dx, dy, start, end = 1e9, title, sub, accent = C.yellow }) => {
+}> = ({ at, dx, dy, start, end = 1e9, title, sub, accent: accentProp }) => {
+  const L = look();
+  const accent = accentProp ?? L.accent;
   const frame = useCurrentFrame();
   const draw = easeOut(interpolate(frame, [start, start + 12], [0, 1], clamp));
   const text = easeOut(interpolate(frame, [start + 8, start + 20], [0, 1], clamp));
@@ -57,8 +59,8 @@ export const Callout: React.FC<{
       <svg width="100%" height="100%" style={{ position: "absolute", inset: 0 }}>
         <circle cx={at.x} cy={at.y} r={7 * Math.min(1, draw * 3)} fill={accent} />
         <circle cx={at.x} cy={at.y} r={16 * Math.min(1, draw * 3)} fill="none" stroke={accent} strokeOpacity={0.45} strokeWidth={1.5} />
-        <line x1={at.x} y1={at.y} x2={ex} y2={ey} stroke="rgba(255,255,255,0.85)" strokeWidth={1.6} />
-        <line x1={ex} y1={ey} x2={ex + (right ? -26 : 26) * text} y2={ey} stroke="rgba(255,255,255,0.85)" strokeWidth={1.6} />
+        <line x1={at.x} y1={at.y} x2={ex} y2={ey} stroke={L.leader} strokeWidth={1.6} />
+        <line x1={ex} y1={ey} x2={ex + (right ? -26 : 26) * text} y2={ey} stroke={L.leader} strokeWidth={1.6} />
       </svg>
       <div
         style={{
@@ -70,13 +72,13 @@ export const Callout: React.FC<{
           whiteSpace: "nowrap",
           textAlign: right ? "right" : "left",
           fontFamily: HEEBO,
-          color: C.white,
+          color: L.text,
           opacity: text,
           filter: `blur(${(1 - text) * 6}px)`,
         }}
       >
         <div style={{ fontSize: 44, fontWeight: 700, letterSpacing: 0.2, lineHeight: 1.1 }}>{title}</div>
-        {sub ? <div style={{ fontSize: 26, fontWeight: 400, color: "rgba(220,232,255,0.8)", marginTop: 6 }}>{sub}</div> : null}
+        {sub ? <div style={{ fontSize: 26, fontWeight: 400, color: L.sub, marginTop: 6 }}>{sub}</div> : null}
       </div>
     </AbsoluteFill>
   );
@@ -98,13 +100,13 @@ export const Chapter: React.FC<{ n: string; title: string; start: number; end: n
         alignItems: "center",
         gap: 18,
         fontFamily: HEEBO,
-        color: C.white,
+        color: look().text,
         opacity: p * out,
         translate: `${(1 - p) * 30}px 0`,
       }}
     >
-      <div style={{ fontSize: 26, fontWeight: 800, color: C.yellow, letterSpacing: 2 }}>{n}</div>
-      <div style={{ width: 46 * p, height: 2, background: C.yellow }} />
+      <div style={{ fontSize: 26, fontWeight: 800, color: look().accent, letterSpacing: 2 }}>{n}</div>
+      <div style={{ width: 46 * p, height: 2, background: look().accent }} />
       <div style={{ fontSize: 30, fontWeight: 500, letterSpacing: 0.5 }}>{title}</div>
     </div>
   );
