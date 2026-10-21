@@ -33,7 +33,7 @@ export const LensFinish: React.FC = () => {
 
 /**
  * A technical callout locked to a projected 3D point: a dot on the object, a thin leader
- * that draws out, then an RTL label (title + optional sub-line). No boxes, no giant type.
+ * that draws out, then an RTL label (title + optional sub-line) on a soft plate with an accent edge.
  */
 export const Callout: React.FC<{
   at: { x: number; y: number };
@@ -54,37 +54,47 @@ export const Callout: React.FC<{
   const ex = at.x + dx * draw;
   const ey = at.y + dy * draw;
   const right = dx < 0; // label sits on the far side of the leader
+  // keep the plate inside a 60 px safe area (width estimated from Heebo 800/500 metrics)
+  const SAFE = 60;
+  const w = Math.max(title.length * 31, (sub ?? "").length * 17) + 58;
+  const offRight = Math.min(1920 - ex + 30, 1920 - SAFE - w);
+  const offLeft = Math.min(ex + 30, 1920 - SAFE - w);
+  const top = Math.min(Math.max(ey, SAFE + 60), 1080 - SAFE - 60);
   return (
     <AbsoluteFill style={{ pointerEvents: "none", opacity: out }}>
       <svg width="100%" height="100%" style={{ position: "absolute", inset: 0 }}>
-        <circle cx={at.x} cy={at.y} r={7 * Math.min(1, draw * 3)} fill={accent} />
-        <circle cx={at.x} cy={at.y} r={16 * Math.min(1, draw * 3)} fill="none" stroke={accent} strokeOpacity={0.45} strokeWidth={1.5} />
-        <line x1={at.x} y1={at.y} x2={ex} y2={ey} stroke={L.leader} strokeWidth={1.6} />
-        <line x1={ex} y1={ey} x2={ex + (right ? -26 : 26) * text} y2={ey} stroke={L.leader} strokeWidth={1.6} />
+        <circle cx={at.x} cy={at.y} r={9 * Math.min(1, draw * 3)} fill={accent} stroke={L.plate} strokeWidth={2} />
+        <circle cx={at.x} cy={at.y} r={20 * Math.min(1, draw * 3)} fill="none" stroke={accent} strokeOpacity={0.55} strokeWidth={2} />
+        <line x1={at.x} y1={at.y} x2={ex} y2={ey} stroke={L.leader} strokeWidth={2.4} />
+        <line x1={ex} y1={ey} x2={ex + (right ? -26 : 26) * text} y2={ey} stroke={L.leader} strokeWidth={2.4} />
       </svg>
       <div
         style={{
           position: "absolute",
-          top: ey,
-          ...(right ? { right: 1920 - ex + 40 } : { left: ex + 40 }),
-          translate: `0 -50%`,
+          top,
+          ...(right ? { right: Math.max(SAFE, offRight) } : { left: Math.max(SAFE, offLeft) }),
           direction: "rtl",
           whiteSpace: "nowrap",
           textAlign: right ? "right" : "left",
           fontFamily: HEEBO,
           color: L.text,
           opacity: text,
-          filter: `blur(${(1 - text) * 6}px)`,
+          translate: `${(1 - text) * (right ? 14 : -14)}px -50%`,
+          background: L.plate,
+          boxShadow: L.plateShadow,
+          borderRadius: 16,
+          padding: "14px 26px 16px",
+          borderInlineStart: `5px solid ${accent}`,
         }}
       >
-        <div style={{ fontSize: 44, fontWeight: 700, letterSpacing: 0.2, lineHeight: 1.1 }}>{title}</div>
-        {sub ? <div style={{ fontSize: 26, fontWeight: 400, color: L.sub, marginTop: 6 }}>{sub}</div> : null}
+        <div style={{ fontSize: 56, fontWeight: 800, letterSpacing: 0.2, lineHeight: 1.05 }}>{title}</div>
+        {sub ? <div style={{ fontSize: 32, fontWeight: 500, color: L.sub, marginTop: 6, lineHeight: 1.15 }}>{sub}</div> : null}
       </div>
     </AbsoluteFill>
   );
 };
 
-/** Small chapter marker, top-right, RTL: "01 · התקנת המאוורר". Understated, never a giant headline. */
+/** Chapter marker, top-right, RTL: "01 · התקנת המאוורר", on a soft pill. Clear but never a giant headline. */
 export const Chapter: React.FC<{ n: string; title: string; start: number; end: number }> = ({ n, title, start, end }) => {
   const frame = useCurrentFrame();
   const p = easeOut(interpolate(frame, [start, start + 14], [0, 1], clamp));
@@ -93,21 +103,25 @@ export const Chapter: React.FC<{ n: string; title: string; start: number; end: n
     <div
       style={{
         position: "absolute",
-        top: 64,
-        right: 84,
+        top: 56,
+        right: 72,
         direction: "rtl",
         display: "flex",
         alignItems: "center",
         gap: 18,
+        background: look().plate,
+        boxShadow: look().plateShadow,
+        borderRadius: 40,
+        padding: "12px 28px",
         fontFamily: HEEBO,
         color: look().text,
         opacity: p * out,
         translate: `${(1 - p) * 30}px 0`,
       }}
     >
-      <div style={{ fontSize: 26, fontWeight: 800, color: look().accent, letterSpacing: 2 }}>{n}</div>
+      <div style={{ fontSize: 34, fontWeight: 800, color: look().accent, letterSpacing: 2 }}>{n}</div>
       <div style={{ width: 46 * p, height: 2, background: look().accent }} />
-      <div style={{ fontSize: 30, fontWeight: 500, letterSpacing: 0.5 }}>{title}</div>
+      <div style={{ fontSize: 38, fontWeight: 700, letterSpacing: 0.5 }}>{title}</div>
     </div>
   );
 };

@@ -59,6 +59,9 @@ export type Look = {
   air: string;
   airPulse: string;
   airAdditive: boolean;
+  /** soft backing plate behind labels, so they stay legible over printed fabric */
+  plate: string;
+  plateShadow: string;
 };
 export const LOOKS: Record<LookId, Look> = {
   night: {
@@ -77,6 +80,8 @@ export const LOOKS: Record<LookId, Look> = {
     air: "#7fd6ff",
     airPulse: "#bff0ff",
     airAdditive: true,
+    plate: "rgba(3,22,64,0.62)",
+    plateShadow: "0 10px 30px rgba(0,0,0,0.25)",
   },
   // Clean bright studio: soft white-blue cyclorama, brand colours carried by the objects and accents.
   daylight: {
@@ -96,6 +101,8 @@ export const LOOKS: Record<LookId, Look> = {
     air: "#1099EA",
     airPulse: "#0B6FC2",
     airAdditive: false,
+    plate: "rgba(255,255,255,0.88)",
+    plateShadow: "0 10px 32px rgba(11,31,77,0.14)",
   },
   // Brand colour: a saturated blue → violet → pink light field (Pumpit palette), still clean and premium.
   color: {
@@ -115,6 +122,8 @@ export const LOOKS: Record<LookId, Look> = {
     air: "#bff0ff",
     airPulse: "#ffffff",
     airAdditive: true,
+    plate: "rgba(20,10,60,0.45)",
+    plateShadow: "0 10px 30px rgba(0,0,0,0.2)",
   },
 };
 let current: Look = LOOKS.night;
