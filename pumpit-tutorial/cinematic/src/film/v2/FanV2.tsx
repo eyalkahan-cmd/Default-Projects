@@ -4,7 +4,7 @@ import { Backdrop, Callout, LensFinish } from "../../overlay/Overlay";
 import { C } from "../../theme";
 import { T1Fan } from "../../tests/T1Fan";
 import { CamKey } from "../../three/rig";
-import { IMG_H, IMG_W } from "../../three/models/DeflatingCostume";
+import { IMG_H, IMG_W, TREX_OVERHANG, TREX_SRC } from "../../three/models/DeflatingCostume";
 import { Character, characterLayout, characterPoint } from "../Character";
 import { clamp, PuffyBlob, puff, settle, ShotFx, SPRING_OBJECT, StepBar } from "../motion";
 import { Retime, useFrame } from "../time";
@@ -29,7 +29,7 @@ const WhereIsTheFan: React.FC<{ len: number }> = ({ len }) => {
     <AbsoluteFill style={{ overflow: "visible" }}>
       <Backdrop x={0.5} y={0.45} />
       <PuffyBlob x={cx - 40} y={layout.floor - H * 0.52 * layout.scale} r={330 * layout.scale} color="#dcedff" scale={puff(frame, 0, SPRING_OBJECT)} />
-      <Character src="img/trex_cutout_v2.png" aspect={IMG_W / IMG_H} height={H} cx={cx} scale={push} appear={appear} />
+      <Character src={TREX_SRC} overhang={TREX_OVERHANG} aspect={IMG_W / IMG_H} height={H} cx={cx} scale={push} appear={appear} />
       <svg width="100%" height="100%" style={{ position: "absolute", inset: 0, overflow: "visible" }}>
         {[0, 1, 2].map((k) => {
           const t = pulse(k);

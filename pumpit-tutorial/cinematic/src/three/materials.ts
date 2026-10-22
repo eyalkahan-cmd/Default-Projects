@@ -5,7 +5,7 @@ import * as THREE from "three";
 const images = new Map<string, HTMLImageElement>();
 
 /** Texture files used by the 3D scenes; all are preloaded before any canvas mounts. */
-export const TEXTURES = ["tex/trex_print.jpg", "tex/trex_print_real.jpg", "tex/ripstop_normal.png", "tex/tape_normal.png", "img/trex_cutout_clean.png", "img/trex_cutout_v2.png"];
+export const TEXTURES = ["tex/trex_print.jpg", "tex/trex_print_real.jpg", "tex/ripstop_normal.png", "tex/tape_normal.png", "img/trex_cutout_clean.png", "img/trex_cutout_v2.png", "img/trex_cutout_v3.png"];
 
 /**
  * Holds the composition until every texture image is decoded, then mounts the children.

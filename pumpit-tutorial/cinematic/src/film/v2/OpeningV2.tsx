@@ -3,7 +3,7 @@ import { AbsoluteFill, Img, interpolate, staticFile } from "remotion";
 import { Backdrop, LensFinish } from "../../overlay/Overlay";
 import { C, HEEBO, look } from "../../theme";
 import { BEAT, clamp, deflateOut, KineticWord, puff, PuffyBlob, settle, SPRING_OBJECT, STEPS } from "../motion";
-import { IMG_H, IMG_W } from "../../three/models/DeflatingCostume";
+import { IMG_H, IMG_W, TREX_OVERHANG, TREX_SRC } from "../../three/models/DeflatingCostume";
 import { Character } from "../Character";
 import { useFrame } from "../time";
 import { OPENING } from "./timings";
@@ -96,7 +96,7 @@ export const OpeningV2: React.FC = () => {
       {frame >= HERO - 2 ? (
         <>
           <PuffyBlob x={640} y={560} r={360} color="#d9ecff" scale={blob} squash={1 + Math.sin(frame / 7) * 0.012} />
-          <Character src="img/trex_cutout_v2.png" aspect={IMG_W / IMG_H} height={900} cx={640} floor={1010} appear={hero} />
+          <Character src={TREX_SRC} overhang={TREX_OVERHANG} aspect={IMG_W / IMG_H} height={900} cx={640} floor={1010} appear={hero} />
           <div style={{ position: "absolute", right: 140, top: 300, direction: "rtl", fontFamily: HEEBO, color: L.text }}>
             {["איך מנפחים", "תחפושת מתנפחת"].map((w, i) => (
               <div key={w} style={{ fontSize: 112, fontWeight: 900, lineHeight: 1.04, letterSpacing: -1, transform: `scale(${puff(frame, HERO + 6 + i * BEAT)})`, transformOrigin: "100% 60%" }}>

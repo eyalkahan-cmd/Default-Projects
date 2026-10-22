@@ -59,9 +59,15 @@ export const deflate = (u: number, v: number, e: number) => {
   return { u: u + du, v: v + dv, crease: e * crease };
 };
 
-// clean GrabCut cutout with the full feet and claws (scripts/cutout_trex.py)
+// T-Rex cutout (scripts/cutout_trex.py, feet and tail tip rebuilt by scripts/fix_trex_feet.py).
+// IMG_W × IMG_H is the reference box every layout / uv constant is measured in; the texture is
+// TEX_W wide — the extra columns on the right hold the tip of the tail, outside the box.
+export const TREX_SRC = "img/trex_cutout_v3.png";
 export const IMG_W = 914;
 export const IMG_H = 1311;
+export const TEX_W = 994;
+/** how far the texture reaches past the reference box on the right (fraction of its width) */
+export const TREX_OVERHANG = TEX_W / IMG_W - 1;
 
 /**
  * The real, fully inflated T-Rex (alpha cutout) on a dense mesh, deformed by `deflate`.
@@ -74,7 +80,13 @@ export const DeflatingCostume: React.FC<{ pressure: number; height?: number; pos
   position = [0, 0, 0],
 }) => {
   const width = (height * IMG_W) / IMG_H;
-  const geo = useMemo(() => new THREE.PlaneGeometry(width, height, 180, 230), [height, width]);
+  const texWidth = (height * TEX_W) / IMG_H;
+  // the plane spans the whole texture; its left edge sits on the reference box's left edge
+  const geo = useMemo(() => {
+    const g = new THREE.PlaneGeometry(texWidth, height, 196, 230);
+    g.translate((texWidth - width) / 2, 0, 0);
+    return g;
+  }, [height, width, texWidth]);
   const base = useMemo(() => Float32Array.from(geo.attributes.position.array as Float32Array), [geo]);
   const colors = useMemo(() => {
     const c = new Float32Array(geo.attributes.position.count * 3);
@@ -84,7 +96,7 @@ export const DeflatingCostume: React.FC<{ pressure: number; height?: number; pos
   const e = 1 - Math.min(1, pressure);
   const p = geo.attributes.position as THREE.BufferAttribute;
   for (let i = 0; i < p.count; i++) {
-    const u = base[i * 3] / width + 0.5;
+    const u = base[i * 3] / width + 0.5; // reference-box u (> 1 on the tail tip)
     const v = base[i * 3 + 1] / height + 0.5;
     const d = deflate(u, v, e);
     // small overshoot when the fabric snaps taut (pressure slightly > 1)
@@ -101,7 +113,7 @@ export const DeflatingCostume: React.FC<{ pressure: number; height?: number; pos
   geo.computeVertexNormals();
   return (
     <mesh geometry={geo} position={position}>
-      <meshBasicMaterial map={getTex("img/trex_cutout_v2.png")} transparent alphaTest={0.02} vertexColors toneMapped={false} side={THREE.DoubleSide} />
+      <meshBasicMaterial map={getTex(TREX_SRC)} transparent alphaTest={0.02} vertexColors toneMapped={false} side={THREE.DoubleSide} />
     </mesh>
   );
 };

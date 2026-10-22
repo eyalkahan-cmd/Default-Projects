@@ -54,7 +54,9 @@ export const Character: React.FC<{
   phase?: number;
   shadow?: number;
   opacity?: number;
-}> = ({ src, aspect, height, cx, floor, scale = 1, appear = 1, breathing = true, phase = 0, shadow = 1, opacity = 1 }) => {
+  /** the photo reaches this far (fraction of the box width) past the right edge of its layout box */
+  overhang?: number;
+}> = ({ src, aspect, height, cx, floor, scale = 1, appear = 1, breathing = true, phase = 0, shadow = 1, opacity = 1, overhang = 0 }) => {
   const frame = useFrame();
   const { height: compH } = useVideoConfig();
   const l = characterLayout({ aspect, height, cx, floor, scale, compH, breathing });
@@ -83,9 +85,10 @@ export const Character: React.FC<{
           left: l.left,
           top: l.top,
           height: l.height,
-          width: l.width,
+          width: l.width * (1 + overhang),
           transform: `translateY(${b.y}px) scale(${s})`,
-          transformOrigin: "50% 100%",
+          // scale around the feet at the centre of the layout box (not of the wider photo)
+          transformOrigin: `${l.width / 2}px 100%`,
         }}
       />
     </div>
