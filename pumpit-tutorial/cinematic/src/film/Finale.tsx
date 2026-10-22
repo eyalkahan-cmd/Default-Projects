@@ -1,15 +1,14 @@
 import { ThreeCanvas } from "@remotion/three";
 import React, { useMemo } from "react";
 import { AbsoluteFill, Img, interpolate, staticFile, useVideoConfig } from "remotion";
-import * as THREE from "three";
 import { Backdrop, Callout, LensFinish } from "../overlay/Overlay";
 import { HEEBO, look } from "../theme";
 import { Preload } from "../three/materials";
-import { Airflow } from "../three/models/Airflow";
 import { Blower } from "../three/models/Blower";
 import { CamKey, makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
 import { Photo } from "./Opening";
+import { AirWisps } from "./motion";
 import { useFrame } from "./time";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
@@ -72,17 +71,8 @@ export const KeepRunning: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ k
     [keys],
   );
   const cam = rig(frame);
-  const paths = useMemo(
-    () =>
-      [-0.18, 0, 0.18].map((y, i) => [
-        new THREE.Vector3(1.2, y + 0.25, 1.1 - i * 0.2),
-        new THREE.Vector3(0.6, y * 0.6 + 0.1, 0.55),
-        new THREE.Vector3(0.12, y * 0.3, 0.12),
-        new THREE.Vector3(0, y * 0.2, -0.05),
-      ]),
-    [],
-  );
   const pFan = project([0.0, 0.32, 0.08], cam, width, height);
+  const pIntake = project([0.05, 0.0, 0.2], cam, width, height);
   return (
     <AbsoluteFill>
       <Backdrop x={0.45} y={0.45} />
@@ -91,9 +81,23 @@ export const KeepRunning: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ k
           <CameraDriver state={cam} />
           <Studio keyPos={[2.5, 3, 3]} rimPos={[-3, 2, -3]} floorY={-0.55} floorStyle="glossy" />
           <Blower position={[0, 0, 0]} rotation={[0, -0.25, 0]} spin={frame * 0.9} />
-          <Airflow paths={paths} t={frame / 30} opacity={interpolate(frame, [6, 24], [0, 1], clamp)} />
         </ThreeCanvas>
       </Preload>
+      {/* air drawn into the intake: soft wisps curling in from the front-right onto the grille */}
+      <AirWisps
+        wisps={[
+          [560, -230],
+          [640, -40],
+          [600, 170],
+          [470, 330],
+        ].map(([dx, dy]) => ({ a: { x: pIntake.x + dx, y: pIntake.y + dy }, b: { x: pIntake.x + dx * 0.12, y: pIntake.y + dy * 0.12 } }))}
+        color={look().air}
+        opacity={interpolate(frame, [4, 20], [0, 0.95], clamp)}
+        amp={1.6}
+        width={1.5}
+        speed={5}
+        id="intake"
+      />
       <Callout at={pFan} dx={-260} dy={-170} start={14} title="המאוורר נשאר פועל" sub="כל זמן שלובשים את התחפושת" />
       <LensFinish />
     </AbsoluteFill>

@@ -9,9 +9,14 @@ const START = 917; // 30.58 s on the film
 const IN_END = 120;
 const END = 344;
 
+// costume framed left of centre (the title sits right), full height with floor room in both angles
+const IN_WIDE: CamKey[] = [
+  { f: 0, pos: [0.95, 0.05, 6.6], target: [0.7, -0.1, 0], fov: 34 },
+  { f: 130, pos: [0.85, 0.0, 5.9], target: [0.65, -0.08, 0], fov: 34 },
+];
 const IN_LOW: CamKey[] = [
-  { f: 0, pos: [0.9, -0.9, 3.2], target: [0.15, -0.45, 0], fov: 32 },
-  { f: 130, pos: [0.6, -0.7, 2.8], target: [0.15, -0.4, 0], fov: 32 },
+  { f: 0, pos: [1.6, -1.15, 6.0], target: [0.75, -0.05, 0], fov: 33 },
+  { f: 130, pos: [1.25, -1.0, 5.6], target: [0.7, -0.02, 0], fov: 33 },
 ];
 // WearPack authored frames: into the pocket 8–70, out 104–140, turn 120–165, onto the belt 168–205
 const POCKET_HIGH: CamKey[] = [
@@ -41,7 +46,7 @@ export const WearV2: React.FC = () => {
   const p2 = cutOnBeat(START, IN_END + 104);
   const p3 = cutOnBeat(START, IN_END + 166);
   const shots: { from: number; to: number; el: React.ReactNode; fx?: "whip" | "zoom" }[] = [
-    { from: 0, to: a, el: <WearIn chrome={false} /> },
+    { from: 0, to: a, el: <WearIn chrome={false} keys={IN_WIDE} /> },
     { from: a, to: IN_END, el: <Retime src={[0, IN_END - a]} dst={[a, IN_END]}><WearIn chrome={false} keys={IN_LOW} /></Retime> },
     { from: IN_END, to: p1, fx: "whip", el: <Retime src={[0, p1 - IN_END]} dst={[0, p1 - IN_END]}><WearPack chrome={false} keys={POCKET_HIGH} /></Retime> },
     { from: p1, to: p2, el: <Retime src={[0, p2 - p1]} dst={[p1 - IN_END, p2 - IN_END]}><WearPack chrome={false} keys={POCKET_LOW} /></Retime> },
@@ -57,7 +62,7 @@ export const WearV2: React.FC = () => {
           </ShotFx>
         </Sequence>
       ))}
-      <KineticWord text="נכנסים לתחפושת" sub="המאוורר עדיין כבוי" start={14} end={IN_END - 4} x={1400} y={300} size={104} />
+      <KineticWord text="נכנסים לתחפושת" sub="המאוורר עדיין כבוי" start={14} end={IN_END - 4} x={1440} y={330} size={104} />
       <StepBar step={3} start={4} end={END + 200} />
     </AbsoluteFill>
   );

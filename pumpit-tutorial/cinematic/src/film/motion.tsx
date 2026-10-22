@@ -123,8 +123,8 @@ export const StepBar: React.FC<{ step: number; start: number; end: number }> = (
     <div
       style={{
         position: "absolute",
-        top: 50,
-        right: 64,
+        top: 44,
+        right: 60,
         direction: "rtl",
         display: "flex",
         flexDirection: "column",
@@ -135,16 +135,16 @@ export const StepBar: React.FC<{ step: number; start: number; end: number }> = (
         transformOrigin: "100% 0%",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 14, background: L.plate, boxShadow: L.plateShadow, borderRadius: 40, padding: "10px 24px 10px 14px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 14, background: L.plate, boxShadow: L.plateShadow, borderRadius: 40, padding: "10px 30px 10px 12px" }}>
         <div
           style={{
-            width: 52,
-            height: 52,
-            borderRadius: 26,
+            width: 64,
+            height: 64,
+            borderRadius: 32,
             background: `radial-gradient(circle at 35% 30%, #7cc8ff 0%, ${C.blue} 45%, #0a6fc0 100%)`,
             color: "#fff",
             fontWeight: 800,
-            fontSize: 30,
+            fontSize: 36,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -153,15 +153,15 @@ export const StepBar: React.FC<{ step: number; start: number; end: number }> = (
         >
           {step}
         </div>
-        <div style={{ fontSize: 36, fontWeight: 700, color: L.text }}>{STEPS[step - 1]}</div>
+        <div style={{ fontSize: 44, fontWeight: 800, color: L.text }}>{STEPS[step - 1]}</div>
       </div>
       <div style={{ display: "flex", gap: 8, paddingRight: 16 }}>
         {STEPS.map((_, i) => {
           const n = i + 1;
-          const w = n === step ? 84 : 40;
+          const w = n === step ? 104 : 50;
           const f = n < step ? 1 : n === step ? fill : 0;
           return (
-            <div key={i} style={{ width: w, height: 14, borderRadius: 7, background: "rgba(11,31,77,0.16)", boxShadow: "inset 0 1px 2px rgba(11,31,77,0.15)", overflow: "hidden" }}>
+            <div key={i} style={{ width: w, height: 16, borderRadius: 8, background: "rgba(11,31,77,0.16)", boxShadow: "inset 0 1px 2px rgba(11,31,77,0.15)", overflow: "hidden" }}>
               <div style={{ width: `${f * 100}%`, height: "100%", borderRadius: 7, background: `linear-gradient(180deg, #5bbcff, ${C.blue})` }} />
             </div>
           );
@@ -191,19 +191,19 @@ export const ShotFx: React.FC<{ len: number; inFx?: "whip" | "zoom" | "none"; ou
   let blur = 0;
   if (inFx === "whip") {
     tx += (1 - tIn) * 520 * dir;
-    blur = Math.max(blur, (1 - tIn) * 40);
+    blur = Math.max(blur, (1 - tIn) * 14);
   }
   if (inFx === "zoom") {
     sc *= 1 + (1 - tIn) * 0.35;
-    blur = Math.max(blur, (1 - tIn) * 18);
+    blur = Math.max(blur, (1 - tIn) * 7);
   }
   if (outFx === "whip") {
     tx -= tOut * 520 * dir;
-    blur = Math.max(blur, tOut * 40);
+    blur = Math.max(blur, tOut * 14);
   }
   if (outFx === "zoom") {
     sc *= 1 + tOut * 0.6;
-    blur = Math.max(blur, tOut * 22);
+    blur = Math.max(blur, tOut * 8);
   }
   // a bright streak sweeps with the move so the blurred frames read as intentional light, not mud
   const streak = Math.max(inFx === "none" ? 0 : 1 - tIn, outFx === "none" ? 0 : tOut);
@@ -279,4 +279,55 @@ export const subMap = (src: number[], dst: number[], a: number, b: number) => {
   };
   const s = [a, ...src.filter((x) => x > a && x < b), b];
   return { src: s.map((x) => x - a), dst: s.map(at) };
+};
+
+/**
+ * Air drawn as soft curling wisps in screen space: each runs from `a` toward `b` (and a little
+ * past it), a blurred colour body with a fine white core, dashes travelling along the path.
+ */
+export const AirWisps: React.FC<{ wisps: { a: { x: number; y: number }; b: { x: number; y: number } }[]; color: string; opacity?: number; amp?: number; width?: number; speed?: number; id?: string }> = ({
+  wisps,
+  color,
+  opacity = 1,
+  amp = 1,
+  width = 1,
+  speed = 4,
+  id = "aw",
+}) => {
+  const frame = useFrame();
+  if (opacity <= 0.01) return null;
+  return (
+    <svg width={1920} height={1080} style={{ position: "absolute", inset: 0, opacity, pointerEvents: "none" }}>
+      <defs>
+        <filter id={`${id}Blur`} x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation={4 * width} />
+        </filter>
+      </defs>
+      {wisps.map(({ a, b }, i) =>
+        [0, 1, 2].map((k) => {
+          const dx = b.x - a.x;
+          const dy = b.y - a.y;
+          const len = Math.hypot(dx, dy) || 1;
+          const nx = -dy / len;
+          const ny = dx / len;
+          const ph = frame / 6 + k * 2.1 + i;
+          const pts = new Array(17).fill(0).map((_, j) => {
+            const t = j / 16;
+            const w = (12 + 30 * t) * amp;
+            const off = Math.sin(ph + t * 6) * w + (k - 1) * 16 * amp * t;
+            const reach = 1 + 0.12 * k;
+            return `${(a.x + dx * t * reach + nx * off).toFixed(1)},${(a.y + dy * t * reach + ny * off).toFixed(1)}`;
+          });
+          const dash = 0.42 * len;
+          const travel = -(((frame * speed * 3 + k * 41 + i * 29) % (dash * 2.4)) - dash * 2.4);
+          return (
+            <g key={`${i}${k}`}>
+              <polyline points={pts.join(" ")} fill="none" stroke={color} strokeOpacity={0.5} strokeWidth={(13 - k * 3) * width} strokeLinecap="round" strokeDasharray={`${dash} ${dash * 1.4}`} strokeDashoffset={travel} filter={`url(#${id}Blur)`} />
+              <polyline points={pts.join(" ")} fill="none" stroke="#ffffff" strokeOpacity={0.9} strokeWidth={3 * width} strokeLinecap="round" strokeDasharray={`${dash} ${dash * 1.4}`} strokeDashoffset={travel} />
+            </g>
+          );
+        }),
+      )}
+    </svg>
+  );
 };

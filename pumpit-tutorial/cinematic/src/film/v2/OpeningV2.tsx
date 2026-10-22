@@ -6,18 +6,28 @@ import { BEAT, clamp, deflateOut, KineticWord, puff, PuffyBlob, STEPS } from "..
 import { useFrame } from "../time";
 
 const CARDS = ["cut/astronaut.png", "cut/dino_blue.png", "cut/giraffe.png", "cut/unicorn.png", "cut/horse.png", "cut/peacock.png"];
-const R = 600; // carousel radius (px, CSS 3D)
-const CARD_W = 500;
-const CARD_H = 650;
+const CARD_W = 520;
+const CARD_H = 660;
 
-/** step the carousel one card per beat: quick move (55% of the beat), then a hold */
-const carouselAngle = (frame: number, start: number) => {
+/** carousel position in cards: one step per beat, quick move (55% of the beat), then a hold */
+const carouselPos = (frame: number, start: number) => {
   const t = Math.max(0, frame - start) / BEAT;
   const k = Math.floor(t);
   const f = t - k;
   const move = f < 0.55 ? f / 0.55 : 1;
   const e = move < 0.5 ? 4 * move ** 3 : 1 - Math.pow(-2 * move + 2, 3) / 2;
-  return -(k + e) * (360 / CARDS.length);
+  return k + e;
+};
+
+/** cover-flow placement for a card at signed offset p from the centre slot */
+const flow = (p: number) => {
+  const a = Math.abs(p);
+  const sg = Math.sign(p);
+  const x = sg * (Math.min(a, 1) * 470 + Math.max(0, a - 1) * 300);
+  const rot = -sg * Math.min(a, 1) * 38;
+  const z = -Math.min(a, 2.2) * 260;
+  const op = interpolate(a, [1.6, 2.4], [1, 0], clamp);
+  return { x, rot, z, op, a };
 };
 
 /**
@@ -29,7 +39,7 @@ export const OpeningV2: React.FC = () => {
   const frame = useFrame();
   const L = look();
   const HERO = 116;
-  const ang = carouselAngle(frame, 8);
+  const pos = carouselPos(frame, 8);
   const zoomOut = interpolate(frame, [HERO - 12, HERO], [0, 1], { ...clamp, easing: (t) => t * t });
   const hero = puff(frame, HERO);
   const blob = puff(frame, HERO - 2, 120);
@@ -37,39 +47,43 @@ export const OpeningV2: React.FC = () => {
     <AbsoluteFill>
       <Backdrop x={0.5} y={0.45} />
       {/* brand blobs drifting at the edges: playful, low-key */}
-      <PuffyBlob x={150 + Math.sin(frame / 40) * 12} y={900} r={120} color={C.yellow} scale={puff(frame, 2, 120)} rot={frame * 0.2} />
-      <PuffyBlob x={1790} y={760 + Math.cos(frame / 35) * 12} r={140} color={C.blue} scale={puff(frame, 5, 120)} rot={-frame * 0.15} />
-      <PuffyBlob x={1840} y={430} r={55} color={C.pink} scale={puff(frame, 8, 120)} />
+      <PuffyBlob x={95 + Math.sin(frame / 40) * 12} y={975} r={115} color={C.yellow} scale={puff(frame, 2, 120)} rot={frame * 0.2} />
+      <PuffyBlob x={1835} y={975 + Math.cos(frame / 35) * 12} r={120} color={C.blue} scale={puff(frame, 5, 120)} rot={-frame * 0.15} />
+      <PuffyBlob x={1790} y={250 + Math.sin(frame / 30) * 8} r={50} color={C.pink} scale={puff(frame, 8, 120)} />
 
       {frame < HERO ? (
-        <AbsoluteFill style={{ perspective: 1900, transform: `scale(${1 + zoomOut * 0.9})`, filter: zoomOut > 0.02 ? `blur(${zoomOut * 16}px)` : undefined, opacity: 1 - zoomOut * 0.6 }}>
-          <div style={{ position: "absolute", left: 960, top: 640, transformStyle: "preserve-3d", transform: `translateZ(${-R * 0.25}px) rotateX(-5deg) rotateY(${ang}deg)` }}>
-            {CARDS.map((src, i) => {
-              const a = (i * 360) / CARDS.length;
-              const ap = puff(frame, 2 + i * 2, 150);
-              return (
-                <div
-                  key={src}
-                  style={{
-                    position: "absolute",
-                    width: CARD_W,
-                    height: CARD_H,
-                    left: -CARD_W / 2,
-                    top: -CARD_H / 2,
-                    transform: `rotateY(${a}deg) translateZ(${R}px) scale(${ap})`,
-                    backfaceVisibility: "hidden",
-                    borderRadius: 36,
-                    background: "linear-gradient(170deg, #ffffff 0%, #eef5fe 100%)",
-                    boxShadow: "0 30px 60px rgba(11,31,77,0.18), inset 0 0 0 2px rgba(255,255,255,0.9)",
-                    overflow: "hidden",
-                  }}
-                >
-                  <div style={{ position: "absolute", left: "50%", top: "52%", width: 330, height: 330, transform: "translate(-50%,-50%)", borderRadius: "50%", background: `radial-gradient(circle at 35% 30%, ${["#d7ecff", "#ffe9f1", "#fff6c9"][i % 3]} 0%, rgba(255,255,255,0) 70%)` }} />
-                  <Img src={staticFile(src)} style={{ position: "absolute", left: "50%", bottom: 18, height: CARD_H - 40, transform: "translateX(-50%)" }} />
-                </div>
-              );
-            })}
-          </div>
+        <AbsoluteFill style={{ perspective: 2000, transform: `scale(${1 + zoomOut * 0.9})`, filter: zoomOut > 0.02 ? `blur(${zoomOut * 7}px)` : undefined, opacity: 1 - zoomOut * 0.6 }}>
+          {CARDS.map((src, i) => {
+            const n = CARDS.length;
+            // signed distance from the centre slot, wrapped to [-n/2, n/2)
+            let p = (((i - pos) % n) + n) % n;
+            if (p >= n / 2) p -= n;
+            const c = flow(p);
+            const ap = puff(frame, 2 + Math.round(c.a) * 3, 150);
+            return (
+              <div
+                key={src}
+                style={{
+                  position: "absolute",
+                  width: CARD_W,
+                  height: CARD_H,
+                  left: 960 - CARD_W / 2,
+                  top: 640 - CARD_H / 2,
+                  zIndex: 100 - Math.round(c.a * 10),
+                  opacity: c.op,
+                  transform: `translateX(${c.x}px) translateZ(${c.z}px) rotateY(${c.rot}deg) scale(${ap})`,
+                  borderRadius: 36,
+                  background: "linear-gradient(170deg, #ffffff 0%, #eef5fe 100%)",
+                  boxShadow: `0 ${30 - c.a * 8}px 60px rgba(11,31,77,${0.2 - c.a * 0.05}), inset 0 0 0 2px rgba(255,255,255,0.9)`,
+                  overflow: "hidden",
+                  filter: c.a > 0.5 ? `brightness(${1 - (c.a - 0.5) * 0.06})` : undefined,
+                }}
+              >
+                <div style={{ position: "absolute", left: "50%", top: "52%", width: 340, height: 340, transform: "translate(-50%,-50%)", borderRadius: "50%", background: `radial-gradient(circle at 35% 30%, ${["#d7ecff", "#ffe9f1", "#fff6c9"][i % 3]} 0%, rgba(255,255,255,0) 70%)` }} />
+                <Img src={staticFile(src)} style={{ position: "absolute", left: "50%", bottom: 18, height: CARD_H - 40, transform: "translateX(-50%)" }} />
+              </div>
+            );
+          })}
         </AbsoluteFill>
       ) : null}
 

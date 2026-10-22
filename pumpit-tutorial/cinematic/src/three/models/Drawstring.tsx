@@ -15,7 +15,27 @@ export const PANEL_DOWN = 1.45;
 export const PANEL_UP = 1.8;
 export const lockYFor = (tighten: number) => -0.98 + 0.3 * tighten;
 
+/** inside of the costume seen through the opening: shadowed nylon, darker toward the middle (not a black hole) */
+let interior: THREE.CanvasTexture | null = null;
+const getInterior = () => {
+  if (interior) return interior;
+  const c = document.createElement("canvas");
+  c.width = c.height = 256;
+  const g = c.getContext("2d")!;
+  const r = g.createRadialGradient(150, 112, 10, 128, 128, 128);
+  r.addColorStop(0, "#2a1408");
+  r.addColorStop(0.55, "#4a2610");
+  r.addColorStop(0.9, "#7a4318");
+  r.addColorStop(1, "#8f4f1c");
+  g.fillStyle = r;
+  g.fillRect(0, 0, 256, 256);
+  interior = new THREE.CanvasTexture(c);
+  interior.colorSpace = THREE.SRGBColorSpace;
+  return interior;
+};
+
 export const Drawstring: React.FC<{ tighten: number; center: [number, number, number] }> = ({ tighten, center }) => {
+  const interiorTex = getInterior();
   const nylon = useNylon([], 1.2);
   const R = 0.62 - 0.1 * tighten;
   const ring = useMemo(() => new THREE.RingGeometry(0.5, 1.45, 260, 48), []);
@@ -88,7 +108,7 @@ export const Drawstring: React.FC<{ tighten: number; center: [number, number, nu
       {/* opening interior */}
       <mesh position={[0, 0, -0.12]}>
         <circleGeometry args={[R + 0.02, 96]} />
-        <meshStandardMaterial color="#0d0704" roughness={1} />
+        <meshBasicMaterial map={interiorTex} toneMapped={false} />
       </mesh>
       {[eyeA, eyeB].map((e, i) => (
         <mesh key={i} position={e}>

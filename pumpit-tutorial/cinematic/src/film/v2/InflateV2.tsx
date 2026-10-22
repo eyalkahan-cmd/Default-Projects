@@ -15,8 +15,8 @@ const FAN_MACRO: CamKey[] = [
   { f: 40, pos: [1.1, -0.3, 1.45], target: [0.48, -0.4, 0], fov: 30 },
 ];
 const LOW_HERO: CamKey[] = [
-  { f: 150, pos: [-0.9, -1.25, 4.7], target: [0.05, 0.1, 0], fov: 32 },
-  { f: 192, pos: [-0.6, -1.05, 4.2], target: [0.05, 0.15, 0], fov: 32 },
+  { f: 150, pos: [-1.35, -1.2, 6.3], target: [-0.45, -0.05, 0], fov: 33 },
+  { f: 192, pos: [-1.0, -1.05, 5.85], target: [-0.42, 0.0, 0], fov: 33 },
 ];
 
 /** 05 · INFLATE (66.18–79.18 s): fan macro → wide airflow → low hero as it fills → full size on the drop. */

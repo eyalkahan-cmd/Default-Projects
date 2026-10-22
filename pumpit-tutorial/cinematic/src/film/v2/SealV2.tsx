@@ -45,9 +45,18 @@ const ZIP_LOW: CamKey[] = [
   { f: 0, pos: [0.5, -2.05, 0.38], target: [0, -1.5, 0], fov: 30 },
   { f: 62, pos: [0.45, -0.35, 0.4], target: [0, 0.15, 0], fov: 30 },
 ];
+// elastics: a wide three-quarter orbit around the opening, then a close pass along the cuff
 const ELASTIC: CamKey[] = [
-  { f: 128, pos: [1.15, 4.05, 1.65], target: OPEN, fov: 32 },
-  { f: 182, pos: [0.85, 3.95, 1.45], target: OPEN, fov: 32 },
+  { f: 128, pos: [1.75, 4.35, 2.7], target: OPEN, fov: 33 },
+  { f: 160, pos: [0.95, 4.1, 2.35], target: OPEN, fov: 33 },
+];
+const ELASTIC_CUFF: CamKey[] = [
+  { f: 150, pos: [-1.75, 4.25, 2.05], target: [-0.5, 3.62, 0], fov: 30 },
+  { f: 184, pos: [-1.35, 4.45, 1.8], target: [-0.45, 3.68, 0], fov: 30 },
+];
+const FIT_PUSH: CamKey[] = [
+  { f: 236, pos: [1.35, 3.0, 2.75], target: [0.2, 3.34, 0], fov: 34 },
+  { f: 270, pos: [0.7, 3.05, 2.05], target: [0.15, 3.38, 0], fov: 33 },
 ];
 const LOCK_MACRO: CamKey[] = [
   { f: 182, pos: [1.45, 2.75, 0.85], target: [0.72, 2.78, 0.05], fov: 30 },
@@ -61,12 +70,16 @@ export const SealV2: React.FC = () => {
   const c2 = cutOnBeat(SEAL_START, SRC[2]);
   const c3 = cutOnBeat(SEAL_START, SRC[3]);
   const c4 = cutOnBeat(SEAL_START, s(12.4));
-  const shots: { a: number; b: number; keys?: CamKey[]; fx?: "whip" | "zoom" }[] = [
-    { a: 0, b: c1, keys: ZIP_LOW },
-    { a: c1, b: c2 },
-    { a: c2, b: c3, keys: ELASTIC, fx: "whip" },
+  const cE = cutOnBeat(SEAL_START, Math.round((c2 + c3) / 2));
+  // the zipper label only appears in the follow shot (no jump across the cut), puffing in on it
+  const zipIn = subMap(SRC, DST, c1, c2).dst[0] + 3;
+  const shots: { a: number; b: number; keys?: CamKey[]; fx?: "whip" | "zoom"; zip?: number; el?: number }[] = [
+    { a: 0, b: c1, keys: ZIP_LOW, zip: 999 },
+    { a: c1, b: c2, zip: zipIn },
+    { a: c2, b: cE, keys: ELASTIC, fx: "whip", el: 999 },
+    { a: cE, b: c3, keys: ELASTIC_CUFF, el: subMap(SRC, DST, cE, c3).dst[0] + 3 },
     { a: c3, b: c4, keys: LOCK_MACRO, fx: "zoom" },
-    { a: c4, b: END },
+    { a: c4, b: END, keys: FIT_PUSH },
   ];
   return (
     <AbsoluteFill>
@@ -76,7 +89,7 @@ export const SealV2: React.FC = () => {
           <Sequence key={i} from={sh.a} durationInFrames={sh.b - sh.a}>
             <ShotFx len={sh.b - sh.a} inFx={sh.fx ?? "none"}>
               <Retime src={m.src} dst={m.dst}>
-                <T2Seal chrome={false} keys={sh.keys} />
+                <T2Seal chrome={false} keys={sh.keys} zipStart={sh.zip} elasticStart={sh.el} />
               </Retime>
             </ShotFx>
           </Sequence>

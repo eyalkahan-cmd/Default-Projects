@@ -84,13 +84,13 @@ export const T4Flow: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys, 
           <CameraDriver state={cam} />
           <Studio keyPos={[2, 4, 3.5]} rimPos={[-4, 3, -3]} floorY={FLOOR} floorStyle="glossy" />
           <Blower position={[-3, 0, 0]} rotation={[0, 0.6, 0]} spin={0} />
-          <Cable points={cable} />
-          <UsbPlug position={new THREE.Vector3(0, plugY, 0)} quaternion={DOWN} />
+          <Cable points={cable} shadow={false} />
+          <UsbPlug position={new THREE.Vector3(0, plugY, 0)} quaternion={DOWN} shadow={false} />
           <BatteryPack position={PACK} explode={explode} />
           <PowerBank position={BANK} />
           {bankCable > 0 ? (
             <>
-              <Cable points={cable2} reveal={bankCable} />
+              <Cable points={cable2} reveal={bankCable} shadow={false} />
               {bankCable >= 0.999 ? <UsbPlug position={new THREE.Vector3(2.4, bankPlugY, 0)} quaternion={DOWN} /> : null}
             </>
           ) : null}

@@ -34,7 +34,7 @@ const CAMS = multiCam([
   // orbit around the power bank
   { from: S.bank, keys: [{ f: 0, pos: [4.4, 0.75, 2.2], target: [2.15, 0.3, 0], fov: 32 }, { f: 74, pos: [2.9, 0.9, 3.4], target: [2.0, 0.3, 0], fov: 32 }] },
   // high three-quarter over the port: the plug comes in from above the frame and seats
-  { from: S.usb, keys: [{ f: 0, pos: [3.05, 1.75, 1.75], target: [2.4, 0.8, 0], fov: 30 }, { f: 130, pos: [2.85, 1.55, 1.5], target: [2.4, 0.78, 0], fov: 30 }] },
+  { from: S.usb, keys: [{ f: 0, pos: [3.15, 1.8, 1.9], target: [2.4, 0.82, 0], fov: 30 }, { f: 130, pos: [2.75, 1.4, 1.3], target: [2.4, 0.78, 0], fov: 30 }] },
 ]);
 
 /**
@@ -49,8 +49,8 @@ export const PowerV2: React.FC = () => {
   const cells = [0, 1, 2, 3].map((i) => smooth(interpolate(frame, [10 + i * 17, 26 + i * 17], [0, 1], clamp)));
   const seatFrames = [26, 43, 60, 77];
   // the plug descends from above the frame, then seats
-  const drop = smooth(interpolate(frame, [S.usb - 12, S.usb + 30], [0, 1], clamp));
-  const seat = smooth(interpolate(frame, [S.usb + 48, S.usb + 68], [0, 1], clamp));
+  const drop = smooth(interpolate(frame, [S.usb - 6, S.usb + 18], [0, 1], clamp));
+  const seat = smooth(interpolate(frame, [S.usb + 24, S.usb + 38], [0, 1], clamp));
   const plugY = BANK_PORT_TOP - 0.1 + 0.32 + (1 - seat) * 0.3 + (1 - drop) * 0.3;
   // the cable hangs straight up out of the plug: off-frame until the plug itself enters
   const cable: [number, number, number][] = [
@@ -127,8 +127,8 @@ export const PowerV2: React.FC = () => {
       ) : null}
       {frame >= S.split && frame < S.bank ? <Callout at={pBank} dx={-160} dy={-230} start={S.split + 22} end={S.bank} title="Power Bank" sub="סוללת גיבוי ניידת" accent={L.air} /> : null}
       {frame >= S.bank && frame < S.usb ? <KineticWord text="Power Bank" sub="סוללת גיבוי ניידת" start={S.bank + 6} end={S.usb - 2} x={560} y={260} size={120} /> : null}
-      <ClickRing at={pPort} start={S.usb + 68} />
-      {showUsb ? <Callout at={pPlug} dx={-300} dy={-60} start={S.usb + 56} title="כבל ה-USB של המאוורר" sub="רק אם הדגם תומך בכך" accent={L.air} /> : null}
+      <ClickRing at={pPort} start={S.usb + 38} />
+      {showUsb ? <Callout at={pPlug} dx={-300} dy={-60} start={S.usb + 30} title="כבל ה-USB של המאוורר" sub="רק אם הדגם תומך בכך" accent={L.air} /> : null}
       <StepBar step={2} start={4} end={S.end + 200} />
       <LensFinish />
     </AbsoluteFill>

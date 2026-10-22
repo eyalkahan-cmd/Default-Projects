@@ -39,7 +39,11 @@ export const WearIn: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys, 
         <ThreeCanvas width={width} height={height} gl={{ alpha: true, antialias: true }}>
           <CameraDriver state={cam} />
           <Studio lights={false} />
-          <DeflatingCostume pressure={0.18} height={3} />
+          <mesh position={[0.05, -1.49, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[1, 0.32, 1]}>
+            <circleGeometry args={[0.95, 48]} />
+            <meshBasicMaterial color="#0b1f4d" transparent opacity={0.22} depthWrite={false} />
+          </mesh>
+          <DeflatingCostume pressure={0.08} height={3} />
         </ThreeCanvas>
       </Preload>
       {chrome ? <Callout at={p} dx={-330} dy={-60} start={12} title="נכנסים לתחפושת" sub="המאוורר עדיין כבוי" /> : null}
@@ -59,6 +63,12 @@ const Pocket: React.FC = () => {
     m.color = new THREE.Color("#e8e2da");
     return m;
   }, [lining]);
+  // side gussets: the same nylon in shadow, so they read as fabric, not card
+  const gusset = useMemo(() => {
+    const m = lining.clone();
+    m.color = new THREE.Color("#b9ad9e");
+    return m;
+  }, [lining]);
   return (
     <group>
       <mesh position={[0, 0, -0.16]} material={lining} receiveShadow>
@@ -75,9 +85,8 @@ const Pocket: React.FC = () => {
       </mesh>
       {/* side seams joining patch to lining */}
       {[-0.5, 0.5].map((x) => (
-        <mesh key={x} position={[x, -0.35, 0.085]}>
-          <boxGeometry args={[0.012, 0.9, 0.5]} />
-          <meshPhysicalMaterial color="#d8d0c4" roughness={0.6} />
+        <mesh key={x} position={[x, -0.35, 0.085]} material={gusset}>
+          <boxGeometry args={[0.006, 0.9, 0.5]} />
         </mesh>
       ))}
     </group>

@@ -20,7 +20,7 @@ const OPENING: [number, number, number] = [0, 3.62, 0.0];
  * closed zipper (directional continuity) and cranes up onto the drawstring opening, where
  * the cord lock is slid up gently and a fit ring shows the comfortable target.
  */
-export const T2Seal: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys, chrome = true }) => {
+export const T2Seal: React.FC<{ keys?: CamKey[]; chrome?: boolean; zipStart?: number; elasticStart?: number }> = ({ keys, chrome = true, zipStart = 34, elasticStart = 140 }) => {
   const frame = useFrame();
   const { width, height } = useVideoConfig();
   const slider = interpolate(frame, [18, 118], [-1.7, 2.03], { ...clamp, easing: smooth });
@@ -63,9 +63,9 @@ export const T2Seal: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys, 
         </ThreeCanvas>
       </Preload>
 
-      <Callout at={pSlider} dx={-210} dy={-120} start={34} end={112} title="סוגרים את הרוכסן" sub="עד הסוף, בלי רווחים" />
+      <Callout at={pSlider} dx={-210} dy={-120} start={zipStart} end={112} title="סוגרים את הרוכסן" sub="עד הסוף, בלי רווחים" />
       <Callout at={pTop} dx={-200} dy={-90} start={116} end={140} title="עד הסוף" />
-      <Callout at={pElastic} dx={-220} dy={-130} start={140} end={180} title="הגומיות סביב הפתחים" sub="יושבות צמוד ונוח" />
+      <Callout at={pElastic} dx={-220} dy={-130} start={elasticStart} end={180} title="הגומיות סביב הפתחים" sub="יושבות צמוד ונוח" />
 
       {/* comfortable fit ring (cyan = technical/airflow family) */}
       <svg width={width} height={height} style={{ position: "absolute", inset: 0, opacity: ringO }}>

@@ -46,11 +46,11 @@ SFX = [
 ]
 
 
-def main(silent, out, sfx=None, dur=None, tail_fade=2.4):
+def main(silent, out, sfx=None, dur=None, tail_fade=2.4, music_path=None, music_in=MUSIC_IN, full_size=FULL_SIZE, music_db=-16):
     sfx = SFX if sfx is None else sfx
     dur = DUR if dur is None else dur
     n = int(dur * SR)
-    music = L.fade(L.load(L.MUSIC, MUSIC_IN, dur)[:n], 0.35, tail_fade)
+    music = L.fade(L.load(music_path or L.MUSIC, music_in, dur)[:n], 0.35, tail_fade)
     if len(music) < n:
         music = np.pad(music, ((0, n - len(music)), (0, 0)))
     voice = np.zeros((n, 2), np.float32)
@@ -69,8 +69,8 @@ def main(silent, out, sfx=None, dur=None, tail_fade=2.4):
         g += (active[i] - g) * (ka if active[i] > g else kr)
         duck[i] = g
     # music sits at -16 dB, a further 6 dB under speech; lifts a touch on the full-size drop
-    lift = np.clip((np.arange(n) / SR - FULL_SIZE) / 0.3, 0, 1) * np.clip((FULL_SIZE + 1.6 - np.arange(n) / SR) / 0.6, 0, 1)
-    mg = 10 ** ((-16 - 6 * duck + 3 * lift) / 20)
+    lift = np.clip((np.arange(n) / SR - full_size) / 0.3, 0, 1) * np.clip((full_size + 1.6 - np.arange(n) / SR) / 0.6, 0, 1)
+    mg = 10 ** ((music_db - 6 * duck + 3 * lift) / 20)
     mix = music * mg[:, None] + voice + fx
     # end of a partial cut: fade everything out over the last 0.6 s
     if dur < DUR - 0.01:

@@ -15,19 +15,21 @@ const FAN = { u: 0.76, v: 0.6 };
 /** Shot A: the whole costume; the camera pushes toward the hip while a ring pulses on the fan opening. */
 const WhereIsTheFan: React.FC<{ len: number }> = ({ len }) => {
   const frame = useFrame();
-  const h = 920;
+  const h = 880;
   const w = (h * IMG_W) / IMG_H;
   const left = 960 - w / 2 - 120;
-  const top = 1040 - h;
+  const FEET = 1030;
+  const top = FEET - h;
   const fx = left + FAN.u * w;
   const fy = top + FAN.v * h;
-  const push = interpolate(frame, [0, len], [1, 1.32], { ...clamp, easing: (t) => t * t * (3 - 2 * t) });
+  const push = interpolate(frame, [0, len], [1, 1.14], { ...clamp, easing: (t) => t * t * (3 - 2 * t) });
   const pulse = (k: number) => ((frame - 10 - k * 9) % 27) / 27;
   return (
     <AbsoluteFill>
       <Backdrop x={0.5} y={0.45} />
-      <AbsoluteFill style={{ transform: `scale(${push})`, transformOrigin: `${fx}px ${fy}px` }}>
+      <AbsoluteFill style={{ transform: `scale(${push})`, transformOrigin: `${fx}px ${FEET}px` }}>
         <PuffyBlob x={fx - 40} y={560} r={330} color="#dcedff" scale={puff(frame, 0, 120)} />
+        <div style={{ position: "absolute", left: left + w * 0.12, top: FEET - 26, width: w * 0.8, height: 44, borderRadius: "50%", background: "radial-gradient(closest-side, rgba(11,31,77,0.34), rgba(11,31,77,0))" }} />
         <Img src={staticFile("img/trex_cutout_v2.png")} style={{ position: "absolute", left, top, height: h, transform: `scale(${1 - 0.006 * Math.sin(frame / 11)}, ${1 + 0.009 * Math.sin(frame / 11)})`, transformOrigin: "50% 100%" }} />
         <svg width="100%" height="100%" style={{ position: "absolute", inset: 0 }}>
           {[0, 1, 2].map((k) => {
@@ -38,7 +40,7 @@ const WhereIsTheFan: React.FC<{ len: number }> = ({ len }) => {
         </svg>
       </AbsoluteFill>
       <LensFinish />
-      <Callout at={{ x: 960 + (fx - 960) * push, y: 540 + (fy - 540) * push }} dx={-300} dy={-200} start={10} end={len + 4} title="פתח המאוורר" sub="כאן מותקן המאוורר" />
+      <Callout at={{ x: fx, y: FEET + (fy - FEET) * push }} dx={-300} dy={-200} start={10} end={len + 4} title="פתח המאוורר" sub="כאן מותקן המאוורר" />
     </AbsoluteFill>
   );
 };

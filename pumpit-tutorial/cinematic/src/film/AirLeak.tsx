@@ -8,6 +8,7 @@ import { Preload } from "../three/materials";
 import { deflate, DeflatingCostume, IMG_H, IMG_W } from "../three/models/DeflatingCostume";
 import { CamKey, makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
+import { AirWisps, puff } from "./motion";
 import { useFrame } from "./time";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
@@ -62,38 +63,8 @@ export const AirLeak: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys,
           <DeflatingCostume pressure={p} height={H} />
         </ThreeCanvas>
       </Preload>
-      {leakO > 0.01 ? (
-        <svg width={width} height={height} style={{ position: "absolute", inset: 0, opacity: leakO, pointerEvents: "none" }}>
-          <defs>
-            <filter id="wispBlur" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="3.2" />
-            </filter>
-          </defs>
-          {wisps.map(({ a, b }, i) =>
-            [0, 1, 2].map((k) => {
-              const dx = b.x - a.x;
-              const dy = b.y - a.y;
-              const len = Math.hypot(dx, dy) || 1;
-              const nx = -dy / len;
-              const ny = dx / len;
-              const ph = frame / 6 + k * 2.1 + i;
-              const pts = new Array(13).fill(0).map((_, j) => {
-                const t = j / 12;
-                const amp = 10 + 26 * t;
-                const off = Math.sin(ph + t * 7) * amp + (k - 1) * 12 * t;
-                return `${a.x + dx * t * (1.1 + 0.15 * k) + nx * off},${a.y + dy * t * (1.1 + 0.15 * k) + ny * off}`;
-              });
-              const travel = ((frame * 4 + k * 37 + i * 23) % 220) - 220;
-              return (
-                <g key={`${i}${k}`}>
-                  <polyline points={pts.join(" ")} fill="none" stroke={C.pink} strokeOpacity={0.55} strokeWidth={9 - k * 2} strokeLinecap="round" strokeDasharray="70 150" strokeDashoffset={travel} filter="url(#wispBlur)" />
-                  <polyline points={pts.join(" ")} fill="none" stroke="#ffffff" strokeOpacity={0.85} strokeWidth={2.5} strokeLinecap="round" strokeDasharray="70 150" strokeDashoffset={travel} />
-                </g>
-              );
-            }),
-          )}
-        </svg>
-      ) : null}
+      {/* longer, fuller wisps than the 3D path alone: readable at a glance */}
+      <AirWisps wisps={wisps.map(({ a, b }) => ({ a, b: { x: a.x + (b.x - a.x) * 2.6, y: a.y + (b.y - a.y) * 2.6 } }))} color={C.pink} opacity={leakO} amp={1.1} width={1.3} id="leak" />
       {/* emphasis card: the one moment the film raises its voice, still clean and quiet */}
       <AbsoluteFill style={{ background: `rgba(238,244,252,${0.72 * card})` }} />
       <div
@@ -106,12 +77,13 @@ export const AirLeak: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys,
           direction: "rtl",
           fontFamily: HEEBO,
           color: L.text,
-          opacity: card,
-          transform: `scale(${0.96 + 0.04 * card})`,
+          opacity: Math.min(1, card * 1.6),
+          transform: `scale(${(0.9 + 0.1 * puff(frame, 6, 190)) * (1 + 0.0011 * Math.max(0, frame - 10))})`,
         }}
       >
-        <div style={{ fontSize: 40, fontWeight: 600, color: L.accent, letterSpacing: 1 }}>עכשיו</div>
-        <div style={{ fontSize: 120, fontWeight: 900, lineHeight: 1.05 }}>השלב החשוב ביותר</div>
+        <div style={{ fontSize: 44, fontWeight: 700, color: L.accent, letterSpacing: 1, transform: `scale(${puff(frame, 4, 220)})` }}>עכשיו</div>
+        <div style={{ fontSize: 124, fontWeight: 900, lineHeight: 1.05 }}>השלב החשוב ביותר</div>
+        <div style={{ margin: "18px auto 0", height: 10, borderRadius: 5, width: 520 * interpolate(frame, [16, 40], [0, 1], { ...clamp, easing: easeOut }), background: `linear-gradient(90deg, ${C.pink}, ${C.blue})` }} />
       </div>
       <Callout at={pLeak} dx={-300} dy={-160} start={120} title="בריחת אוויר" sub="בפתחים וברוכסן פתוח" accent={C.pink} />
       {chrome ? (
