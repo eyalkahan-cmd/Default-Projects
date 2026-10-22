@@ -10,9 +10,11 @@ import { INFLATE, INFLATE_DST, INFLATE_SRC } from "./timings";
 // "הפעילו" 66.18 · "כחצי דקה" ~72.5 · full size / "וזהו" 77.66 (on the drop)
 const SRC = INFLATE_SRC;
 const DST = INFLATE_DST;
+// opening shot of step 5: close on the fan at the hip, but always the whole costume, feet included
+// (the full-body guard holds it at ≤ 85 % of the frame)
 const FAN_MACRO: CamKey[] = [
-  { f: 0, pos: [1.25, -0.35, 1.25], target: [0.5, -0.42, 0], fov: 30 },
-  { f: 40, pos: [1.1, -0.3, 1.45], target: [0.48, -0.4, 0], fov: 30 },
+  { f: 0, pos: [1.5, -0.55, 5.0], target: [0.4, -0.25, 0], fov: 30 },
+  { f: 40, pos: [1.25, -0.5, 4.7], target: [0.38, -0.22, 0], fov: 30 },
 ];
 const LOW_HERO: CamKey[] = [
   { f: 150, pos: [-1.35, -1.2, 6.3], target: [-0.45, -0.05, 0], fov: 33 },
