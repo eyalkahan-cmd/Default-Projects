@@ -1,6 +1,9 @@
 import React from "react";
 import { AbsoluteFill, Sequence } from "remotion";
 import { ShotFx } from "../motion";
+import { FilmClock } from "../time";
+import { SoundTrack } from "./SoundTrack";
+import { SCENES } from "./timings";
 import { ConnectV2 } from "./ConnectV2";
 import { FanV2 } from "./FanV2";
 import { OpeningV2 } from "./OpeningV2";
@@ -44,20 +47,7 @@ export const FilmV2Test: React.FC = () => {
 };
 
 /** the full film in the v2 language, every chapter on the Guide_v2 voiceover */
-export const F2 = {
-  opening: 0,
-  fan: s(6.4),
-  power: s(11.96),
-  connect: s(25.58),
-  wear: s(30.58),
-  leak: s(42.04),
-  seal: s(50.24),
-  inflate: s(66.18),
-  lineup: s(79.18),
-  keep: s(81.83),
-  end: s(86.5),
-  total: s(89.73),
-};
+export const F2 = SCENES;
 
 export const FilmV2Full: React.FC = () => {
   const c = F2;
@@ -69,6 +59,7 @@ export const FilmV2Full: React.FC = () => {
     </Sequence>
   );
   return (
+    <FilmClock>
     <AbsoluteFill style={{ background: "#eef4fc", filter: GRADE }}>
       {seq(c.opening, c.fan, <OpeningV2 />, "none", "zoom")}
       {seq(c.fan, c.power, <FanV2 />, "none", "whip")}
@@ -81,6 +72,11 @@ export const FilmV2Full: React.FC = () => {
       {seq(c.lineup, c.keep, <LineupV2 />, "whip", "whip")}
       {seq(c.keep, c.end, <KeepRunning chrome={false} />, "whip", "zoom")}
       {seq(c.end, c.total, <EndCardV2 />, "zoom", "none")}
+      <SoundTrack />
     </AbsoluteFill>
+    </FilmClock>
   );
 };
+
+/** the soundtrack alone (for the audio-only render that gets mastered) */
+export const FilmV2Audio: React.FC = () => <SoundTrack />;

@@ -8,7 +8,7 @@ import { Blower } from "../three/models/Blower";
 import { CamKey, makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
 import { Photo } from "./Opening";
-import { AirWisps } from "./motion";
+import { AirParticles } from "./motion";
 import { useFrame } from "./time";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
@@ -59,7 +59,7 @@ export const Lineup: React.FC = () => {
 };
 
 /** "רק זכרו להשאיר את המאוורר פועל…" — the blower running, air drawn in, one clear reminder. */
-export const KeepRunning: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys, chrome = true }) => {
+export const KeepRunning: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys }) => {
   const frame = useFrame();
   const { width, height } = useVideoConfig();
   const rig = useMemo(
@@ -83,21 +83,8 @@ export const KeepRunning: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ k
           <Blower position={[0, 0, 0]} rotation={[0, -0.25, 0]} spin={frame * 0.9} />
         </ThreeCanvas>
       </Preload>
-      {/* air drawn into the intake: soft wisps curling in from the front-right onto the grille */}
-      <AirWisps
-        wisps={[
-          [560, -230],
-          [640, -40],
-          [600, 170],
-          [470, 330],
-        ].map(([dx, dy]) => ({ a: { x: pIntake.x + dx, y: pIntake.y + dy }, b: { x: pIntake.x + dx * 0.12, y: pIntake.y + dy * 0.12 } }))}
-        color={look().air}
-        opacity={interpolate(frame, [4, 20], [0, 0.95], clamp)}
-        amp={1.6}
-        width={1.5}
-        speed={5}
-        id="intake"
-      />
+      {/* air drawn into the intake: small rounded strokes swirling in from the front-right and fading */}
+      <AirParticles at={pIntake} radius={460} count={30} arc={[-1.3, 1.3]} color={look().air} opacity={interpolate(frame, [4, 20], [0, 1], clamp)} />
       <Callout at={pFan} dx={-260} dy={-170} start={14} title="המאוורר נשאר פועל" sub="כל זמן שלובשים את התחפושת" />
       <LensFinish />
     </AbsoluteFill>

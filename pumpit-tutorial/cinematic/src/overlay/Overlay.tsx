@@ -1,20 +1,42 @@
 import React from "react";
-import { AbsoluteFill, interpolate } from "remotion";
-import { useFrame } from "../film/time";
-import { puff } from "../film/motion";
+import { AbsoluteFill, interpolate, interpolateColors } from "remotion";
+import { useFilmFrame, useFrame } from "../film/time";
+import { GLASS, puff } from "../film/motion";
 import { HEEBO, look } from "../theme";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 
-/** Deep-navy studio cyclorama behind the 3D canvas (the canvas is transparent). */
-export const Backdrop: React.FC<{ x?: number; y?: number }> = ({ x = 0.55, y = 0.42 }) => (
-  <AbsoluteFill
-    style={{
-      background: look().bg(x * 100, y * 100),
-    }}
-  />
-);
+/**
+ * Studio cyclorama behind the 3D canvas (the canvas is transparent). In the daylight look it is
+ * alive: the soft key of the radial gradient drifts slowly, and its tint breathes between the
+ * brand's light blue, sky and a warm orange (interpolateColors on the film clock, ~24 s cycle),
+ * continuous across cuts.
+ */
+export const Backdrop: React.FC<{ x?: number; y?: number }> = ({ x = 0.55, y = 0.42 }) => {
+  const L = look();
+  const f = useFilmFrame();
+  if (L.id !== "daylight") return <AbsoluteFill style={{ background: L.bg(x * 100, y * 100) }} />;
+  const T = f / 30;
+  const cx = x * 100 + Math.sin(T * 0.21) * 6;
+  const cy = y * 100 + Math.cos(T * 0.17) * 4;
+  const ph = (Math.sin((T / 24) * Math.PI * 2 - Math.PI / 2) + 1) / 2;
+  const stops = [0, 0.5, 1];
+  const inner = interpolateColors(ph, stops, ["#ffffff", "#f6fcff", "#fffaf3"]);
+  const mid = interpolateColors(ph, stops, ["#eaf2fc", "#e2f3fc", "#f8eee3"]);
+  const outer = interpolateColors(ph, stops, ["#cbdcf1", "#c6e3f4", "#ead8c6"]);
+  // a faint second light (warm orange ↔ brand blue) wandering on the opposite side
+  const gx = 100 - cx + Math.sin(T * 0.13) * 10;
+  const gy = 70 + Math.sin(T * 0.11) * 8;
+  const glow = interpolateColors(ph, stops, ["rgba(16,153,234,0.10)", "rgba(120,200,255,0.10)", "rgba(255,150,60,0.10)"]);
+  return (
+    <AbsoluteFill
+      style={{
+        background: `radial-gradient(ellipse 45% 50% at ${gx}% ${gy}%, ${glow} 0%, rgba(255,255,255,0) 70%), radial-gradient(ellipse 80% 90% at ${cx}% ${cy}%, ${inner} 0%, ${mid} 40%, ${outer} 100%)`,
+      }}
+    />
+  );
+};
 
 /** Lens finish on top of everything: vignette + a fine animated film grain. */
 export const LensFinish: React.FC = () => {
@@ -50,8 +72,8 @@ export const Callout: React.FC<{
   const L = look();
   const accent = accentProp ?? L.accent;
   const frame = useFrame();
-  const draw = easeOut(interpolate(frame, [start, start + 12], [0, 1], clamp));
-  const text = easeOut(interpolate(frame, [start + 8, start + 20], [0, 1], clamp));
+  const draw = Math.min(1, puff(frame, start));
+  const text = Math.min(1, puff(frame, start + 8));
   const out = interpolate(frame, [end - 8, end], [1, 0], clamp);
   const ex = at.x + dx * draw;
   const ey = at.y + dy * draw;
@@ -85,11 +107,11 @@ export const Callout: React.FC<{
           translate: "0 -50%",
           transform: `scale(${puff(frame, start + 8)})`,
           transformOrigin: right ? "100% 50%" : "0% 50%",
-          background: L.plate,
-          boxShadow: L.plateShadow,
+          ...GLASS,
+          // accent edge on the reading-start side (right, RTL), drawn as an inset shadow so the glass border stays uniform
+          boxShadow: `${GLASS.boxShadow}, inset -5px 0 0 ${accent}`,
           borderRadius: 22,
-          padding: "14px 28px 16px",
-          borderInlineStart: `5px solid ${accent}`,
+          padding: "14px 30px 16px 28px",
         }}
       >
         <div style={{ fontSize: 56, fontWeight: 800, letterSpacing: 0.2, lineHeight: 1.05 }}>{title}</div>

@@ -12,3 +12,5 @@ remotion/public/audio/
 remotion/out/
 deliver/
 __pycache__/
+cinematic/public/audio/
+cinematic/public/sfx/

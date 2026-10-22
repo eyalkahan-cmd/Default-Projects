@@ -2,20 +2,46 @@ import React from "react";
 import { AbsoluteFill, interpolate, spring } from "remotion";
 import { C, HEEBO, look } from "../theme";
 import { CamKey, CamState, makeRig } from "../three/rig";
+import { FPS } from "./v2/timings";
 import { useFrame } from "./time";
+
+// the film clock (frame rate, beat grid) is defined with the rest of the timings
+export { BEAT, beatSnap, cutOnBeat, FPS } from "./v2/timings";
 
 /**
  * "Inflatable" motion language for the film: things don't fade in, they puff up — a quick
  * overshoot and a soft settle, like air filling nylon. Fun and rhythmic, still clean.
  */
 export const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
-export const FPS = 30;
-/** one beat of the 124 BPM underscore in frames (14.52) */
-export const BEAT = (60 / 124) * FPS;
 
-/** puff-in scale 0 → ~1.08 → 1 starting at `start` */
-export const puff = (frame: number, start: number, stiffness = 170) =>
-  spring({ frame: frame - start, fps: FPS, config: { damping: 9, mass: 0.55, stiffness } });
+/** spring for text / UI pop-ups: quick and bouncy (≈9 % overshoot) */
+export const SPRING_UI = { mass: 0.8, damping: 12, stiffness: 120 } as const;
+/** spring for characters / products: heavier and smoother (≈4 % overshoot) */
+export const SPRING_OBJECT = { mass: 1.2, damping: 15, stiffness: 90 } as const;
+export type SpringCfg = { mass: number; damping: number; stiffness: number };
+
+/** puff-in 0 → overshoot → 1 starting at `start` (UI spring unless told otherwise) */
+export const puff = (frame: number, start: number, config: SpringCfg = SPRING_UI) => spring({ frame: frame - start, fps: FPS, config });
+/**
+ * A product move from `from` to `to` (frames) on the heavy object spring, stretched to exactly that
+ * duration so the choreography (and every sound cue tied to it) keeps its timing. `contact`
+ * clamps the overshoot for moves that end against something (a cell in its tray, a plug in a port).
+ */
+export const move = (frame: number, from: number, to: number, contact = false) => {
+  const v = spring({ frame: frame - from, fps: FPS, config: SPRING_OBJECT, durationInFrames: to - from });
+  return contact ? Math.min(1, v) : v;
+};
+/** a product / character settling into place (heavy spring, 0 → 1) */
+export const settle = (frame: number, start: number) => puff(frame, start, SPRING_OBJECT);
+
+/**
+ * Idle "breathing" for a character on screen: a slow float (±4 px) and a 1.5 % swell, both
+ * from one sine so the costume looks alive while it holds.
+ */
+export const breathe = (frame: number) => {
+  const w = Math.sin(frame / 15);
+  return { y: -4 * w, s: 1 + 0.0075 * (1 + w) };
+};
 /** puff-out 1 → 0 ending at `end` (quick deflate) */
 export const deflateOut = (frame: number, end: number, len = 7) =>
   interpolate(frame, [end - len, end], [1, 0], { ...clamp, easing: (t) => t * t });
@@ -107,6 +133,15 @@ export const KineticWord: React.FC<{ text: string; sub?: string; start: number; 
   );
 };
 
+/** frosted-glass plate for all on-screen UI (step pill, callouts, cards) */
+export const GLASS = {
+  background: "rgba(255, 255, 255, 0.7)",
+  backdropFilter: "blur(12px)",
+  WebkitBackdropFilter: "blur(12px)",
+  border: "1px solid rgba(255, 255, 255, 0.3)",
+  boxShadow: "0px 20px 40px rgba(0, 0, 0, 0.08)",
+} as const;
+
 export const STEPS = ["התקנת המאוורר", "מקור חשמל", "לובשים", "אטימה", "ניפוח"];
 
 /**
@@ -116,9 +151,9 @@ export const STEPS = ["התקנת המאוורר", "מקור חשמל", "לוב�
 export const StepBar: React.FC<{ step: number; start: number; end: number }> = ({ step, start, end }) => {
   const frame = useFrame();
   const L = look();
-  const p = puff(frame, start, 200);
+  const p = puff(frame, start);
   const o = deflateOut(frame, end, 6);
-  const fill = interpolate(frame, [start + 6, start + 22], [0, 1], { ...clamp, easing: (t) => 1 - Math.pow(1 - t, 3) });
+  const fill = Math.min(1, puff(frame, start + 6));
   return (
     <div
       style={{
@@ -135,7 +170,7 @@ export const StepBar: React.FC<{ step: number; start: number; end: number }> = (
         transformOrigin: "100% 0%",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 14, background: L.plate, boxShadow: L.plateShadow, borderRadius: 40, padding: "10px 30px 10px 12px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 14, ...GLASS, borderRadius: 40, padding: "10px 30px 10px 12px" }}>
         <div
           style={{
             width: 64,
@@ -258,10 +293,6 @@ export const ClickRing: React.FC<{ at: { x: number; y: number }; start: number; 
   );
 };
 
-/** film beat grid: beats of the underscore slice fall at 0.3 + n · BEAT frames */
-export const beatSnap = (filmFrame: number) => Math.round(Math.round((filmFrame - 0.3) / BEAT) * BEAT + 0.3);
-/** snap a scene-local cut (scene starting at `sceneStart` on the film) to the nearest beat */
-export const cutOnBeat = (sceneStart: number, local: number) => beatSnap(sceneStart + local) - sceneStart;
 
 /**
  * Restrict a piecewise-linear retime map (src → dst) to the window [a, b] of `src`, re-based
@@ -328,6 +359,58 @@ export const AirWisps: React.FC<{ wisps: { a: { x: number; y: number }; b: { x: 
           );
         }),
       )}
+    </svg>
+  );
+};
+
+const rnd = (i: number, k: number) => {
+  const s = Math.sin(i * 127.1 + k * 311.7) * 43758.5453;
+  return s - Math.floor(s);
+};
+
+/**
+ * Air being drawn in (or blown out): small rounded strokes that travel toward (or away from)
+ * `at` along a gently swirling path and fade in and out over their life. Deterministic per frame.
+ */
+export const AirParticles: React.FC<{
+  at: { x: number; y: number };
+  radius?: number;
+  count?: number;
+  arc?: [number, number];
+  dir?: "in" | "out";
+  color: string;
+  opacity?: number;
+  life?: number;
+}> = ({ at, radius = 420, count = 26, arc = [0, Math.PI * 2], dir = "in", color, opacity = 1, life = 34 }) => {
+  const frame = useFrame();
+  if (opacity <= 0.01) return null;
+  return (
+    <svg width={1920} height={1080} style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "visible" }}>
+      {new Array(count).fill(0).map((_, i) => {
+        const L = life * (0.8 + 0.4 * rnd(i, 1));
+        const t = (((frame + rnd(i, 2) * L) % L) + L) % L / L;
+        const k = dir === "in" ? 1 - t : t; // distance from the centre, 1 = outer edge
+        const a0 = arc[0] + (arc[1] - arc[0]) * rnd(i, 3);
+        const a = a0 + (dir === "in" ? 0.7 : -0.7) * (1 - k); // swirl as it nears the intake
+        const r = radius * (0.12 + 0.88 * k) * (0.75 + 0.35 * rnd(i, 4));
+        const x = at.x + Math.cos(a) * r;
+        const y = at.y + Math.sin(a) * r;
+        // the stroke points along the direction of travel (inward/outward, with the swirl)
+        const ta = a + Math.PI + (dir === "in" ? 0.5 : -0.5);
+        const len = (16 + 22 * rnd(i, 5)) * (0.6 + 0.6 * k);
+        const sgn = dir === "in" ? 1 : -1;
+        const x2 = x + Math.cos(ta) * len * sgn;
+        const y2 = y + Math.sin(ta) * len * sgn;
+        const cx = (x + x2) / 2 + Math.cos(ta + Math.PI / 2) * len * 0.25;
+        const cy = (y + y2) / 2 + Math.sin(ta + Math.PI / 2) * len * 0.25;
+        const o = Math.sin(Math.PI * t) * opacity;
+        return (
+          <g key={i} opacity={o}>
+            <path d={`M${x.toFixed(1)},${y.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}`} stroke={color} strokeOpacity={0.35} strokeWidth={9} strokeLinecap="round" fill="none" />
+            <path d={`M${x.toFixed(1)},${y.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}`} stroke="#ffffff" strokeOpacity={0.95} strokeWidth={3.2} strokeLinecap="round" fill="none" />
+          </g>
+        );
+      })}
     </svg>
   );
 };

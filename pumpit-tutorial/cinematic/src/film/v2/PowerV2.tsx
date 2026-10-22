@@ -1,6 +1,6 @@
 import { ThreeCanvas } from "@remotion/three";
 import React from "react";
-import { AbsoluteFill, interpolate, useVideoConfig } from "remotion";
+import { AbsoluteFill, useVideoConfig } from "remotion";
 import * as THREE from "three";
 import { Backdrop, Callout, LensFinish } from "../../overlay/Overlay";
 import { C, HEEBO, look } from "../../theme";
@@ -9,10 +9,10 @@ import { Cable, UsbPlug } from "../../three/models/Cable";
 import { BatteryPack, PowerBank } from "../../three/models/PowerSources";
 import { project } from "../../three/rig";
 import { CameraDriver, Studio } from "../../three/Studio";
-import { ClickRing, clamp, KineticWord, LensBlur, multiCam, puff, StepBar } from "../motion";
+import { ClickRing, KineticWord, LensBlur, move, multiCam, puff, StepBar } from "../motion";
 import { useFrame } from "../time";
+import { POWER, POWER_USB, SCENES, TIMINGS } from "./timings";
 
-const smooth = (t: number) => t * t * (3 - 2 * t);
 const FLOOR = -0.5;
 const PACK: [number, number, number] = [0, FLOOR + 0.475, 0];
 const BANK: [number, number, number] = [2.4, FLOOR + 0.71, 0];
@@ -20,7 +20,7 @@ const BANK_PORT_TOP = BANK[1] + 0.715;
 const DOWN = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), Math.PI);
 
 // shot boundaries (scene frames, 0 = 11.96 s), on the beat
-const S = { top: 0, macro: 38, hero: 82, split: 132, bank: 204, usb: 278, end: 408 };
+const S = POWER;
 
 const CAMS = multiCam([
   // high front angle into the open tray: the first cells drop in
@@ -46,11 +46,11 @@ export const PowerV2: React.FC = () => {
   const { width, height } = useVideoConfig();
   const L = look();
   const { cam, shot } = CAMS(frame);
-  const cells = [0, 1, 2, 3].map((i) => smooth(interpolate(frame, [10 + i * 17, 26 + i * 17], [0, 1], clamp)));
-  const seatFrames = [26, 43, 60, 77];
+  const cells = [0, 1, 2, 3].map((i) => move(frame, S.cellStart + i * S.cellStep, S.cellStart + i * S.cellStep + S.cellMove, true));
+  const seatFrames = TIMINGS.AA_CELL_SEAT_FRAMES.map((f) => f - SCENES.power);
   // the plug descends from above the frame, then seats
-  const drop = smooth(interpolate(frame, [S.usb - 6, S.usb + 18], [0, 1], clamp));
-  const seat = smooth(interpolate(frame, [S.usb + 24, S.usb + 38], [0, 1], clamp));
+  const drop = move(frame, POWER_USB.dropFrom, POWER_USB.dropTo);
+  const seat = move(frame, POWER_USB.seatFrom, POWER_USB.seatTo, true);
   const plugY = BANK_PORT_TOP - 0.1 + 0.32 + (1 - seat) * 0.3 + (1 - drop) * 0.3;
   // the cable hangs straight up out of the plug: off-frame until the plug itself enters
   const cable: [number, number, number][] = [
@@ -127,8 +127,8 @@ export const PowerV2: React.FC = () => {
       ) : null}
       {frame >= S.split && frame < S.bank ? <Callout at={pBank} dx={-160} dy={-230} start={S.split + 22} end={S.bank} title="Power Bank" sub="סוללת גיבוי ניידת" accent={L.air} /> : null}
       {frame >= S.bank && frame < S.usb ? <KineticWord text="Power Bank" sub="סוללת גיבוי ניידת" start={S.bank + 6} end={S.usb - 2} x={560} y={260} size={120} /> : null}
-      <ClickRing at={pPort} start={S.usb + 38} />
-      {showUsb ? <Callout at={pPlug} dx={-300} dy={-60} start={S.usb + 30} title="כבל ה-USB של המאוורר" sub="רק אם הדגם תומך בכך" accent={L.air} /> : null}
+      <ClickRing at={pPort} start={POWER_USB.seatTo} />
+      {showUsb ? <Callout at={pPlug} dx={-300} dy={-60} start={POWER_USB.callout} title="כבל ה-USB של המאוורר" sub="רק אם הדגם תומך בכך" accent={L.air} /> : null}
       <StepBar step={2} start={4} end={S.end + 200} />
       <LensFinish />
     </AbsoluteFill>

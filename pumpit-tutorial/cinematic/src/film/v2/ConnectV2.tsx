@@ -4,6 +4,7 @@ import { T4Flow } from "../../tests/T4Flow";
 import { CamKey, makeRig, project } from "../../three/rig";
 import { ClickRing, ShotFx, StepBar } from "../motion";
 import { Retime } from "../time";
+import { CONNECT, CONNECT_SEAT } from "./timings";
 
 // T4's authored frames: plug descends 96–132 onto the box (PORT_TOP = FLOOR + 0.475 + 0.485)
 const BLOWER_EXIT: CamKey[] = [
@@ -22,10 +23,9 @@ const OVER_PORT: CamKey[] = [
  */
 export const ConnectV2: React.FC = () => {
   const { width, height } = useVideoConfig();
-  const A = 52;
-  const END = 150;
-  // seat moment in this scene: T4 frame 132 mapped through the second shot's retime (84→150 over A→END)
-  const seatLocal = A + ((132 - 84) / (150 - 84)) * (END - A);
+  const { A, END } = CONNECT;
+  // seat moment in this scene: T4's seat frame mapped through the second shot's retime
+  const seatLocal = CONNECT_SEAT;
   const portCam = makeRig(OVER_PORT)(132);
   const pPort = project([0, -0.5 + 0.475 + 0.485, 0.02], portCam, width, height);
   return (
@@ -39,7 +39,7 @@ export const ConnectV2: React.FC = () => {
       </Sequence>
       <Sequence from={A} durationInFrames={END - A}>
         <ShotFx len={END - A} inFx="whip">
-          <Retime src={[0, END - A]} dst={[84, 150]}>
+          <Retime src={[0, END - A]} dst={[...CONNECT.t4Plug]}>
             <T4Flow chrome={false} keys={OVER_PORT} />
           </Retime>
         </ShotFx>

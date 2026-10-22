@@ -1,6 +1,8 @@
 import { ThreeCanvas } from "@remotion/three";
 import React, { useMemo } from "react";
-import { AbsoluteFill, interpolate, useVideoConfig } from "remotion";
+import { AbsoluteFill, interpolate, spring, useVideoConfig } from "remotion";
+import { costumeExtent, fullBodyFit } from "../film/Character";
+import { AirParticles, GLASS, puff } from "../film/motion";
 import { useFrame } from "../film/time";
 import * as THREE from "three";
 import { Backdrop, Callout, Chapter, LensFinish } from "../overlay/Overlay";
@@ -48,7 +50,15 @@ export const T3Inflate: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ key
   const spinRate = interpolate(frame, [8, 40], [0, 1], { ...clamp, easing: (t) => t * t });
   const spin = spinRate * (frame - 8) * 0.9;
 
-  const fan = toWorld(FAN_UV[0], FAN_UV[1], e, 0.02);
+  // organic fill: the width leads (air spreads into the body first), the height lags and then
+  // catches up on a soft, slightly overshooting spring as the fabric goes taut
+  const fillT = interpolate(frame, [34, 192], [0, 1], clamp);
+  const sx = 0.93 + 0.07 * Math.min(1, 1 - Math.pow(1 - Math.min(1, fillT * 1.3), 2));
+  const syLag = 0.88 + 0.08 * Math.pow(fillT, 1.4);
+  const sy = syLag + (1 - syLag) * spring({ frame: frame - 176, fps, config: { mass: 1.2, damping: 8, stiffness: 110 } });
+  // world point → its place after the anisotropic scale (anchored on the floor, at the costume's axis)
+  const scl = (v: THREE.Vector3) => new THREE.Vector3(v.x * sx, FLOOR + (v.y - FLOOR) * sy, v.z);
+  const fan = scl(toWorld(FAN_UV[0], FAN_UV[1], e, 0.02));
   // streamlines follow the current fabric shape (rebuilt every frame from the deflation field)
   const flows: THREE.Vector3[][] = [
     [[0.76, 0.4], [0.6, 0.48], [0.47, 0.6], [0.36, 0.76], [0.22, 0.88]].map(([u, v]) => toWorld(u, v, e)),
@@ -68,8 +78,12 @@ export const T3Inflate: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ key
     [keys],
   );
   const cam = rig(frame);
-  const pFan = project(fan, cam, width, height);
-  const pBody = project(toWorld(0.5, 0.55, e), cam, width, height);
+  // full-body guard: the whole costume (feet included) stays ≤ 85 % of the frame inside the safe area
+  const ext = costumeExtent(cam, width, height, FLOOR, H * sy, Wd * sx);
+  const fit = fullBodyFit(ext, width, height);
+  const pFan = fit.map(project(fan, cam, width, height));
+  const pBody = fit.map(project(scl(toWorld(0.5, 0.55, e)), cam, width, height));
+  const fanOn = interpolate(frame, [10, 30], [0, 1], clamp);
   const timeO = interpolate(frame, [150, 166, 236, 250], [0, 1, 1, 0], clamp);
   const heroO = interpolate(frame, [212, 230], [0, 1], clamp);
 
@@ -77,6 +91,7 @@ export const T3Inflate: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ key
     <AbsoluteFill>
       <Backdrop x={0.5} y={0.42} />
       {/* soft floor contact shadow, widening as the costume fills */}
+      <div style={{ position: "absolute", inset: 0, ...fit.style }}>
       <Preload>
         <ThreeCanvas width={width} height={height} gl={{ alpha: true, antialias: true }}>
           <CameraDriver state={cam} />
@@ -89,11 +104,18 @@ export const T3Inflate: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ key
             <circleGeometry args={[1.05, 48]} />
             <meshBasicMaterial color="#000000" transparent opacity={0.32} depthWrite={false} />
           </mesh>
-          <DeflatingCostume pressure={p} height={H} />
+          <group position={[0, FLOOR, 0]} scale={[sx, sy, 1]}>
+            <group position={[0, -FLOOR, 0]}>
+              <DeflatingCostume pressure={p} height={H} />
+              <Airflow paths={flows} t={frame / fps} opacity={flowO} />
+            </group>
+          </group>
           <Blower position={[fan.x, fan.y, fan.z]} rotation={[0, -0.35, 0]} spin={spin} scale={0.17} />
-          <Airflow paths={flows} t={frame / fps} opacity={flowO} />
         </ThreeCanvas>
       </Preload>
+      </div>
+      {/* air drawn into the blower while it runs */}
+      <AirParticles at={pFan} radius={300 * fanOn + 60} count={22} color={look().air} opacity={fanOn * interpolate(frame, [186, 230], [1, 0.55], clamp)} />
 
       <Callout at={pFan} dx={170} dy={-150} start={8} end={74} title="מפעילים את המאוורר" />
       <Callout at={pBody} dx={-400} dy={-30} start={66} end={150} title="האוויר זורם פנימה" sub="וממלא את התחפושת" accent={look().air} />
@@ -106,9 +128,10 @@ export const T3Inflate: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ key
           fontFamily: HEEBO,
           color: look().text,
           direction: "rtl",
-          opacity: timeO,
-          background: look().plate,
-          boxShadow: look().plateShadow,
+          opacity: Math.min(1, timeO * 1.4),
+          transform: `scale(${timeO > 0 ? puff(frame, 150) : 0})`,
+          transformOrigin: "0% 100%",
+          ...GLASS,
           borderRadius: 18,
           padding: "18px 32px 20px",
           borderInlineStart: `5px solid ${look().air}`,
@@ -128,8 +151,9 @@ export const T3Inflate: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ key
           fontFamily: HEEBO,
           color: look().text,
           direction: "rtl",
-          opacity: heroO,
-          translate: `0 ${(1 - heroO) * 16}px`,
+          opacity: Math.min(1, heroO * 1.5),
+          transform: `scale(${heroO > 0 ? puff(frame, 212) : 0})`,
+          transformOrigin: "100% 60%",
         }}
       >
         <div style={{ fontSize: 40, fontWeight: 600, color: look().accent, letterSpacing: 1 }}>ניפוח מלא</div>

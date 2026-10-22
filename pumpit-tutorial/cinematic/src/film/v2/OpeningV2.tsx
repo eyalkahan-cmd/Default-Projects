@@ -2,8 +2,11 @@ import React from "react";
 import { AbsoluteFill, Img, interpolate, staticFile } from "remotion";
 import { Backdrop, LensFinish } from "../../overlay/Overlay";
 import { C, HEEBO, look } from "../../theme";
-import { BEAT, clamp, deflateOut, KineticWord, puff, PuffyBlob, STEPS } from "../motion";
+import { BEAT, clamp, deflateOut, KineticWord, puff, PuffyBlob, settle, SPRING_OBJECT, STEPS } from "../motion";
+import { IMG_H, IMG_W } from "../../three/models/DeflatingCostume";
+import { Character } from "../Character";
 import { useFrame } from "../time";
+import { OPENING } from "./timings";
 
 const CARDS = ["cut/astronaut.png", "cut/dino_blue.png", "cut/giraffe.png", "cut/unicorn.png", "cut/horse.png", "cut/peacock.png"];
 const CARD_W = 520;
@@ -38,18 +41,18 @@ const flow = (p: number) => {
 export const OpeningV2: React.FC = () => {
   const frame = useFrame();
   const L = look();
-  const HERO = 116;
-  const pos = carouselPos(frame, 8);
+  const HERO = OPENING.hero;
+  const pos = carouselPos(frame, OPENING.carouselStart);
   const zoomOut = interpolate(frame, [HERO - 12, HERO], [0, 1], { ...clamp, easing: (t) => t * t });
-  const hero = puff(frame, HERO);
-  const blob = puff(frame, HERO - 2, 120);
+  const hero = settle(frame, HERO);
+  const blob = puff(frame, HERO - 2, SPRING_OBJECT);
   return (
     <AbsoluteFill>
       <Backdrop x={0.5} y={0.45} />
       {/* brand blobs drifting at the edges: playful, low-key */}
-      <PuffyBlob x={95 + Math.sin(frame / 40) * 12} y={975} r={115} color={C.yellow} scale={puff(frame, 2, 120)} rot={frame * 0.2} />
-      <PuffyBlob x={1835} y={975 + Math.cos(frame / 35) * 12} r={120} color={C.blue} scale={puff(frame, 5, 120)} rot={-frame * 0.15} />
-      <PuffyBlob x={1790} y={250 + Math.sin(frame / 30) * 8} r={50} color={C.pink} scale={puff(frame, 8, 120)} />
+      <PuffyBlob x={95 + Math.sin(frame / 40) * 12} y={975} r={115} color={C.yellow} scale={puff(frame, 2, SPRING_OBJECT)} rot={frame * 0.2} />
+      <PuffyBlob x={1835} y={975 + Math.cos(frame / 35) * 12} r={120} color={C.blue} scale={puff(frame, 5, SPRING_OBJECT)} rot={-frame * 0.15} />
+      <PuffyBlob x={1790} y={250 + Math.sin(frame / 30) * 8} r={50} color={C.pink} scale={puff(frame, 8, SPRING_OBJECT)} />
 
       {frame < HERO ? (
         <AbsoluteFill style={{ perspective: 2000, transform: `scale(${1 + zoomOut * 0.9})`, filter: zoomOut > 0.02 ? `blur(${zoomOut * 7}px)` : undefined, opacity: 1 - zoomOut * 0.6 }}>
@@ -59,7 +62,7 @@ export const OpeningV2: React.FC = () => {
             let p = (((i - pos) % n) + n) % n;
             if (p >= n / 2) p -= n;
             const c = flow(p);
-            const ap = puff(frame, 2 + Math.round(c.a) * 3, 150);
+            const ap = settle(frame, 2 + Math.round(c.a) * 3);
             return (
               <div
                 key={src}
@@ -87,16 +90,13 @@ export const OpeningV2: React.FC = () => {
         </AbsoluteFill>
       ) : null}
 
-      <KineticWord text="קניתם תחפושת מתנפחת?" start={14} end={58} x={960} y={140} size={96} />
-      <KineticWord text="מוכנים לגנוב את ההצגה?" start={60} end={HERO - 6} x={960} y={140} size={96} color={C.blue} />
+      <KineticWord text="קניתם תחפושת מתנפחת?" start={OPENING.line1} end={OPENING.line2 - 2} x={960} y={140} size={96} />
+      <KineticWord text="מוכנים לגנוב את ההצגה?" start={OPENING.line2} end={HERO - 6} x={960} y={140} size={96} color={C.blue} />
 
       {frame >= HERO - 2 ? (
         <>
           <PuffyBlob x={640} y={560} r={360} color="#d9ecff" scale={blob} squash={1 + Math.sin(frame / 7) * 0.012} />
-          <Img
-            src={staticFile("img/trex_cutout_v2.png")}
-            style={{ position: "absolute", left: 640, bottom: 70, height: 900, transform: `translateX(-50%) scale(${hero * (1 - 0.006 * Math.sin(frame / 11))}, ${hero * (1 + 0.009 * Math.sin(frame / 11))})`, transformOrigin: "50% 100%" }}
-          />
+          <Character src="img/trex_cutout_v2.png" aspect={IMG_W / IMG_H} height={900} cx={640} floor={1010} appear={hero} />
           <div style={{ position: "absolute", right: 140, top: 300, direction: "rtl", fontFamily: HEEBO, color: L.text }}>
             {["איך מנפחים", "תחפושת מתנפחת"].map((w, i) => (
               <div key={w} style={{ fontSize: 112, fontWeight: 900, lineHeight: 1.04, letterSpacing: -1, transform: `scale(${puff(frame, HERO + 6 + i * BEAT)})`, transformOrigin: "100% 60%" }}>
@@ -114,7 +114,7 @@ export const OpeningV2: React.FC = () => {
                       height: 26,
                       borderRadius: 13,
                       background: `radial-gradient(circle at 35% 30%, #8fd0ff 0%, ${C.blue} 60%)`,
-                      transform: `scale(${puff(frame, HERO + 10 + 2 * BEAT + i * 3, 220) * deflateOut(frame, 9999)})`,
+                      transform: `scale(${puff(frame, HERO + 10 + 2 * BEAT + i * 3) * deflateOut(frame, 9999)})`,
                     }}
                   />
                 ))}

@@ -20,3 +20,18 @@ export const Retime: React.FC<{ src: number[]; dst: number[]; children: React.Re
   const mapped = interpolate(f, src, dst, { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return <FrameCtx.Provider value={mapped}>{children}</FrameCtx.Provider>;
 };
+
+/**
+ * Absolute film clock: the frame of the whole film, unaffected by Sequences and Retime. Lets
+ * continuous elements (the moving background) flow across cuts without restarting.
+ */
+const FilmClockCtx = createContext<number | null>(null);
+export const FilmClock: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const f = useCurrentFrame();
+  return <FilmClockCtx.Provider value={f}>{children}</FilmClockCtx.Provider>;
+};
+export const useFilmFrame = () => {
+  const real = useCurrentFrame();
+  const film = useContext(FilmClockCtx);
+  return film ?? real;
+};

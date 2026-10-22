@@ -6,10 +6,12 @@ import { Backdrop, Callout, Chapter, LensFinish } from "../overlay/Overlay";
 import { look } from "../theme";
 import { getTex, Preload } from "../three/materials";
 import { useNylon } from "../three/models/FabricPanel";
-import { DeflatingCostume } from "../three/models/DeflatingCostume";
+import { DeflatingCostume, IMG_H, IMG_W } from "../three/models/DeflatingCostume";
 import { BatteryPack } from "../three/models/PowerSources";
 import { CamKey, makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
+import { costumeExtent, fullBodyFit } from "./Character";
+import { breathe, move } from "./motion";
 import { useFrame } from "./time";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
@@ -31,10 +33,13 @@ export const WearIn: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys, 
     [keys],
   );
   const cam = rig(frame);
-  const p = project([0.15, 0.35, 0.1], cam, width, height);
+  const fit = fullBodyFit(costumeExtent(cam, width, height, -1.5, 3, (3 * IMG_W) / IMG_H), width, height);
+  const p = fit.map(project([0.15, 0.35, 0.1], cam, width, height));
+  const b = breathe(frame);
   return (
     <AbsoluteFill>
       <Backdrop x={0.5} y={0.42} />
+      <div style={{ position: "absolute", inset: 0, ...fit.style }}>
       <Preload>
         <ThreeCanvas width={width} height={height} gl={{ alpha: true, antialias: true }}>
           <CameraDriver state={cam} />
@@ -43,9 +48,15 @@ export const WearIn: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys, 
             <circleGeometry args={[0.95, 48]} />
             <meshBasicMaterial color="#0b1f4d" transparent opacity={0.22} depthWrite={false} />
           </mesh>
-          <DeflatingCostume pressure={0.08} height={3} />
+          {/* idle breathing: the slack costume sways a little on its wearer */}
+          <group position={[0, -1.5 - b.y * 0.004, 0]} scale={[1, b.s, 1]}>
+            <group position={[0, 1.5, 0]}>
+              <DeflatingCostume pressure={0.08} height={3} />
+            </group>
+          </group>
         </ThreeCanvas>
       </Preload>
+      </div>
       {chrome ? <Callout at={p} dx={-330} dy={-60} start={12} title="נכנסים לתחפושת" sub="המאוורר עדיין כבוי" /> : null}
       {chrome ? (
       <Chapter n="03" title="לובשים" start={4} end={130} />
@@ -131,12 +142,12 @@ export const WearPack: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys
   const { width, height } = useVideoConfig();
   const L = look();
   // phase 1: into the pocket (0–90); phase 2: out, turn, onto the belt (110–200)
-  const into = smooth(interpolate(frame, [8, 70], [0, 1], clamp));
-  const out = smooth(interpolate(frame, [104, 140], [0, 1], clamp));
-  const turn = smooth(interpolate(frame, [120, 165], [0, 1], clamp));
-  const onBelt = smooth(interpolate(frame, [168, 205], [0, 1], clamp));
+  const into = move(frame, 8, 70, true);
+  const out = move(frame, 104, 140);
+  const turn = move(frame, 120, 165);
+  const onBelt = move(frame, 168, 205, true);
   const pocketO = 1 - smooth(interpolate(frame, [100, 125], [0, 1], clamp));
-  const beltIn = smooth(interpolate(frame, [110, 150], [0, 1], clamp));
+  const beltIn = move(frame, 110, 150);
   const packY = 1.25 - into * 1.15 + out * 1.0 - onBelt * 0.55;
   const packX = out * 1.3;
   const rotY = turn * Math.PI;

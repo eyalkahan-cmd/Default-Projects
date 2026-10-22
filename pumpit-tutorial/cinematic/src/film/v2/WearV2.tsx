@@ -2,12 +2,11 @@ import React from "react";
 import { AbsoluteFill, Sequence } from "remotion";
 import { CamKey } from "../../three/rig";
 import { WearIn, WearPack } from "../Wear";
-import { cutOnBeat, KineticWord, ShotFx, StepBar } from "../motion";
+import { KineticWord, ShotFx, StepBar } from "../motion";
 import { Retime } from "../time";
+import { WEAR } from "./timings";
 
-const START = 917; // 30.58 s on the film
-const IN_END = 120;
-const END = 344;
+const { IN_END, END } = WEAR;
 
 // costume framed left of centre (the title sits right), full height with floor room in both angles
 const IN_WIDE: CamKey[] = [
@@ -41,10 +40,7 @@ const BELT_SIDE: CamKey[] = [
  * (high, then low) → it rises and turns to show the clip (macro) → clips onto the belt (side).
  */
 export const WearV2: React.FC = () => {
-  const a = cutOnBeat(START, 60);
-  const p1 = cutOnBeat(START, IN_END + 62);
-  const p2 = cutOnBeat(START, IN_END + 104);
-  const p3 = cutOnBeat(START, IN_END + 166);
+  const { a, p1, p2, p3 } = WEAR;
   const shots: { from: number; to: number; el: React.ReactNode; fx?: "whip" | "zoom" }[] = [
     { from: 0, to: a, el: <WearIn chrome={false} keys={IN_WIDE} /> },
     { from: a, to: IN_END, el: <Retime src={[0, IN_END - a]} dst={[a, IN_END]}><WearIn chrome={false} keys={IN_LOW} /></Retime> },

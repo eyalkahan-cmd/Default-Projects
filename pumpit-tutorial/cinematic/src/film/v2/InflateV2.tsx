@@ -2,14 +2,14 @@ import React from "react";
 import { AbsoluteFill, Sequence } from "remotion";
 import { T3Inflate } from "../../tests/T3Inflate";
 import { CamKey } from "../../three/rig";
-import { cutOnBeat, ShotFx, StepBar, subMap } from "../motion";
+import { ShotFx, StepBar, subMap } from "../motion";
 import { Retime } from "../time";
+import { INFLATE, INFLATE_DST, INFLATE_SRC } from "./timings";
 
-const s = (sec: number) => Math.round(sec * 30);
-const START = 1985; // 66.18 s
+
 // "הפעילו" 66.18 · "כחצי דקה" ~72.5 · full size / "וזהו" 77.66 (on the drop)
-const SRC = [0, s(6.33), s(11.48), s(13.0)];
-const DST = [0, 150, 192, 270];
+const SRC = INFLATE_SRC;
+const DST = INFLATE_DST;
 const FAN_MACRO: CamKey[] = [
   { f: 0, pos: [1.25, -0.35, 1.25], target: [0.5, -0.42, 0], fov: 30 },
   { f: 40, pos: [1.1, -0.3, 1.45], target: [0.48, -0.4, 0], fov: 30 },
@@ -21,10 +21,7 @@ const LOW_HERO: CamKey[] = [
 
 /** 05 · INFLATE (66.18–79.18 s): fan macro → wide airflow → low hero as it fills → full size on the drop. */
 export const InflateV2: React.FC = () => {
-  const END = SRC[SRC.length - 1];
-  const c1 = cutOnBeat(START, 62);
-  const c2 = cutOnBeat(START, 198);
-  const c3 = cutOnBeat(START, SRC[2]);
+  const { END, c1, c2, c3 } = INFLATE;
   const shots: { a: number; b: number; keys?: CamKey[]; fx?: "whip" | "zoom" }[] = [
     { a: 0, b: c1, keys: FAN_MACRO },
     { a: c1, b: c2, fx: "zoom" },

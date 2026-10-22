@@ -1,46 +1,44 @@
 import React from "react";
-import { AbsoluteFill, Img, interpolate, Sequence, staticFile } from "remotion";
+import { AbsoluteFill, interpolate, Sequence, useVideoConfig } from "remotion";
 import { Backdrop, Callout, LensFinish } from "../../overlay/Overlay";
 import { C } from "../../theme";
 import { T1Fan } from "../../tests/T1Fan";
 import { CamKey } from "../../three/rig";
-import { clamp, PuffyBlob, puff, ShotFx, StepBar } from "../motion";
+import { IMG_H, IMG_W } from "../../three/models/DeflatingCostume";
+import { Character, characterLayout, characterPoint } from "../Character";
+import { clamp, PuffyBlob, puff, settle, ShotFx, SPRING_OBJECT, StepBar } from "../motion";
 import { Retime, useFrame } from "../time";
+import { FAN as FAN_SHOTS } from "./timings";
 
 // where the blower sits on the costume photo (fraction of the image box), measured on trex_cutout_v2
-const IMG_W = 914;
-const IMG_H = 1311;
 const FAN = { u: 0.76, v: 0.6 };
 
 /** Shot A: the whole costume; the camera pushes toward the hip while a ring pulses on the fan opening. */
 const WhereIsTheFan: React.FC<{ len: number }> = ({ len }) => {
   const frame = useFrame();
-  const h = 880;
-  const w = (h * IMG_W) / IMG_H;
-  const left = 960 - w / 2 - 120;
-  const FEET = 1030;
-  const top = FEET - h;
-  const fx = left + FAN.u * w;
-  const fy = top + FAN.v * h;
+  const { height: compH } = useVideoConfig();
+  // the camera pushes toward the hip; the push is applied to the costume itself, around its feet
   const push = interpolate(frame, [0, len], [1, 1.14], { ...clamp, easing: (t) => t * t * (3 - 2 * t) });
+  const appear = settle(frame, -6);
+  const H = 780;
+  const cx = 840;
+  const layout = characterLayout({ aspect: IMG_W / IMG_H, height: H, cx, scale: push, compH, breathing: true });
+  const f = characterPoint(layout, FAN.u, FAN.v);
   const pulse = (k: number) => ((frame - 10 - k * 9) % 27) / 27;
   return (
-    <AbsoluteFill>
+    <AbsoluteFill style={{ overflow: "visible" }}>
       <Backdrop x={0.5} y={0.45} />
-      <AbsoluteFill style={{ transform: `scale(${push})`, transformOrigin: `${fx}px ${FEET}px` }}>
-        <PuffyBlob x={fx - 40} y={560} r={330} color="#dcedff" scale={puff(frame, 0, 120)} />
-        <div style={{ position: "absolute", left: left + w * 0.12, top: FEET - 26, width: w * 0.8, height: 44, borderRadius: "50%", background: "radial-gradient(closest-side, rgba(11,31,77,0.34), rgba(11,31,77,0))" }} />
-        <Img src={staticFile("img/trex_cutout_v2.png")} style={{ position: "absolute", left, top, height: h, transform: `scale(${1 - 0.006 * Math.sin(frame / 11)}, ${1 + 0.009 * Math.sin(frame / 11)})`, transformOrigin: "50% 100%" }} />
-        <svg width="100%" height="100%" style={{ position: "absolute", inset: 0 }}>
-          {[0, 1, 2].map((k) => {
-            const t = pulse(k);
-            return frame > 10 + k * 9 ? <circle key={k} cx={fx} cy={fy} r={18 + t * 70} fill="none" stroke={C.blue} strokeWidth={6 * (1 - t)} opacity={1 - t} /> : null;
-          })}
-          <circle cx={fx} cy={fy} r={14 * puff(frame, 8, 220)} fill={C.blue} stroke="#fff" strokeWidth={4} />
-        </svg>
-      </AbsoluteFill>
+      <PuffyBlob x={cx - 40} y={layout.floor - H * 0.52 * layout.scale} r={330 * layout.scale} color="#dcedff" scale={puff(frame, 0, SPRING_OBJECT)} />
+      <Character src="img/trex_cutout_v2.png" aspect={IMG_W / IMG_H} height={H} cx={cx} scale={push} appear={appear} />
+      <svg width="100%" height="100%" style={{ position: "absolute", inset: 0, overflow: "visible" }}>
+        {[0, 1, 2].map((k) => {
+          const t = pulse(k);
+          return frame > 10 + k * 9 ? <circle key={k} cx={f.x} cy={f.y} r={18 + t * 70} fill="none" stroke={C.blue} strokeWidth={6 * (1 - t)} opacity={1 - t} /> : null;
+        })}
+        <circle cx={f.x} cy={f.y} r={14 * puff(frame, 8)} fill={C.blue} stroke="#fff" strokeWidth={4} />
+      </svg>
       <LensFinish />
-      <Callout at={{ x: fx, y: FEET + (fy - FEET) * push }} dx={-300} dy={-200} start={10} end={len + 4} title="פתח המאוורר" sub="כאן מותקן המאוורר" />
+      <Callout at={f} dx={-300} dy={-200} start={10} end={len + 4} title="פתח המאוורר" sub="כאן מותקן המאוורר" />
     </AbsoluteFill>
   );
 };
@@ -56,10 +54,7 @@ const LOW_ORBIT: CamKey[] = [
  * zoom-through into the opening → low orbit while the nylon goes x-ray → tilt down the cable.
  */
 export const FanV2: React.FC = () => {
-  const A = 44;
-  const B = 92;
-  const Cc = 130;
-  const END = 167;
+  const { A, B, C: Cc, END } = FAN_SHOTS;
   return (
     <AbsoluteFill>
       <Sequence durationInFrames={A}>

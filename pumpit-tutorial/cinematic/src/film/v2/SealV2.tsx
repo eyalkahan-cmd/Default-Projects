@@ -3,12 +3,11 @@ import { AbsoluteFill, Sequence } from "remotion";
 import { T2Seal } from "../../tests/T2Seal";
 import { CamKey } from "../../three/rig";
 import { AirLeak } from "../AirLeak";
-import { cutOnBeat, ShotFx, StepBar, subMap } from "../motion";
+import { ShotFx, StepBar, subMap } from "../motion";
 import { Retime } from "../time";
+import { LEAK, SEAL, SEAL_DST, SEAL_SRC } from "./timings";
 
-const s = (sec: number) => Math.round(sec * 30);
-const LEAK_START = 1261; // 42.04 s
-const SEAL_START = 1507; // 50.24 s
+
 
 // AirLeak authored frames: emphasis card 6–96, leaks from 104
 const LEAK_FOOT: CamKey[] = [
@@ -18,8 +17,7 @@ const LEAK_FOOT: CamKey[] = [
 
 /** 04 · part 1 (42.04–50.24 s): "השלב החשוב ביותר" → air escaping, wide → macro at the cuff. */
 export const AirLeakV2: React.FC = () => {
-  const b = cutOnBeat(LEAK_START, 166);
-  const END = 246;
+  const { b, END } = LEAK;
   return (
     <AbsoluteFill>
       <Sequence durationInFrames={b}>
@@ -38,8 +36,8 @@ export const AirLeakV2: React.FC = () => {
 };
 
 // the T2 take fitted to the voiceover (film-local frames → T2 frames), split into shots
-const SRC = [0, s(3.38), s(3.82), s(8.34), s(9.26), s(12.76), s(15.32), s(15.94)];
-const DST = [0, 118, 128, 180, 184, 236, 270, 270];
+const SRC = SEAL_SRC;
+const DST = SEAL_DST;
 const OPEN: [number, number, number] = [0, 3.62, 0];
 const ZIP_LOW: CamKey[] = [
   { f: 0, pos: [0.5, -2.05, 0.38], target: [0, -1.5, 0], fov: 30 },
@@ -65,12 +63,7 @@ const LOCK_MACRO: CamKey[] = [
 
 /** 04 · part 2 (50.24–66.18 s): zipper (low macro → follow) · elastics · cord lock macro → fit ring. */
 export const SealV2: React.FC = () => {
-  const END = SRC[SRC.length - 1];
-  const c1 = cutOnBeat(SEAL_START, 52);
-  const c2 = cutOnBeat(SEAL_START, SRC[2]);
-  const c3 = cutOnBeat(SEAL_START, SRC[3]);
-  const c4 = cutOnBeat(SEAL_START, s(12.4));
-  const cE = cutOnBeat(SEAL_START, Math.round((c2 + c3) / 2));
+  const { END, c1, c2, c3, c4, cE } = SEAL;
   // the zipper label only appears in the follow shot (no jump across the cut), puffing in on it
   const zipIn = subMap(SRC, DST, c1, c2).dst[0] + 3;
   const shots: { a: number; b: number; keys?: CamKey[]; fx?: "whip" | "zoom"; zip?: number; el?: number }[] = [

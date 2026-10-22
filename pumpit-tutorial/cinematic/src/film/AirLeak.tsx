@@ -8,6 +8,7 @@ import { Preload } from "../three/materials";
 import { deflate, DeflatingCostume, IMG_H, IMG_W } from "../three/models/DeflatingCostume";
 import { CamKey, makeRig, project } from "../three/rig";
 import { CameraDriver, Studio } from "../three/Studio";
+import { costumeExtent, fullBodyFit } from "./Character";
 import { AirWisps, puff } from "./motion";
 import { useFrame } from "./time";
 
@@ -46,23 +47,30 @@ export const AirLeak: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys,
     [keys],
   );
   const cam = rig(frame);
-  const pLeak = project(leaks[0][1], cam, width, height);
+  const fit = fullBodyFit(costumeExtent(cam, width, height, -H / 2, H, Wd), width, height);
+  const pLeak = fit.map(project(leaks[0][1], cam, width, height));
   // air escaping, drawn as soft curling wisps in screen space (start + direction from the 3D path)
   const wisps = leaks.map((w) => {
-    const a = project(w[0], cam, width, height);
-    const b = project(w[3], cam, width, height);
+    const a = fit.map(project(w[0], cam, width, height));
+    const b = fit.map(project(w[3], cam, width, height));
     return { a, b };
   });
   return (
     <AbsoluteFill>
       <Backdrop x={0.5} y={0.42} />
-      <Preload>
-        <ThreeCanvas width={width} height={height} gl={{ alpha: true, antialias: true }}>
-          <CameraDriver state={cam} />
-          <Studio lights={false} />
-          <DeflatingCostume pressure={p} height={H} />
-        </ThreeCanvas>
-      </Preload>
+      <div style={{ position: "absolute", inset: 0, ...fit.style }}>
+        <Preload>
+          <ThreeCanvas width={width} height={height} gl={{ alpha: true, antialias: true }}>
+            <CameraDriver state={cam} />
+            <Studio lights={false} />
+            <mesh position={[0.05, -H / 2 + 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]} scale={[1.1, 0.34, 1]}>
+              <circleGeometry args={[0.95, 48]} />
+              <meshBasicMaterial color="#0b1f4d" transparent opacity={0.2} depthWrite={false} />
+            </mesh>
+            <DeflatingCostume pressure={p} height={H} />
+          </ThreeCanvas>
+        </Preload>
+      </div>
       {/* longer, fuller wisps than the 3D path alone: readable at a glance */}
       <AirWisps wisps={wisps.map(({ a, b }) => ({ a, b: { x: a.x + (b.x - a.x) * 2.6, y: a.y + (b.y - a.y) * 2.6 } }))} color={C.pink} opacity={leakO} amp={1.1} width={1.3} id="leak" />
       {/* emphasis card: the one moment the film raises its voice, still clean and quiet */}
@@ -78,10 +86,10 @@ export const AirLeak: React.FC<{ keys?: CamKey[]; chrome?: boolean }> = ({ keys,
           fontFamily: HEEBO,
           color: L.text,
           opacity: Math.min(1, card * 1.6),
-          transform: `scale(${(0.9 + 0.1 * puff(frame, 6, 190)) * (1 + 0.0011 * Math.max(0, frame - 10))})`,
+          transform: `scale(${(0.9 + 0.1 * puff(frame, 6)) * (1 + 0.0011 * Math.max(0, frame - 10))})`,
         }}
       >
-        <div style={{ fontSize: 44, fontWeight: 700, color: L.accent, letterSpacing: 1, transform: `scale(${puff(frame, 4, 220)})` }}>עכשיו</div>
+        <div style={{ fontSize: 44, fontWeight: 700, color: L.accent, letterSpacing: 1, transform: `scale(${puff(frame, 4)})` }}>עכשיו</div>
         <div style={{ fontSize: 124, fontWeight: 900, lineHeight: 1.05 }}>השלב החשוב ביותר</div>
         <div style={{ margin: "18px auto 0", height: 10, borderRadius: 5, width: 520 * interpolate(frame, [16, 40], [0, 1], { ...clamp, easing: easeOut }), background: `linear-gradient(90deg, ${C.pink}, ${C.blue})` }} />
       </div>
