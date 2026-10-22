@@ -1,23 +1,23 @@
-# Video 1: Artlist SFX cue sheet
+# Video 1: SFX cue sheet (v2)
 
-Sound effects only (no music). Each scene's sound fades in under the previous one (1.5–2.2 s audio dissolves), so no transition cuts hard.
+Per feedback: removed all baby and grandpa laughs, toy sounds (rattles, balloons, basket, fire-truck siren, swing creak) and transition whooshes.
+This version is built on footsteps synced to each step and matched to the surface, with ambience under every scene. Ambience beds cross-fade over 1.5–2.2 s, so nothing cuts hard.
 
-| Time | Scene | Sound effects (Artlist) |
-|---|---|---|
-| 0:00–0:05 | Earth from space → through the clouds → aerial city | Bionic Transitions – Space Whoosh; Experimental Transitions – Howling Wind Whoosh; BOOM – Whoosh Soft Gust; Urban Skylines – Daytime City Ambience |
-| 0:05–0:12 | Baby on the play mat, crawls onto the carpet | Cozy Ambiences – Big Living Room tone; Toys – Plastic Maracas Rattling; Toy Collection – Plastic Box Toy; Baby Love – 16 Months Giggling |
-| 0:12–0:18 | Grandpa lifts the baby on the sofa | Childish – Kid Laugh/Giggle; Manly Reactions – Male Laughing (quiet); Baby Love – Giggle |
-| 0:18–0:30 | Runs outside → swing at the playground | Airy Transformation – Soft Whoosh; American Suburbs – Kids on Playground, Wind in Leaves; Introvert – Rocking Creak (swing chains); Happy Toddler Laughing |
-| 0:30–0:37 | Balloons, flower crown, small chair | Living-room tone; Mr. Balloon – Rubbing/Squeaking |
-| 0:37–0:44 | Hugging the newborn twins | BOOM – Whoosh Soft Wave; Baby Love – Sleepy Babbling; light giggle |
-| 0:44–0:50 | Close-up on the leather couch | Trivial Foley – Leather Creak |
-| 0:50–0:58 | Front door, stone steps, basket | Household Objects – Front Door Open; Calm City – Park, Birds, Distant Traffic; Wicker Basket Creaking |
-| 0:58–1:08 | Park, wooden ladder | Soft whoosh; park ambience; Creaky Freaky – Slow Wood Creaks ×2 |
-| 1:08–1:14 | Wet plaza with planes | Wet City – Dripping Rain Ambience; Step it Up – Sneakers on Sloshy Surface |
-| 1:14–1:21 | Wooden studio with the twins | Room tone; The Attic – Wooden Floor Creak; Chuckles – Children Laughing |
-| 1:21–1:31 | Firefighter costume in the garden | Soft whoosh; garden ambience; Sneakers on Grass; Toys – Fire Truck Siren (quiet) |
-| 1:31–1:38 | Pony at the farm | Livestock – Countryside Ambience; The Rancher – Horse Snorting; Farm Animals – Horse Nickering |
-| 1:38–1:45 | Running and sitting on the grass | Sneakers on Grass Running; kid laugh |
-| 1:45–1:50 | Beach, digging in the sand | World Ocean – Gentle Waves Lapping; Sand Digging; final giggle, 1.2 s fade-out |
+Step times were read off 10 fps frame sheets. Each step is a single hit cut from an Artlist footstep recording and pitched slightly up for a child's lighter foot.
 
-Mix: −24.6 LUFS integrated, true peak −1.7 dBFS, 48 kHz stereo; no silent gaps from 0.25 s onward.
+| Time | What happens | Surface → footsteps (Artlist) | Ambience |
+|---|---|---|---|
+| 0:00–0:05 | Earth → clouds → city | — | Howling wind (quiet), daytime city |
+| 0:08–0:12 | Baby crawls on foam mat, then rug | Immersive Foley – Thick Carpet, Gentle Barefoot Scuffing | Living-room tone |
+| 0:17–0:21 | Walks off the rug, runs onto playground | Fly Sound – Barefoot on Carpet → Tovusound – Barefoot Concrete | Room tone → park birds/leaves |
+| 0:29–0:37 | Hops off swing, runs inside onto marble | Barefoot concrete → Martin Scaglia – Barefoot Hard Surface | Park → room tone |
+| 0:50–0:59 | Hallway, stone entrance, down the stone steps | Foley Walkers – Sneakers on Wood; Martin Scaglia – Sneakers Hard Surface; SpillAudio – Concrete Stairs | Front door, garden birds |
+| 0:59–1:08 | Garden lawn, wooden ladder, lawn | Fly Sound – Sneakers on Grass; SpillAudio – Wooden Stairs (rungs) | Garden ambience |
+| 1:08–1:14 | Wet plaza | Fly Sound – Sneakers on Sloshy Surface | Wet city, dripping |
+| 1:14–1:21 | Wooden studio with the twins | Immersive Foley – Creaky Wooden Deck, Sneakers | Room tone |
+| 1:21–1:30 | Firefighter runs and walks on the lawn | Fly Sound – Sneakers on Grass, Running/Walking | Garden ambience |
+| 1:30–1:38 | Farm dirt path, mounting block, pony | Fly Sound – Sneakers on Gritty Ground; Gerald Clark – Horse Footsteps | Countryside ambience |
+| 1:38–1:46 | Dirt → grass, sits, runs | Gritty ground → grass | Countryside |
+| 1:46–1:50 | Beach | Fly Sound – Barefoot on Sand (+ light sand digging) | Gentle waves |
+
+Mix: −26.8 LUFS integrated, true peak −4.6 dBFS; footsteps lead and sit about 6 dB above the ambience.
