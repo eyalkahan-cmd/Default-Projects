@@ -10,7 +10,10 @@ in the source frame (kling/out/kf_inflated_v2.png):
   edge (below it there is only the glossy floor and its mirror image), keeping the orange fabric,
   the black claws and their highlights and none of the navy floor,
 - newly revealed pixels get the same magenta-rim neutralisation as the rest of the cutout.
-usage: fix_trex_feet.py <src.png> <cutout_v2.png> <out_v3.png> <preview.jpg>
+Foreground for the feet and tail comes from a BiRefNet matte of the source (rembg,
+"birefnet-general", run on the source crop starting at MATTE_XY): it keeps the black claws on the
+black floor cleanly; the sole polyline then removes the floor reflection it also picks up.
+usage: fix_trex_feet.py <src.png> <cutout_v2.png> <birefnet_mask.png> <out_v3.png> <preview.jpg>
 """
 import sys
 
@@ -18,7 +21,8 @@ import cv2
 import numpy as np
 
 PAD_R = 80
-src_p, cut_p, out_p, prev_p = sys.argv[1:5]
+src_p, cut_p, matte_p, out_p, prev_p = sys.argv[1:6]
+MATTE_XY = (1440, 60)
 src = cv2.imread(src_p)
 cut = cv2.imread(cut_p, cv2.IMREAD_UNCHANGED)
 ch, cw = cut.shape[:2]
@@ -57,25 +61,15 @@ hh, ww = reg.shape[:2]
 xs = np.arange(RX0, RX1)
 sole = np.interp(xs, [p[0] for p in SOLE], [p[1] for p in SOLE])
 below = np.arange(RY0, RY1)[:, None] > sole[None, :]
-warm = (rr > b + 40) & (rr > 90)
-claw = (np.maximum(np.maximum(rr, g), b) < 95) & (np.abs(b - rr) < 14)
-shine = (np.minimum(np.minimum(rr, g), b) > 140) & (np.abs(b - rr) < 40)
-pink = (rr > 120) & (b > 60) & (g < rr - 30)  # the rim-lit spots on the tail tip
-fg = ((warm | claw | shine | pink) & ~below).astype(np.uint8) * 255
-fg = cv2.morphologyEx(fg, cv2.MORPH_OPEN, np.ones((2, 2), np.uint8))
-fg = cv2.morphologyEx(fg, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
+matte = cv2.imread(matte_p, cv2.IMREAD_GRAYSCALE)
+mx, my = MATTE_XY
+fg = matte[RY0 - my : RY1 - my, RX0 - mx : RX1 - mx].copy()
 fg[below] = 0
-# only what is connected to the body coming down from the top rows of the region
-n, lab, _, _ = cv2.connectedComponentsWithStats(fg, 8)
-top = set(np.unique(lab[:6][fg[:6] > 0])) - {0}
-fg = np.isin(lab, list(top)).astype(np.uint8) * 255
-inv = cv2.bitwise_not(fg)
-n2, lab2, st2, _ = cv2.connectedComponentsWithStats(inv, 4)
-for i in range(1, n2):
-    x, y, w2, h2, area = st2[i]
-    if area < 2500 and x > 0 and x + w2 < ww and y + h2 < hh:
-        fg[lab2 == i] = 255
-fg = cv2.GaussianBlur(fg, (0, 0), 1.0)
+# drop specks the matte left on the floor: keep what is connected to the body (top rows)
+n, lab, _, _ = cv2.connectedComponentsWithStats((fg > 40).astype(np.uint8), 8)
+top = set(np.unique(lab[:6][fg[:6] > 40])) - {0}
+fg[~np.isin(lab, list(top))] = 0
+fg = cv2.GaussianBlur(fg, (0, 0), 0.6)
 
 oy0, ox0 = RY0 - Y0, RX0 - X0
 old = out[oy0:, ox0:, 3].astype(np.float32)
