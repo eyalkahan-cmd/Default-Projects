@@ -220,7 +220,7 @@ function setupForm() {
       `טלפון: ${d.get('phone')}`,
       `אירוע: ${d.get('type')}`,
       d.get('date') ? `מועד: ${d.get('date')}` : '',
-      d.get('notes') ? `על הסרט: ${d.get('notes')}` : '',
+      d.get('notes') ? `על הסרטון: ${d.get('notes')}` : '',
     ]
       .filter(Boolean)
       .join('\n');
