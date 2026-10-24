@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import Wordmark from '../components/Wordmark.astro';
+---
+
+<Base title="העמוד לא נמצא | OneStory" description="העמוד שחיפשתם לא קיים.">
+  <main id="main" class="nf">
+    <Wordmark class="nf-mark" />
+    <h1>העמוד הזה לא קיים.</h1>
+    <p>אולי הקישור השתנה. אפשר לחזור לעמוד הבית ולהמשיך משם.</p>
+    <a class="btn btn--primary" href="/">לעמוד הבית</a>
+  </main>
+</Base>
+
+<style>
+  .nf {
+    min-height: 100svh;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 20px;
+    padding: 24px;
+    text-align: center;
+  }
+  .nf :global(.nf-mark) {
+    height: 36px;
+    width: auto;
+    color: var(--ink);
+  }
+  .nf h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+  }
+  .nf p {
+    color: var(--muted);
+  }
+</style>

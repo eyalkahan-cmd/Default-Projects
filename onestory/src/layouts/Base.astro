@@ -1,0 +1,46 @@
+---
+import '../styles/global.css';
+import { SITE } from '../config';
+
+interface Props {
+  title: string;
+  description: string;
+  schema?: Record<string, unknown>[];
+}
+
+const { title, description, schema = [] } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL('/media/hero-poster.webp', Astro.site).href;
+---
+
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {SITE.private && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#12151B" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="he_IL" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    {schema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">דילוג לתוכן</a>
+    <slot />
+  </body>
+</html>
