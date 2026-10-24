@@ -1,6 +1,19 @@
 // Page copy that is also used for structured data. Keep facts here honest:
 // anything not yet confirmed by the business is marked with [brackets] and hidden or flagged on the site.
 
+// The source photos of the sample film, in order. `start`/`end` (seconds) mark when each photo's
+// scene is on screen; the gap between one scene's end and the next one's start is the transition.
+export const filmScenes = [
+  { label: 'התיקים לכיתה', thumb: '/media/thumb-backpacks.webp', alt: 'שלושה ילדים עם תיקי בית ספר', start: 0, end: 1.5 },
+  { label: 'המצוק מול הים', thumb: '/media/thumb-cliff.webp', alt: 'אב ובתו על מצוק מול הים', start: 3, end: 7.5 },
+  { label: 'הכותל', thumb: '/media/thumb-kotel.webp', alt: 'ילדה ברחבת הכותל', start: 9.5, end: 12.7 },
+  { label: 'סלפי משפחתי', thumb: '/media/thumb-selfie.webp', alt: 'סלפי משפחתי עם פרצופים מופתעים', start: 14.5, end: 17.3 },
+  { label: 'הלב באילת', thumb: '/media/thumb-heart.webp', alt: 'ילדה בתוך לב מואר בטיילת בלילה', start: 19, end: 24 },
+  { label: 'מול הדגל', thumb: '/media/thumb-flag.webp', alt: 'ילדה כורעת מול דגל ישראל', start: 25.5, end: 29.8 },
+  { label: 'האגם', thumb: '/media/thumb-lake.webp', alt: 'ילדה בבגד ים על שפת אגם', start: 33.3, end: 38.5 },
+  { label: 'פינת החי', thumb: '/media/thumb-bear.webp', alt: 'ילדה ליד גדר, ומאחוריה דוב', start: 40.3, end: 43 },
+];
+
 export const demos = [
   {
     id: 'flag-lake',

@@ -178,6 +178,83 @@ function setupCompare() {
   });
 }
 
+// The row of source photos under the sample film: follows playback, and the line between
+// photos fills only while the film is moving from one photo to the next.
+function setupStoryPath() {
+  const root = document.querySelector<HTMLElement>('[data-story-path]');
+  const video = document.querySelector<HTMLVideoElement>('#film video');
+  if (!root || !video) return;
+  const scenes: [number, number][] = JSON.parse(root.dataset.scenes!);
+  const items = [...root.querySelectorAll<HTMLElement>('.story-item')];
+  const dots = [...root.querySelectorAll<HTMLElement>('.story-dot')];
+  const fill = root.querySelector<HTMLElement>('[data-story-fill]')!;
+  const kind = root.querySelector<HTMLElement>('[data-now-kind]')!;
+  const label = root.querySelector<HTMLElement>('[data-now-label]')!;
+  const scroller = root.querySelector<HTMLElement>('.story-scroller')!;
+  const names = items.map((li) => li.querySelector('.story-name')!.lastChild!.textContent!.trim());
+  let last = '';
+  let raf = 0;
+
+  // Position along the path: an integer while a photo is on screen, fractional during a transition.
+  const position = (t: number) => {
+    for (let i = 0; i < scenes.length; i++) {
+      const [start, end] = scenes[i];
+      if (t < start) return i === 0 ? 0 : i - 1 + (t - scenes[i - 1][1]) / (start - scenes[i - 1][1]);
+      if (t <= end) return i;
+    }
+    return scenes.length - 1;
+  };
+
+  const render = () => {
+    const pos = position(video.currentTime);
+    const cur = Math.floor(pos);
+    const moving = pos !== cur;
+    fill.style.width = `${(pos / (scenes.length - 1)) * 100}%`;
+    items.forEach((li, i) => {
+      li.classList.toggle('is-done', i < cur);
+      li.classList.toggle('is-current', i === cur);
+      li.classList.toggle('is-next', moving && i === cur + 1);
+    });
+    dots.forEach((d, i) => {
+      d.classList.toggle('is-done', i < cur);
+      d.classList.toggle('is-current', i === cur);
+      d.classList.toggle('is-next', moving && i === cur + 1);
+    });
+    const key = moving ? `m${cur}` : `s${cur}`;
+    if (key !== last) {
+      last = key;
+      kind.textContent = moving ? 'מעבר' : `תמונה ${cur + 1} מתוך ${scenes.length}`;
+      label.textContent = moving ? `${names[cur]} ← ${names[cur + 1]}` : names[cur];
+      const target = items[moving ? cur + 1 : cur];
+      const r = scroller.getBoundingClientRect();
+      if (scroller.scrollWidth > scroller.clientWidth && r.top < window.innerHeight && r.bottom > 0) {
+        const tr = target.getBoundingClientRect();
+        scroller.scrollBy({ left: tr.left + tr.width / 2 - (r.left + r.width / 2), behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+      }
+    }
+  };
+
+  const loop = () => {
+    render();
+    raf = video.paused ? 0 : requestAnimationFrame(loop);
+  };
+  video.addEventListener('play', () => {
+    if (!raf) raf = requestAnimationFrame(loop);
+  });
+  video.addEventListener('seeked', render);
+  video.addEventListener('timeupdate', () => {
+    if (!raf) render();
+  });
+
+  root.querySelectorAll<HTMLButtonElement>('[data-seek]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      video.currentTime = Number(btn.dataset.seek);
+      video.play().catch(() => {});
+      render();
+    });
+  });
+}
+
 function setupReveal() {
   const els = document.querySelectorAll<HTMLElement>('.reveal');
   if (reduceMotion.matches || !('IntersectionObserver' in window)) {
@@ -244,6 +321,7 @@ export function init() {
   setupHeader();
   setupDemos();
   setupCompare();
+  setupStoryPath();
   setupReveal();
   setupForm();
 }

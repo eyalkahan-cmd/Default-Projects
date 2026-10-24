@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Wordmark from '../components/Wordmark.astro';
 import { SITE } from '../config';
-import { demos, effects, steps, craft, addons, faq } from '../data/content';
+import { filmScenes, demos, effects, steps, craft, addons, faq } from '../data/content';
 
 const site = Astro.site!;
 const abs = (p: string) => new URL(p, site).href;
@@ -137,6 +137,34 @@ const play = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"
             <source src="/media/film.mp4" type="video/mp4" />
           </video>
           <p id="film-desc" class="visually-hidden">ילדה עוברת בתנועה רציפה מהחדר עם תיקי בית הספר אל מצוק מול הים, לכותל, לסלפי משפחתי, לטיילת באילת, לצלילה באגם ולפינת חיות.</p>
+        </div>
+
+        <div class="story-path reveal" data-story-path data-scenes={JSON.stringify(filmScenes.map((s) => [s.start, s.end]))}>
+          <div class="story-head">
+            <p class="story-now">
+              <span class="story-kind" data-now-kind>התמונות שמאחורי הסרטון</span>
+              <span class="story-label-now" data-now-label>{filmScenes.length} תמונות מקוריות, תנועה אחת</span>
+            </p>
+            <p class="story-hint">לחצו על תמונה כדי לקפוץ אליה בסרטון</p>
+          </div>
+          <div class="story-scroller">
+            <div class="story-inner" style={`--n: ${filmScenes.length}`}>
+              <div class="story-rail" aria-hidden="true">
+                <span class="story-line"><span class="story-fill" data-story-fill></span></span>
+                {filmScenes.map(() => <span class="story-dot"></span>)}
+              </div>
+              <ol class="story-list">
+                {filmScenes.map((s, i) => (
+                  <li class="story-item">
+                    <button class="story-thumb" type="button" data-seek={s.start} aria-label={`קפיצה לתמונה ${i + 1} בסרטון: ${s.label}`}>
+                      <img src={s.thumb} alt="" width="160" height="90" loading="lazy" decoding="async" />
+                    </button>
+                    <span class="story-name"><span class="story-n" aria-hidden="true">{i + 1}</span>{s.label}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -657,6 +685,184 @@ const play = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"
     width: 100%;
     aspect-ratio: 16 / 9;
     background: #000;
+  }
+
+  /* Story path under the film */
+  .story-path {
+    margin-top: 28px;
+    display: grid;
+    gap: 18px;
+  }
+  .story-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 24px;
+  }
+  .story-now {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 12px;
+    min-height: 2.2em;
+  }
+  .story-kind {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gold-light);
+  }
+  .story-label-now {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: clamp(1.15rem, 2vw, 1.4rem);
+    color: var(--cream);
+  }
+  .story-hint {
+    font-size: 0.95rem;
+    color: #c9c2b6;
+  }
+  .story-scroller {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    padding-bottom: 6px;
+  }
+  .story-inner {
+    min-width: 760px;
+    display: grid;
+    gap: 14px;
+  }
+  .story-rail,
+  .story-list {
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    gap: 12px;
+  }
+  .story-rail {
+    position: relative;
+    height: 14px;
+    align-items: center;
+    justify-items: center;
+  }
+  /* The line runs from the first dot's centre to the last one's. */
+  .story-line {
+    position: absolute;
+    inset-inline: calc((100% - (var(--n) - 1) * 12px) / var(--n) / 2);
+    top: 50%;
+    height: 2px;
+    transform: translateY(-50%);
+    background: rgba(250, 246, 239, 0.18);
+    border-radius: 2px;
+  }
+  .story-fill {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: 0;
+    background: var(--gold-light);
+    border-radius: 2px;
+    box-shadow: 0 0 12px rgba(217, 168, 78, 0.6);
+  }
+  .story-dot {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--cinema);
+    border: 2px solid rgba(250, 246, 239, 0.35);
+    transition: background-color 250ms var(--ease-out), border-color 250ms var(--ease-out), transform 250ms var(--ease-out);
+  }
+  .story-dot.is-done {
+    background: var(--gold-light);
+    border-color: var(--gold-light);
+  }
+  .story-dot.is-current {
+    background: var(--gold-light);
+    border-color: var(--cream);
+    transform: scale(1.35);
+  }
+  .story-dot.is-next {
+    border-color: var(--gold-light);
+  }
+  .story-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .story-item {
+    display: grid;
+    gap: 8px;
+    align-content: start;
+  }
+  .story-thumb {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: none;
+    cursor: pointer;
+    outline-offset: 3px;
+    position: relative;
+    transition: transform 300ms var(--ease-out);
+  }
+  .story-thumb img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 12px;
+    opacity: 0.55;
+    filter: saturate(0.6);
+    transition: opacity 300ms var(--ease-out), filter 300ms var(--ease-out);
+  }
+  .story-thumb::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 15px;
+    border: 2px solid transparent;
+    transition: border-color 250ms var(--ease-out);
+    pointer-events: none;
+  }
+  .story-thumb:hover img {
+    opacity: 0.85;
+  }
+  .story-item.is-done .story-thumb img {
+    opacity: 0.8;
+    filter: none;
+  }
+  .story-item.is-current .story-thumb {
+    transform: translateY(-4px);
+  }
+  .story-item.is-current .story-thumb img,
+  .story-item.is-next .story-thumb img {
+    opacity: 1;
+    filter: none;
+  }
+  .story-item.is-current .story-thumb::after {
+    border-color: var(--gold-light);
+  }
+  .story-item.is-next .story-thumb::after {
+    border-color: rgba(217, 168, 78, 0.55);
+    border-style: dashed;
+  }
+  .story-name {
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    color: #c9c2b6;
+  }
+  .story-n {
+    font-weight: 700;
+    color: var(--gold-light);
+    font-variant-numeric: tabular-nums;
+  }
+  .story-item.is-current .story-name,
+  .story-item.is-next .story-name {
+    color: var(--cream);
   }
 
   /* Demos */
