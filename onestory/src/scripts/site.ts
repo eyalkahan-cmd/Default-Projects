@@ -12,8 +12,10 @@ function loadVideo(video: HTMLVideoElement) {
   video.load();
 }
 
+// The hero loop is the product demo, so it always plays (muted, with its own pause button).
+// Other loops respect reduced motion and get controls instead.
 function tryPlay(video: HTMLVideoElement) {
-  if (reduceMotion.matches) return;
+  if (reduceMotion.matches && !video.hasAttribute('data-always-play')) return;
   video.play().catch(() => {
     /* autoplay blocked: the poster or first frame stays visible */
   });
@@ -39,7 +41,7 @@ function setupLazyVideos() {
 
   // With reduced motion, muted loops get native controls so they can still be watched on demand.
   if (reduceMotion.matches) {
-    document.querySelectorAll<HTMLVideoElement>('video[data-autoplay]').forEach((v) => {
+    document.querySelectorAll<HTMLVideoElement>('video[data-autoplay]:not([data-always-play])').forEach((v) => {
       v.controls = true;
     });
   }
