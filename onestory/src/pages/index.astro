@@ -102,10 +102,10 @@ const play = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"
       </video>
       <div class="hero-scrim" aria-hidden="true"></div>
       <div class="wrap hero-content">
-        <p class="eyebrow hero-eyebrow">סרטוני גדילה AI</p>
+        <p class="eyebrow hero-eyebrow">סרטון גדילה</p>
         <h1 id="hero-title">המעבר הוא כל ההבדל.</h1>
         <p class="hero-lead">
-          סרטוני גדילה שבהם הדמות עוברת מתמונה לתמונה בתנועה אחת רציפה, בלי דיזולב. כל מעבר מתוכנן ונערך בהתאמה אישית לתמונות שלכם.
+          סרטוני גדילה שבהם הדמות עוברת מתמונה לתמונה בתנועה אחת רציפה, כל מעבר מתוכנן ונערך בהתאמה אישית לתמונות שלכם.
         </p>
         <div class="hero-actions">
           <a href="#contact" class="btn btn--light">בואו נדבר על סרטון הגדילה שלכם</a>
@@ -580,8 +580,14 @@ const play = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"
     color: var(--gold-light);
   }
   .hero-eyebrow {
-    font-size: clamp(1.15rem, 1.7vw, 1.4rem);
+    font-size: 1.15rem;
     letter-spacing: 0.01em;
+  }
+  @media (min-width: 901px) {
+    .hero-eyebrow {
+      font-size: 1.75rem;
+      margin-bottom: -10px;
+    }
   }
   #film {
     padding-top: clamp(40px, 5vw, 72px);
