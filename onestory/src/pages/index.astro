@@ -102,7 +102,7 @@ const play = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"
       </video>
       <div class="hero-scrim" aria-hidden="true"></div>
       <div class="wrap hero-content">
-        <p class="eyebrow">סרטוני גדילה ב-AI · עריכה בהתאמה אישית</p>
+        <p class="eyebrow hero-eyebrow">סרטוני גדילה AI</p>
         <h1 id="hero-title">המעבר הוא כל ההבדל.</h1>
         <p class="hero-lead">
           סרטוני גדילה שבהם הדמות עוברת מתמונה לתמונה בתנועה אחת רציפה, בלי דיזולב. כל מעבר מתוכנן ונערך בהתאמה אישית לתמונות שלכם.
@@ -572,12 +572,19 @@ const play = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"
   .hero-content {
     position: relative;
     padding-top: 140px;
-    padding-bottom: clamp(48px, 8vh, 96px);
+    padding-bottom: clamp(40px, 6vh, 72px);
     display: grid;
     gap: 22px;
   }
   .hero-content .eyebrow {
     color: var(--gold-light);
+  }
+  .hero-eyebrow {
+    font-size: clamp(1.15rem, 1.7vw, 1.4rem);
+    letter-spacing: 0.01em;
+  }
+  #film {
+    padding-top: clamp(40px, 5vw, 72px);
   }
   .hero h1 {
     font-size: clamp(2.75rem, 7vw, 5.5rem);
@@ -659,7 +666,7 @@ const play = '<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24"
     .hero-content {
       padding-top: 0;
       margin-top: -64px;
-      padding-bottom: 112px;
+      padding-bottom: 48px;
       gap: 16px;
     }
     .hero-actions .btn {
