@@ -33,7 +33,11 @@ Reply to the user in their language (often Hebrew). Captions are in the language
      - **Formants (LPC):** a filled pause "eh/uh" holds steady F1≈400–500 / F2≈1800–2000; "all" has F2≈900–1100; "yeah" shows F1 rising and F2 falling (/j/→/ɛə/).
      - **Tight-window re-runs** of both ASRs on the disputed stretch.
    - Whisper often stops early on clips over ~30 s. Parakeet completes; use it for the tail.
-4. **Fillers are not captioned**, but never let a hesitation stand in for the next word. The next word appears only when it is really said. Example: "have… ehhh… all the": ALL appears at 16.70, not 16.02.
+4. **Fillers are not captioned.** Verbal fillers like a stray "yeah" inside a sentence are unwanted in captions and, when possible, in the audio.
+   - If it is the speaker's own word with silence around it, cut it from picture and audio (frame-aligned, with micro-fades), ideally inside a card so the jump is small.
+   - If it overlaps other speech and can't be separated, drop it from the captions only.
+   - Stutter repeats ("what what") may be shown once in the captions when the user asks; the audio stays.
+   - Still, never let a hesitation stand in for the next word. The next word appears only when it is really said. Example: "have… ehhh… all the": ALL appears at 16.70, not 16.02.
 5. **Names and brands:** keep what the evidence says (e.g. "Jev" beat "Bob"/"Jeff" clearly), and ask the user to confirm the spelling.
 
 ## 2. Speakers
@@ -83,11 +87,12 @@ Reply to the user in their language (often Hebrew). Captions are in the language
    - Drop outliers: face width < 0.65× the shot median, or x > 350 px from the median.
    - In wide shots, search only the side of the person you want.
    - Never eyeball a focal point from one frame: that put a speaker ~300 px off-centre for a whole shot.
-4. **Placement:**
+4. **Check the median.** A median skewed by head turns can push a person off-centre (x 979 vs a real face at ~830). Check each shot's frame visually, and keep the microphone in frame when the speaker talks into one: a person centred or slightly right, with the mic visible.
+5. **Placement:**
    - Face at x = 50 % of the box.
    - Face at y ≈ 38 % in full screen and ≈ 36 % in the card, leaving headroom.
    - Spot-check every shot.
-5. **Tell the user** that the full-screen crop of 16:9 is a ~1.78× upscale. Wide shots need a further ×2 zoom, so keep them in the card.
+6. **Tell the user** that the full-screen crop of 16:9 is a ~1.78× upscale. Wide shots need a further ×2 zoom, so keep them in the card.
 
 ## 5. Layouts
 
