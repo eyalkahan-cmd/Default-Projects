@@ -32,6 +32,8 @@ Turn an uploaded clip (usually vertical 1080x1920 podcast footage) into a studio
    - Use it at most once or twice per video, only in a stretch with no cuts and continuous speech flow (both crops must come from the same uncut shot, and it ends before the next cut like any other overlay).
    - It is a variety tool: worth adding when the video is somewhat longer, to alternate with full-screen and card-mode (infographic) sections. Don't force it into short clips that are already full of graphics.
    - Ramp in/out like card mode (≈0.45s easeInOut); add a soft servo/slide SFX for the split.
+   - Mark the active speaker: coral border + glow and small audio bars driven by the real per-frame RMS on the speaking panel, listener panel dimmed ~28%; switch on the first word of each turn.
+16. **Two speakers in the audio:** captions include the interviewer's words too (verbatim), in a distinct style (dark chips with a coral edge) so viewers can tell who is talking. Decide who said what from the picture, not the ASR: grab frames (crop around both mouths) across the disputed window; also an off-screen interjection ("yeah") during a close-up is the other person if the visible speaker's mouth is closed. Overlapping speech makes ASR invent words ("this year", "in here"); drop them unless the CTC variant scores and frames support them.
 
 ## Environment notes
 - Hugging Face, download.pytorch.org and dl.fbaipublicfiles.com are blocked (no torch / torchaudio aligners). GitHub release downloads work. PyPI may work (`pip install onnxruntime kaldi-native-fbank` succeeded); numpy and scipy are preinstalled. Node `playwright` is preinstalled and works with the bundled Chromium (Python playwright may not be installed; a Node `render.js` is fine).
