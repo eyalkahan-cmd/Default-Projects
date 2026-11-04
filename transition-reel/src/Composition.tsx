@@ -58,10 +58,10 @@ const pop = (frame: number, fps: number, delay = 0) =>
   spring({ frame: frame - delay, fps, config: { damping: 11, stiffness: 180, mass: 0.6 } });
 
 // ---------- Hook ----------
-const CARD_W = 430;
+const CARD_W = 390;
 const CARD_H = Math.round((CARD_W * 1672) / 941);
-const CARD1 = { x: W / 2 + 22, y: 560, rot: 6 }; // right side (RTL: first)
-const CARD2 = { x: W / 2 - CARD_W - 22, y: 600, rot: -6 };
+const CARD1 = { x: W / 2 + 26, y: 540, rot: 6 }; // right side (RTL: first)
+const CARD2 = { x: W / 2 - CARD_W - 26, y: 575, rot: -6 };
 
 const PhotoCard: React.FC<{
   src: string;
@@ -163,10 +163,10 @@ const Hook: React.FC = () => {
         style={{
           ...textStyle,
           position: "absolute",
-          top: 150,
+          top: 140,
           left: 0,
           right: 0,
-          fontSize: 132,
+          fontSize: 124,
           transform: `scale(${interpolate(title, [0, 1], [2.2, 1])})`,
           opacity: Math.min(1, title * 2) * fadeOut,
         }}
@@ -205,7 +205,7 @@ const Hook: React.FC = () => {
           </filter>
         </defs>
         <path
-          d="M 760 1430 Q 540 1600 320 1430"
+          d="M 750 505 Q 540 400 330 505"
           stroke={YELLOW}
           strokeWidth={14}
           fill="none"
@@ -215,7 +215,7 @@ const Hook: React.FC = () => {
           filter="url(#glow)"
         />
         <path
-          d="M 350 1400 L 312 1436 L 362 1458"
+          d="M 336 462 L 326 508 L 374 512"
           stroke={YELLOW}
           strokeWidth={14}
           fill="none"
@@ -226,16 +226,16 @@ const Hook: React.FC = () => {
         />
         <text
           x={540}
-          y={1560}
-          fill="white"
+          y={448}
+          fill={YELLOW}
           fontFamily={fontFamily}
           fontWeight={900}
-          fontSize={110}
+          fontSize={52}
           textAnchor="middle"
           opacity={arrow}
           style={{ filter: "url(#glow)" }}
         >
-          ?
+          AI
         </text>
       </svg>
 
@@ -258,10 +258,10 @@ const Hook: React.FC = () => {
         style={{
           ...textStyle,
           position: "absolute",
-          top: 1630,
-          left: 40,
-          right: 40,
-          fontSize: 76,
+          top: 1310,
+          left: 20,
+          right: 20,
+          fontSize: 66,
           transform: `translateY(${interpolate(sub, [0, 1], [60, 0])}px)`,
           opacity: Math.min(1, sub * 2) * fadeOut,
         }}
@@ -426,7 +426,7 @@ const CAPTIONS: { from: number; to: number; text: React.ReactNode; size?: number
   { from: 136, to: 182, text: "קפיצה", size: 190, color: YELLOW },
   { from: 182, to: 226, text: "נפילה חופשית..." },
   { from: 226, to: 262, text: "רגע..." },
-  { from: 262, to: VIDEO_END, text: "מנהרת רוח!", size: 160, color: YELLOW },
+  { from: 262, to: VIDEO_END, text: <span style={{ direction: "ltr", unicodeBidi: "isolate" }}>FlyBox!</span>, size: 180, color: YELLOW },
 ];
 
 const Caption: React.FC<{ text: React.ReactNode; size?: number; color?: string; dur: number }> = ({
@@ -444,7 +444,7 @@ const Caption: React.FC<{ text: React.ReactNode; size?: number; color?: string; 
       style={{
         ...textStyle,
         position: "absolute",
-        top: 1380,
+        top: 1130,
         left: 30,
         right: 30,
         fontSize: size,
@@ -520,7 +520,7 @@ const EndCard: React.FC = () => {
         style={{
           ...textStyle,
           position: "absolute",
-          top: 150,
+          top: 410,
           left: 0,
           right: 0,
           fontSize: 110,
@@ -536,30 +536,105 @@ const EndCard: React.FC = () => {
         style={{
           ...textStyle,
           position: "absolute",
-          bottom: 190,
-          left: 40,
-          right: 40,
-          fontSize: 66,
+          top: 1140,
+          left: 30,
+          right: 30,
+          fontSize: 64,
           transform: `translateY(${interpolate(t2, [0, 1], [80, 0])}px)`,
           opacity: Math.min(1, t2 * 2),
         }}
       >
-        לאן הוא יעוף בפעם הבאה?
-        <div
-          style={{
-            display: "inline-block",
-            marginTop: 22,
-            background: RED,
-            padding: "10px 36px",
-            borderRadius: 999,
-            fontSize: 54,
-            textShadow: "none",
-          }}
-        >
-          כתבו בתגובות
-        </div>
+        הופכים את התמונות שלכם
+        <br />
+        ל<span style={{ color: YELLOW }}>סרטון גדילה</span> מרגש
       </div>
     </AbsoluteFill>
+  );
+};
+
+// ---------- Persistent overlays (whole video) ----------
+const GrowthBadge: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const s = pop(frame, fps, 6);
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: 312,
+        left: 0,
+        right: 0,
+        display: "flex",
+        justifyContent: "center",
+        opacity: Math.min(1, s * 2),
+        transform: `scale(${interpolate(s, [0, 1], [0.6, 1])})`,
+      }}
+    >
+      <div
+        style={{
+          ...textStyle,
+          fontSize: 38,
+          fontWeight: 800,
+          textShadow: "none",
+          background: "rgba(10,10,15,0.72)",
+          border: "3px solid rgba(255,255,255,0.85)",
+          borderRadius: 999,
+          padding: "8px 30px",
+          display: "flex",
+          alignItems: "center",
+          gap: 14,
+        }}
+      >
+        <span style={{ width: 16, height: 16, borderRadius: "50%", background: RED, boxShadow: `0 0 12px ${RED}`, opacity: Math.floor(frame / 15) % 2 ? 0.35 : 1 }} />
+        קטע מעבר מתוך <span style={{ color: YELLOW }}>סרטון גדילה</span>
+      </div>
+    </div>
+  );
+};
+
+const CTA: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const s = pop(frame, fps, 14);
+  const endBoost = pop(frame, fps, VIDEO_END + 20);
+  const beat = 1 + 0.035 * Math.max(0, Math.sin((frame / fps) * Math.PI * 2.5)); // 150 BPM pulse
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: 1440,
+        left: 0,
+        right: 0,
+        display: "flex",
+        justifyContent: "center",
+        opacity: Math.min(1, s * 2),
+        transform: `translateY(${interpolate(s, [0, 1], [120, 0])}px) scale(${1 + 0.12 * endBoost})`,
+      }}
+    >
+      <div
+        style={{
+          ...textStyle,
+          textShadow: "none",
+          background: "rgba(10,10,15,0.82)",
+          border: `4px solid ${YELLOW}`,
+          borderRadius: 36,
+          padding: "14px 46px 18px",
+          boxShadow: `0 10px 40px rgba(0,0,0,0.5), 0 0 ${20 + 20 * endBoost}px rgba(255,214,10,0.45)`,
+        }}
+      >
+        <div style={{ fontSize: 44, fontWeight: 800 }}>רוצים גם? פרטים באתר:</div>
+        <div
+          style={{
+            fontSize: 72,
+            color: YELLOW,
+            direction: "ltr",
+            transform: `scale(${beat})`,
+          }}
+        >
+          OneStory.co.il
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -587,6 +662,8 @@ export const Reel: React.FC = () => {
         <EndCard />
       </Sequence>
       <Flash />
+      <GrowthBadge />
+      <CTA />
 
       {/* audio */}
       <Audio src={staticFile("music.mp3")} trimBefore={Math.round(MUSIC_START_SEC * FPS)} volume={musicVol} />
