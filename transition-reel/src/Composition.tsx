@@ -58,10 +58,10 @@ const pop = (frame: number, fps: number, delay = 0) =>
   spring({ frame: frame - delay, fps, config: { damping: 11, stiffness: 180, mass: 0.6 } });
 
 // ---------- Hook ----------
-const CARD_W = 390;
+const CARD_W = 460;
 const CARD_H = Math.round((CARD_W * 1672) / 941);
-const CARD1 = { x: W / 2 + 26, y: 540, rot: 6 }; // right side (RTL: first)
-const CARD2 = { x: W / 2 - CARD_W - 26, y: 575, rot: -6 };
+const CARD1 = { x: W / 2 + 14, y: 545, rot: 6 }; // right side (RTL: first)
+const CARD2 = { x: W / 2 - CARD_W - 14, y: 580, rot: -6 };
 
 const PhotoCard: React.FC<{
   src: string;
@@ -205,7 +205,7 @@ const Hook: React.FC = () => {
           </filter>
         </defs>
         <path
-          d="M 750 505 Q 540 400 330 505"
+          d="M 740 522 Q 540 432 340 522"
           stroke={YELLOW}
           strokeWidth={14}
           fill="none"
@@ -215,7 +215,7 @@ const Hook: React.FC = () => {
           filter="url(#glow)"
         />
         <path
-          d="M 336 462 L 326 508 L 374 512"
+          d="M 346 478 L 336 524 L 384 528"
           stroke={YELLOW}
           strokeWidth={14}
           fill="none"
@@ -235,7 +235,7 @@ const Hook: React.FC = () => {
           opacity={arrow}
           style={{ filter: "url(#glow)" }}
         >
-          AI
+          {""}
         </text>
       </svg>
 
@@ -258,15 +258,15 @@ const Hook: React.FC = () => {
         style={{
           ...textStyle,
           position: "absolute",
-          top: 1310,
+          top: 1470,
           left: 20,
           right: 20,
-          fontSize: 66,
+          fontSize: 76,
           transform: `translateY(${interpolate(sub, [0, 1], [60, 0])}px)`,
           opacity: Math.min(1, sub * 2) * fadeOut,
         }}
       >
-        תראו מה ה-<span style={{ color: YELLOW }}>AI</span> יצר ביניהן
+        תראו איזה <span style={{ color: YELLOW }}>מעבר גדילה</span> יצרנו
       </div>
     </AbsoluteFill>
   );
@@ -536,17 +536,17 @@ const EndCard: React.FC = () => {
         style={{
           ...textStyle,
           position: "absolute",
-          top: 1140,
-          left: 30,
-          right: 30,
-          fontSize: 64,
+          top: 1150,
+          left: 20,
+          right: 20,
+          fontSize: 56,
           transform: `translateY(${interpolate(t2, [0, 1], [80, 0])}px)`,
           opacity: Math.min(1, t2 * 2),
         }}
       >
-        הופכים את התמונות שלכם
+        <span style={{ color: YELLOW }}>סרטון גדילה AI</span> בהתאמה אישית
         <br />
-        ל<span style={{ color: YELLOW }}>סרטון גדילה</span> מרגש
+        עם מעברים מושלמים!
       </div>
     </AbsoluteFill>
   );
@@ -561,7 +561,7 @@ const GrowthBadge: React.FC = () => {
     <div
       style={{
         position: "absolute",
-        top: 312,
+        top: 292,
         left: 0,
         right: 0,
         display: "flex",
@@ -573,19 +573,20 @@ const GrowthBadge: React.FC = () => {
       <div
         style={{
           ...textStyle,
-          fontSize: 38,
-          fontWeight: 800,
+          fontSize: 54,
+          fontWeight: 900,
           textShadow: "none",
-          background: "rgba(10,10,15,0.72)",
-          border: "3px solid rgba(255,255,255,0.85)",
+          background: "rgba(10,10,15,0.85)",
+          border: "4px solid white",
           borderRadius: 999,
-          padding: "8px 30px",
+          padding: "10px 42px 12px",
           display: "flex",
           alignItems: "center",
-          gap: 14,
+          gap: 18,
+          boxShadow: "0 8px 30px rgba(0,0,0,0.5)",
         }}
       >
-        <span style={{ width: 16, height: 16, borderRadius: "50%", background: RED, boxShadow: `0 0 12px ${RED}`, opacity: Math.floor(frame / 15) % 2 ? 0.35 : 1 }} />
+        <span style={{ width: 22, height: 22, borderRadius: "50%", background: RED, boxShadow: `0 0 12px ${RED}`, opacity: Math.floor(frame / 15) % 2 ? 0.35 : 1 }} />
         קטע מעבר מתוך <span style={{ color: YELLOW }}>סרטון גדילה</span>
       </div>
     </div>
@@ -595,14 +596,14 @@ const GrowthBadge: React.FC = () => {
 const CTA: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const s = pop(frame, fps, 14);
+  const s = pop(frame, fps, 60);
   const endBoost = pop(frame, fps, VIDEO_END + 20);
   const beat = 1 + 0.035 * Math.max(0, Math.sin((frame / fps) * Math.PI * 2.5)); // 150 BPM pulse
   return (
     <div
       style={{
         position: "absolute",
-        top: 1440,
+        top: 1420,
         left: 0,
         right: 0,
         display: "flex",
@@ -618,14 +619,14 @@ const CTA: React.FC = () => {
           background: "rgba(10,10,15,0.82)",
           border: `4px solid ${YELLOW}`,
           borderRadius: 36,
-          padding: "14px 46px 18px",
+          padding: "16px 50px 20px",
           boxShadow: `0 10px 40px rgba(0,0,0,0.5), 0 0 ${20 + 20 * endBoost}px rgba(255,214,10,0.45)`,
         }}
       >
-        <div style={{ fontSize: 44, fontWeight: 800 }}>רוצים גם? פרטים באתר:</div>
+        <div style={{ fontSize: 54, fontWeight: 900 }}>רוצים סרטון גדילה? פרטים באתר:</div>
         <div
           style={{
-            fontSize: 72,
+            fontSize: 92,
             color: YELLOW,
             direction: "ltr",
             transform: `scale(${beat})`,
