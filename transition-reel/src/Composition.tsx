@@ -648,7 +648,7 @@ const GrowthBadge: React.FC = () => {
 const CTA: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const s = pop(frame, fps, 60);
+  const s = pop(frame, fps, DROP); // CTA lands on the music drop
   const endBoost = pop(frame, fps, VIDEO_END + 20);
   const beat = 1 + 0.035 * Math.max(0, Math.sin((frame / fps) * Math.PI * 2.5)); // 150 BPM pulse
   return (
@@ -723,6 +723,18 @@ export const Reel: React.FC = () => {
       <Sequence from={2} durationInFrames={15}><Audio src={staticFile("snap.wav")} volume={0.7} /></Sequence>
       <Sequence from={10} durationInFrames={15}><Audio src={staticFile("snap.wav")} volume={0.7} /></Sequence>
       <Sequence from={HOOK_END - 8} durationInFrames={20}><Audio src={staticFile("whoosh.wav")} volume={0.8} /></Sequence>
+      {/* off-road riding: builds under the music from the first pedal stroke to the takeoff */}
+      <Sequence from={VIDEO_START - 2} durationInFrames={DROP - VIDEO_START + 6}>
+        <Audio
+          src={staticFile("bike.wav")}
+          volume={(f) =>
+            interpolate(f, [0, 12, DROP - VIDEO_START - 6, DROP - VIDEO_START + 2, DROP - VIDEO_START + 6], [0, 0.28, 0.5, 0.5, 0], {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+            })
+          }
+        />
+      </Sequence>
       <Sequence from={DROP - 42} durationInFrames={44}><Audio src={staticFile("riser.wav")} volume={0.45} /></Sequence>
       <Sequence from={DROP} durationInFrames={54}><Audio src={staticFile("boom.wav")} volume={0.9} /></Sequence>
       <Sequence from={REVEAL - 10} durationInFrames={20}><Audio src={staticFile("whoosh.wav")} volume={0.7} /></Sequence>
