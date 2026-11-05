@@ -58,7 +58,7 @@ const SRC_TIME: number[] = [];
 const DROP = 136;
 const REVEAL = 260;
 const END = 438;
-const WIND_IN = 178; // freefall wind: from the freefall shot ("נפילה חופשית...") until FlyBox
+const WIND_IN = 178; // freefall wind: from the freefall shot ("צניחה חופשית...") until FlyBox
 const BIKE_IN = 90; // riding sound starts once he is actually riding (3s)
 // Music: the first bass kick of the drop (70.47s in the track) lands exactly on the
 // takeoff from the ramp lip (source frame ~68.6 -> output frame ~135.3)
@@ -442,7 +442,7 @@ const ProgressStrip: React.FC = () => {
 const CAPTIONS: { from: number; to: number; text: React.ReactNode; size?: number; color?: string }[] = [
   { from: 70, to: 136, text: "מתחיל באופניים..." },
   { from: 136, to: 182, text: "קפיצה", size: 190, color: YELLOW },
-  { from: 182, to: 226, text: "נפילה חופשית..." },
+  { from: 182, to: 226, text: "צניחה חופשית..." },
   { from: 226, to: REVEAL, text: "רגע..." },
   { from: REVEAL, to: VIDEO_END, text: <span style={{ direction: "ltr", unicodeBidi: "isolate" }}>FlyBox!</span>, size: 180, color: YELLOW },
 ];
