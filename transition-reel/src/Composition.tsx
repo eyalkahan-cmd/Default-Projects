@@ -58,7 +58,8 @@ const SRC_TIME: number[] = [];
 const DROP = 136;
 const REVEAL = 260;
 const END = 438;
-const WIND_IN = 198; // wind starts fading in ~1s before "רגע..." (226)
+const WIND_IN = 178; // freefall wind: from the freefall shot ("נפילה חופשית...") until FlyBox
+const BIKE_IN = 90; // riding sound starts once he is actually riding (3s)
 // Music: the drop of the track (70.27s) lands on the takeoff (DROP)
 const MUSIC_DROP_SEC = 70.27;
 const MUSIC_START_SEC = MUSIC_DROP_SEC - DROP / FPS;
@@ -725,23 +726,23 @@ export const Reel: React.FC = () => {
       <Sequence from={10} durationInFrames={15}><Audio src={staticFile("snap.wav")} volume={0.7} /></Sequence>
       <Sequence from={HOOK_END - 8} durationInFrames={20}><Audio src={staticFile("whoosh.wav")} volume={0.8} /></Sequence>
       {/* off-road riding: builds under the music from the first pedal stroke to the takeoff */}
-      <Sequence from={VIDEO_START - 2} durationInFrames={DROP - VIDEO_START + 6}>
+      <Sequence from={BIKE_IN} durationInFrames={DROP - BIKE_IN + 6}>
         <Audio
           src={staticFile("bike.wav")}
           volume={(f) =>
-            interpolate(f, [0, 12, DROP - VIDEO_START - 6, DROP - VIDEO_START + 2, DROP - VIDEO_START + 6], [0, 0.45, 0.8, 0.8, 0], {
+            interpolate(f, [0, 8, DROP - BIKE_IN - 6, DROP - BIKE_IN + 2, DROP - BIKE_IN + 6], [0, 0.32, 0.5, 0.5, 0], {
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             })
           }
         />
       </Sequence>
-      {/* air / wind bed while he floats: eases in before "רגע...", carries into the tunnel, eases out on the end card */}
-      <Sequence from={WIND_IN} durationInFrames={196}>
+      {/* freefall wind: eases in with the freefall shot, eases out just before the FlyBox reveal */}
+      <Sequence from={WIND_IN} durationInFrames={REVEAL - WIND_IN}>
         <Audio
           src={staticFile("wind.wav")}
           volume={(f) =>
-            interpolate(f, [0, 34, 100, 176], [0, 0.8, 0.8, 0], {
+            interpolate(f, [0, 16, REVEAL - WIND_IN - 26, REVEAL - WIND_IN - 2], [0, 0.55, 0.55, 0], {
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
               easing: Easing.inOut(Easing.sin),

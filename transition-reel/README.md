@@ -8,7 +8,7 @@ Remotion project that edits the AI transition clip (photo 1 → photo 2) into a 
 - **11.6–14.6s**: before/after slider of the two photos with a growth-video line; persistent "קטע מעבר מתוך סרטון גדילה" badge and "רוצים סרטון גדילה? פרטים באתר: OneStory.co.il" CTA from the music drop (takeoff)
 
 Music: "Get Up (Gear Up) – Instrumental" by OLLiGAN (Artlist, licensed under the account's plan); the drop (70.27s) lands on the takeoff.
-Off-road riding SFX: "Mountain Biking – Riding on Dirt Road, Fast" by Marcello Del Monaco (Artlist), under the ride up to the takeoff; wind bed "Under the Weather – Freezing Wind" by DT Sound (Artlist) eases in before "רגע..." and out on the end card. Whoosh, boom, riser and snap are synthesized by `audio/make_sfx.py`.
+Off-road riding SFX: "Mountain Biking – Riding on Dirt Road, Fast" by Marcello Del Monaco (Artlist), under the ride (from 3s) up to the takeoff; wind bed "Under the Weather – Freezing Wind" by DT Sound (Artlist) runs over the freefall shot and eases out before the FlyBox reveal. Whoosh, boom, riser and snap are synthesized by `audio/make_sfx.py`.
 
 ```bash
 npm i
