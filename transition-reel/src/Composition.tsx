@@ -62,9 +62,12 @@ const WIND_IN = 178; // freefall wind: from the freefall shot ("צניחה חו�
 const BIKE_IN = 90; // riding sound starts once he is actually riding (3s)
 // Music: the first bass kick of the drop (70.47s in the track) lands exactly on the
 // takeoff from the ramp lip (source frame ~68.6 -> output frame ~135.3)
-const MUSIC_KICK_SEC = 70.47;
 const TAKEOFF_FRAME = 135.3;
-const MUSIC_START_SEC = MUSIC_KICK_SEC - TAKEOFF_FRAME / FPS;
+
+// Music versions. kickSec = the first bass kick of the drop in the track; it is placed on the takeoff.
+export type MusicProps = { music: string; kickSec: number; bpm: number; volume: number };
+export const MUSIC_V1: MusicProps = { music: "music.mp3", kickSec: 70.47, bpm: 150, volume: 0.9 }; // OLLiGAN - Get Up (Gear Up)
+export const MUSIC_V2: MusicProps = { music: "music2.mp3", kickSec: 35.33, bpm: 136, volume: 0.85 }; // Leo de Nada - Gravity Line
 
 const textStyle: React.CSSProperties = {
   fontFamily,
@@ -649,12 +652,12 @@ const GrowthBadge: React.FC = () => {
   );
 };
 
-const CTA: React.FC = () => {
+const CTA: React.FC<{ bpm: number }> = ({ bpm }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const s = pop(frame, fps, DROP); // CTA lands on the music drop
   const endBoost = pop(frame, fps, VIDEO_END + 20);
-  const beat = 1 + 0.035 * Math.max(0, Math.sin((frame / fps) * Math.PI * 2.5)); // 150 BPM pulse
+  const beat = 1 + 0.035 * Math.max(0, Math.sin((frame / fps) * Math.PI * (bpm / 60))); // tempo-matched pulse
   return (
     <div
       style={{
@@ -696,10 +699,11 @@ const CTA: React.FC = () => {
 };
 
 // ---------- Main ----------
-export const Reel: React.FC = () => {
+export const Reel: React.FC<MusicProps> = ({ music, kickSec, bpm, volume }) => {
   const frame = useCurrentFrame();
+  const musicStartSec = kickSec - TAKEOFF_FRAME / FPS;
   const musicVol = (f: number) =>
-    interpolate(f, [0, 6, END - 18, END], [0, 0.9, 0.9, 0], {
+    interpolate(f, [0, 6, END - 18, END], [0, volume, volume, 0], {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp",
     });
@@ -720,10 +724,10 @@ export const Reel: React.FC = () => {
       </Sequence>
       <Flash />
       {frame < VIDEO_END ? <GrowthBadge /> : null}
-      <CTA />
+      <CTA bpm={bpm} />
 
       {/* audio */}
-      <Audio src={staticFile("music.mp3")} trimBefore={Math.round(MUSIC_START_SEC * FPS)} volume={musicVol} />
+      <Audio src={staticFile(music)} trimBefore={Math.round(musicStartSec * FPS)} volume={musicVol} />
       <Sequence from={2} durationInFrames={15}><Audio src={staticFile("snap.wav")} volume={0.7} /></Sequence>
       <Sequence from={10} durationInFrames={15}><Audio src={staticFile("snap.wav")} volume={0.7} /></Sequence>
       <Sequence from={HOOK_END - 8} durationInFrames={20}><Audio src={staticFile("whoosh.wav")} volume={0.8} /></Sequence>
@@ -763,13 +767,25 @@ export const Reel: React.FC = () => {
 
 export const MyComposition = () => {
   return (
-    <Composition
-      id="TransitionReel"
-      component={Reel}
-      durationInFrames={END}
-      fps={FPS}
-      width={W}
-      height={H}
-    />
+    <>
+      <Composition
+        id="TransitionReel"
+        component={Reel}
+        defaultProps={MUSIC_V1}
+        durationInFrames={END}
+        fps={FPS}
+        width={W}
+        height={H}
+      />
+      <Composition
+        id="TransitionReelV2"
+        component={Reel}
+        defaultProps={MUSIC_V2}
+        durationInFrames={END}
+        fps={FPS}
+        width={W}
+        height={H}
+      />
+    </>
   );
 };

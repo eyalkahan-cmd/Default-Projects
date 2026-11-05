@@ -10,8 +10,13 @@ Remotion project that edits the AI transition clip (photo 1 → photo 2) into a 
 Music: "Get Up (Gear Up) – Instrumental" by OLLiGAN (Artlist, licensed under the account's plan); the first bass kick of the drop (70.47s) lands exactly on the takeoff from the ramp lip (frame ~135).
 Off-road riding SFX: "Mountain Biking – Riding on Dirt Road, Fast" by Marcello Del Monaco (Artlist), under the ride (from 3s) up to the takeoff; wind bed "Under the Weather – Freezing Wind" by DT Sound (Artlist) runs over the freefall shot and eases out before the FlyBox reveal. Whoosh, boom, riser and snap are synthesized by `audio/make_sfx.py`.
 
+### Version 2 – different music (`TransitionReelV2`)
+Same edit with "Gravity Line" by Leo de Nada (Artlist, 136 BPM, instrumental). The first kick of the drop (35.33s) lands on the takeoff; the track's short break before the drop sits under the riser. The CTA pulse follows the track's tempo. Music versions are defined in `MUSIC_V1` / `MUSIC_V2` in `src/Composition.tsx`.
+
 ```bash
 npm i
+npm run frames
 npx remotion studio
 npx remotion render TransitionReel out/transition-reel.mp4 --codec=h264 --crf=18
+npx remotion render TransitionReelV2 out/transition-reel-music2.mp4 --codec=h264 --crf=18
 ```
