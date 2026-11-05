@@ -4,8 +4,8 @@ Remotion project that edits the AI transition clip (photo 1 → photo 2) into a 
 
 - **0–1.8s hook**: both photos slam in as cards – "רק 2 תמונות" / "תראו איזה מעבר גדילה יצרנו"
 - **1.8–2.2s**: photo 1 flies to full screen and becomes the first frame of the clip
-- **2.2–11.6s**: the AI clip with speed ramps (1.25x ride → 0.5x slow-mo takeoff on the music drop → 1x morph → 0.8x tunnel reveal), flash and shake on hits, captions, and a top progress bar from photo 1 to photo 2
-- **11.6–14.6s**: before/after slider of the two photos with a growth-video line; persistent "קטע מעבר מתוך סרטון גדילה" badge and "רוצים סרטון גדילה? פרטים באתר: OneStory.co.il" CTA from the music drop (takeoff)
+- **2.2–10.9s**: the AI clip with speed ramps (1.25x ride → 0.5x slow-mo takeoff on the music drop → 1x morph → 0.8x tunnel reveal), flash and shake on hits, captions, and a top progress bar from photo 1 to photo 2
+- **10.87–14.6s** (on the first strong beat after the thumbs-up; per-version `cut` frame): before/after slider of the two photos with a growth-video line; persistent "קטע מעבר מתוך סרטון גדילה" badge and "רוצים סרטון גדילה? פרטים באתר: OneStory.co.il" CTA from the music drop (takeoff)
 
 Music: "Get Up (Gear Up) – Instrumental" by OLLiGAN (Artlist, licensed under the account's plan); the first bass kick of the drop (70.47s) lands exactly on the takeoff from the ramp lip (frame ~135).
 Off-road riding SFX: "Mountain Biking – Riding on Dirt Road, Fast" by Marcello Del Monaco (Artlist), under the ride (from 3s) up to the takeoff; wind bed "Under the Weather – Freezing Wind" by DT Sound (Artlist) runs over the freefall shot and eases out before the FlyBox reveal. Extra layers (Artlist): helmet visor snap "Modern Motorcycle – Lowering Helmet Visor" (MAD ROBOT Sound Lab) when the goggles come down (frame 78); "High Winds – Strong Wind Ambience, Gusts Howling" (Cinematic Sound Design) as a second wind layer from the takeoff through the tunnel; "Terrific Textiles – Cotton Fabric, Fast, Flapping" (Milciclos) for clothes flapping in the freefall and tunnel airflow. Whoosh, boom, riser and snap are synthesized by `audio/make_sfx.py`.

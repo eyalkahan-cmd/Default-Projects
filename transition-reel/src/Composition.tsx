@@ -45,12 +45,12 @@ const speedAt = (f: number) => {
   return 0.75;
 };
 const VIDEO_START = 66;
-const VIDEO_END = 348;
+const CLIP_MAX = 348; // last output frame the speed-ramped clip can reach
 // source time (seconds) for every output frame of the clip
 const SRC_TIME: number[] = [];
 {
   let t = 0;
-  for (let f = VIDEO_START; f < VIDEO_END; f++) {
+  for (let f = VIDEO_START; f < CLIP_MAX; f++) {
     SRC_TIME[f] = Math.min(t, (SRC_FRAMES - 1) / SRC_FPS);
     t += speedAt(f) / FPS;
   }
@@ -66,11 +66,12 @@ const BIKE_IN = 90; // riding sound starts once he is actually riding (3s)
 const TAKEOFF_FRAME = 135.3;
 
 // Music versions. kickSec = the first bass kick of the drop in the track; it is placed on the takeoff.
-export type MusicProps = { music: string; kickSec: number; bpm: number; volume: number };
-export const MUSIC_V1: MusicProps = { music: "music.mp3", kickSec: 70.47, bpm: 150, volume: 0.9 }; // OLLiGAN - Get Up (Gear Up)
-export const MUSIC_V2: MusicProps = { music: "music2.mp3", kickSec: 41.82, bpm: 93, volume: 0.9 }; // Korshun - Own the Moment
-export const MUSIC_V3: MusicProps = { music: "music3.mp3", kickSec: 104.0, bpm: 105, volume: 0.9 }; // Ikoliks - Break It Down
-export const MUSIC_V4: MusicProps = { music: "music4.mp3", kickSec: 57.78, bpm: 100, volume: 0.9 }; // Ikoliks - Run It Up
+// cut = output frame of the end card: the first strong beat right after the thumbs-up (~10.6s)
+export type MusicProps = { music: string; kickSec: number; bpm: number; volume: number; cut: number };
+export const MUSIC_V1: MusicProps = { music: "music.mp3", kickSec: 70.47, bpm: 150, volume: 0.9, cut: 326 }; // OLLiGAN - Get Up (Gear Up)
+export const MUSIC_V2: MusicProps = { music: "music2.mp3", kickSec: 41.82, bpm: 93, volume: 0.9, cut: 326 }; // Korshun - Own the Moment
+export const MUSIC_V3: MusicProps = { music: "music3.mp3", kickSec: 104.0, bpm: 105, volume: 0.9, cut: 324 }; // Ikoliks - Break It Down
+export const MUSIC_V4: MusicProps = { music: "music4.mp3", kickSec: 57.78, bpm: 100, volume: 0.9, cut: 325 }; // Ikoliks - Run It Up
 
 const textStyle: React.CSSProperties = {
   fontFamily,
@@ -305,7 +306,7 @@ const impact = (frame: number, at: number, len = 14) =>
   interpolate(frame, [at, at + len], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) *
   (frame >= at ? 1 : 0);
 
-const TransitionVideo: React.FC = () => {
+const TransitionVideo: React.FC<{ end: number }> = ({ end: VIDEO_END }) => {
   const frame = useCurrentFrame();
   const hit = Math.max(impact(frame, DROP), impact(frame, REVEAL));
   const shakeX = Math.sin(frame * 2.7) * 22 * hit;
@@ -337,7 +338,7 @@ const TransitionVideo: React.FC = () => {
 };
 
 // ---------- Overlays ----------
-const ProgressStrip: React.FC = () => {
+const ProgressStrip: React.FC<{ end: number }> = ({ end: VIDEO_END }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const p = interpolate(frame, [VIDEO_START, VIDEO_END], [0, 1], {
@@ -445,7 +446,7 @@ const ProgressStrip: React.FC = () => {
   );
 };
 
-const CAPTIONS: { from: number; to: number; text: React.ReactNode; size?: number; color?: string }[] = [
+const captions = (VIDEO_END: number): { from: number; to: number; text: React.ReactNode; size?: number; color?: string }[] => [
   { from: 70, to: 136, text: "מתחיל באופניים..." },
   { from: 136, to: 182, text: "קפיצה", size: 190, color: YELLOW },
   { from: 182, to: 226, text: "צניחה חופשית..." },
@@ -484,7 +485,7 @@ const Caption: React.FC<{ text: React.ReactNode; size?: number; color?: string; 
   );
 };
 
-const Flash: React.FC = () => {
+const Flash: React.FC<{ end: number }> = ({ end: VIDEO_END }) => {
   const frame = useCurrentFrame();
   const f = Math.max(impact(frame, DROP, 8), impact(frame, REVEAL, 10), impact(frame, VIDEO_END, 8));
   return <AbsoluteFill style={{ background: "white", opacity: f * 0.9 }} />;
@@ -655,7 +656,7 @@ const GrowthBadge: React.FC = () => {
   );
 };
 
-const CTA: React.FC<{ bpm: number }> = ({ bpm }) => {
+const CTA: React.FC<{ bpm: number; end: number }> = ({ bpm, end: VIDEO_END }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const s = pop(frame, fps, DROP); // CTA lands on the music drop
@@ -702,7 +703,7 @@ const CTA: React.FC<{ bpm: number }> = ({ bpm }) => {
 };
 
 // ---------- Main ----------
-export const Reel: React.FC<MusicProps> = ({ music, kickSec, bpm, volume }) => {
+export const Reel: React.FC<MusicProps> = ({ music, kickSec, bpm, volume, cut: VIDEO_END }) => {
   const frame = useCurrentFrame();
   const musicStartSec = kickSec - TAKEOFF_FRAME / FPS;
   const musicVol = (f: number) =>
@@ -712,12 +713,12 @@ export const Reel: React.FC<MusicProps> = ({ music, kickSec, bpm, volume }) => {
     });
   return (
     <AbsoluteFill style={{ background: "black" }}>
-      <TransitionVideo />
+      <TransitionVideo end={VIDEO_END} />
       <Sequence durationInFrames={ZOOM_END}>
         <Hook />
       </Sequence>
-      {frame >= VIDEO_START && frame < VIDEO_END ? <ProgressStrip /> : null}
-      {CAPTIONS.map((c) => (
+      {frame >= VIDEO_START && frame < VIDEO_END ? <ProgressStrip end={VIDEO_END} /> : null}
+      {captions(VIDEO_END).map((c) => (
         <Sequence key={c.from} from={c.from} durationInFrames={c.to - c.from}>
           <Caption text={c.text} size={c.size} color={c.color} dur={c.to - c.from} />
         </Sequence>
@@ -725,9 +726,9 @@ export const Reel: React.FC<MusicProps> = ({ music, kickSec, bpm, volume }) => {
       <Sequence from={VIDEO_END} durationInFrames={END - VIDEO_END}>
         <EndCard />
       </Sequence>
-      <Flash />
+      <Flash end={VIDEO_END} />
       {frame < VIDEO_END ? <GrowthBadge /> : null}
-      <CTA bpm={bpm} />
+      <CTA bpm={bpm} end={VIDEO_END} />
 
       {/* audio */}
       <Audio src={staticFile(music)} trimBefore={Math.round(musicStartSec * FPS)} volume={musicVol} />
