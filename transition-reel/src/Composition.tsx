@@ -60,9 +60,11 @@ const REVEAL = 260;
 const END = 438;
 const WIND_IN = 178; // freefall wind: from the freefall shot ("נפילה חופשית...") until FlyBox
 const BIKE_IN = 90; // riding sound starts once he is actually riding (3s)
-// Music: the drop of the track (70.27s) lands on the takeoff (DROP)
-const MUSIC_DROP_SEC = 70.27;
-const MUSIC_START_SEC = MUSIC_DROP_SEC - DROP / FPS;
+// Music: the first bass kick of the drop (70.47s in the track) lands exactly on the
+// takeoff from the ramp lip (source frame ~68.6 -> output frame ~135.3)
+const MUSIC_KICK_SEC = 70.47;
+const TAKEOFF_FRAME = 135.3;
+const MUSIC_START_SEC = MUSIC_KICK_SEC - TAKEOFF_FRAME / FPS;
 
 const textStyle: React.CSSProperties = {
   fontFamily,
