@@ -475,15 +475,16 @@ const EndCard: React.FC = () => {
     extrapolateRight: "clamp",
     easing: Easing.inOut(Easing.cubic),
   });
-  const t1 = pop(frame, fps, 8);
-  const t2 = pop(frame, fps, 30);
+  const t1 = pop(frame, fps, 6);
+  const t2 = pop(frame, fps, 16);
+  const t3 = pop(frame, fps, 24);
   return (
     <AbsoluteFill style={{ background: "black" }}>
       <Img src={staticFile("photo1.jpg")} style={{ width: W, height: H, objectFit: "cover", position: "absolute" }} />
       <div style={{ position: "absolute", left: 0, top: 0, width: seam, height: H, overflow: "hidden" }}>
         <Img src={staticFile("photo2.jpg")} style={{ width: W, height: H, objectFit: "cover" }} />
       </div>
-      <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 65%, rgba(0,0,0,0.75) 100%)" }} />
+      <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.5) 22%, rgba(0,0,0,0) 42%, rgba(0,0,0,0) 62%, rgba(0,0,0,0.7) 100%)" }} />
       <div
         style={{
           position: "absolute",
@@ -518,35 +519,72 @@ const EndCard: React.FC = () => {
       </div>
       <div
         style={{
-          ...textStyle,
           position: "absolute",
-          top: 410,
+          top: 190,
           left: 0,
           right: 0,
-          fontSize: 110,
-          transform: `scale(${interpolate(t1, [0, 1], [1.8, 1])})`,
-          opacity: Math.min(1, t1 * 2),
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        <span style={{ color: YELLOW }}>2</span> תמונות.
-        <br />
-        <span style={{ fontSize: 84 }}>סרטון אחד.</span>
-      </div>
-      <div
-        style={{
-          ...textStyle,
-          position: "absolute",
-          top: 1150,
-          left: 20,
-          right: 20,
-          fontSize: 56,
-          transform: `translateY(${interpolate(t2, [0, 1], [80, 0])}px)`,
-          opacity: Math.min(1, t2 * 2),
-        }}
-      >
-        <span style={{ color: YELLOW }}>סרטון גדילה AI</span> בהתאמה אישית
-        <br />
-        עם מעברים מושלמים!
+        <div
+          style={{
+            position: "relative",
+            overflow: "hidden",
+            borderRadius: 24,
+            transform: `scale(${interpolate(t1, [0, 1], [1.6, 1])}) rotate(-2deg)`,
+            opacity: Math.min(1, t1 * 2),
+            boxShadow: "0 16px 44px rgba(0,0,0,0.45)",
+          }}
+        >
+          <div
+            style={{
+              fontFamily,
+              fontWeight: 900,
+              fontSize: 120,
+              lineHeight: 1.1,
+              color: "#111",
+              background: YELLOW,
+              padding: "6px 40px 14px",
+              direction: "rtl",
+            }}
+          >
+            סרטון גדילה <span style={{ direction: "ltr", unicodeBidi: "isolate" }}>AI</span>
+          </div>
+          {/* light sheen sweeping across */}
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              width: 160,
+              left: `${interpolate(frame, [22, 42], [-25, 120], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })}%`,
+              background: "linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0) 100%)",
+              transform: "skewX(-18deg)",
+            }}
+          />
+        </div>
+        {[
+          { d: t2, el: <>בהתאמה אישית</> },
+          { d: t3, el: <>עם מעברים <span style={{ color: YELLOW }}>מושלמים!</span></> },
+        ].map((l, i) => (
+          <div
+            key={i}
+            style={{
+              ...textStyle,
+              fontSize: 94,
+              marginTop: i === 0 ? 30 : 4,
+              WebkitTextStroke: "3px rgba(0,0,0,0.6)",
+              paintOrder: "stroke fill",
+              textShadow: "0 6px 0 rgba(0,0,0,0.35), 0 0 50px rgba(0,0,0,0.85)",
+              transform: `translateY(${interpolate(l.d, [0, 1], [70, 0])}px)`,
+              opacity: Math.min(1, l.d * 2),
+            }}
+          >
+            {l.el}
+          </div>
+        ))}
       </div>
     </AbsoluteFill>
   );
@@ -663,7 +701,7 @@ export const Reel: React.FC = () => {
         <EndCard />
       </Sequence>
       <Flash />
-      <GrowthBadge />
+      {frame < VIDEO_END ? <GrowthBadge /> : null}
       <CTA />
 
       {/* audio */}
