@@ -11,7 +11,7 @@ Music: "Get Up (Gear Up) – Instrumental" by OLLiGAN (Artlist, licensed under t
 Off-road riding SFX: "Mountain Biking – Riding on Dirt Road, Fast" by Marcello Del Monaco (Artlist), under the ride (from 3s) up to the takeoff; wind bed "Under the Weather – Freezing Wind" by DT Sound (Artlist) runs over the freefall shot and eases out before the FlyBox reveal. Whoosh, boom, riser and snap are synthesized by `audio/make_sfx.py`.
 
 ### Version 2 – different music (`TransitionReelV2`)
-Same edit with "Own the Moment" by Korshun (Artlist, 93 BPM). The track comes out of its breakdown on the reel: the build swells under the riser and the big hit after it (75.41s) lands on the takeoff. The CTA pulse follows the track's tempo. Music versions are defined in `MUSIC_V1` / `MUSIC_V2` in `src/Composition.tsx`.
+Same edit with "Own the Moment" by Korshun (Artlist, 93 BPM). The heavy section of the track starts at 41.82s and lands exactly on the takeoff, and it runs through to the end of the reel; the groove before it plays under the hook and the ride. The CTA pulse follows the track's tempo. Music versions are defined in `MUSIC_V1` / `MUSIC_V2` in `src/Composition.tsx`.
 
 ```bash
 npm i
