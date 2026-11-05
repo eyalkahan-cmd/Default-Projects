@@ -64,7 +64,33 @@ const BIKE_IN = 90; // riding sound starts once he is actually riding (3s)
 // takeoff from the ramp lip (source frame ~68.6 -> output frame ~135.3)
 const MUSIC_KICK_SEC = 70.47;
 const TAKEOFF_FRAME = 135.3;
-const MUSIC_START_SEC = MUSIC_KICK_SEC - TAKEOFF_FRAME / FPS;
+
+// Per-version settings: the music track (and the SFX levels that sit under it).
+export type ReelProps = {
+  musicFile: string; // file in public/
+  musicKickSec: number; // first bass kick of the drop, in the track
+  musicVolume: number;
+  bikeGain: number; // multiplier on the riding SFX level
+  windGain: number; // multiplier on the freefall wind level
+};
+export const V1_PROPS: ReelProps = {
+  musicFile: "music.mp3",
+  musicKickSec: MUSIC_KICK_SEC,
+  musicVolume: 0.9,
+  bikeGain: 1,
+  windGain: 1,
+};
+// V2: "Own the Moment" (Korshun, 93 BPM). Its drop (the full chorus after the break)
+// starts with a bass kick at 41.845s, synced to the same takeoff frame.
+export const V2_PROPS: ReelProps = {
+  musicFile: "music-own-the-moment.mp3",
+  musicKickSec: 41.845,
+  musicVolume: 0.9,
+  // this track is ~7 dB louder than V1 before the drop and ~1 dB quieter after it:
+  // riding SFX raised to sit ~2.5 dB under it, wind kept at V1's ~13 dB under
+  bikeGain: 1.8,
+  windGain: 0.87,
+};
 
 const textStyle: React.CSSProperties = {
   fontFamily,
@@ -696,10 +722,11 @@ const CTA: React.FC = () => {
 };
 
 // ---------- Main ----------
-export const Reel: React.FC = () => {
+export const Reel: React.FC<ReelProps> = ({ musicFile, musicKickSec, musicVolume, bikeGain, windGain }) => {
   const frame = useCurrentFrame();
+  const musicStartSec = musicKickSec - TAKEOFF_FRAME / FPS;
   const musicVol = (f: number) =>
-    interpolate(f, [0, 6, END - 18, END], [0, 0.9, 0.9, 0], {
+    interpolate(f, [0, 6, END - 18, END], [0, musicVolume, musicVolume, 0], {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp",
     });
@@ -723,7 +750,7 @@ export const Reel: React.FC = () => {
       <CTA />
 
       {/* audio */}
-      <Audio src={staticFile("music.mp3")} trimBefore={Math.round(MUSIC_START_SEC * FPS)} volume={musicVol} />
+      <Audio src={staticFile(musicFile)} trimBefore={Math.round(musicStartSec * FPS)} volume={musicVol} />
       <Sequence from={2} durationInFrames={15}><Audio src={staticFile("snap.wav")} volume={0.7} /></Sequence>
       <Sequence from={10} durationInFrames={15}><Audio src={staticFile("snap.wav")} volume={0.7} /></Sequence>
       <Sequence from={HOOK_END - 8} durationInFrames={20}><Audio src={staticFile("whoosh.wav")} volume={0.8} /></Sequence>
@@ -732,7 +759,7 @@ export const Reel: React.FC = () => {
         <Audio
           src={staticFile("bike.wav")}
           volume={(f) =>
-            interpolate(f, [0, 8, DROP - BIKE_IN - 6, DROP - BIKE_IN + 2, DROP - BIKE_IN + 6], [0, 0.32, 0.5, 0.5, 0], {
+            interpolate(f, [0, 8, DROP - BIKE_IN - 6, DROP - BIKE_IN + 2, DROP - BIKE_IN + 6], [0, 0.32 * bikeGain, 0.5 * bikeGain, 0.5 * bikeGain, 0], {
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             })
@@ -744,7 +771,7 @@ export const Reel: React.FC = () => {
         <Audio
           src={staticFile("wind.wav")}
           volume={(f) =>
-            interpolate(f, [0, 16, REVEAL - WIND_IN - 26, REVEAL - WIND_IN - 2], [0, 0.55, 0.55, 0], {
+            interpolate(f, [0, 16, REVEAL - WIND_IN - 26, REVEAL - WIND_IN - 2], [0, 0.55 * windGain, 0.55 * windGain, 0], {
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
               easing: Easing.inOut(Easing.sin),
@@ -766,6 +793,21 @@ export const MyComposition = () => {
     <Composition
       id="TransitionReel"
       component={Reel}
+      defaultProps={V1_PROPS}
+      durationInFrames={END}
+      fps={FPS}
+      width={W}
+      height={H}
+    />
+  );
+};
+
+export const MyCompositionV2 = () => {
+  return (
+    <Composition
+      id="TransitionReelV2"
+      component={Reel}
+      defaultProps={V2_PROPS}
       durationInFrames={END}
       fps={FPS}
       width={W}
