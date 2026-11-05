@@ -59,6 +59,7 @@ const DROP = 136;
 const REVEAL = 260;
 const END = 438;
 const WIND_IN = 178; // freefall wind: from the freefall shot ("צניחה חופשית...") until FlyBox
+const VISOR_CLICK = 78; // goggles snap down over the helmet (source frame ~12)
 const BIKE_IN = 90; // riding sound starts once he is actually riding (3s)
 // Music: the first bass kick of the drop (70.47s in the track) lands exactly on the
 // takeoff from the ramp lip (source frame ~68.6 -> output frame ~135.3)
@@ -750,10 +751,38 @@ export const Reel: React.FC<MusicProps> = ({ music, kickSec, bpm, volume }) => {
         <Audio
           src={staticFile("wind.wav")}
           volume={(f) =>
-            interpolate(f, [0, 16, REVEAL - WIND_IN - 26, REVEAL - WIND_IN - 2], [0, 0.55, 0.55, 0], {
+            interpolate(f, [0, 16, REVEAL - WIND_IN - 26, REVEAL - WIND_IN - 2], [0, 0.7, 0.7, 0], {
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
               easing: Easing.inOut(Easing.sin),
+            })
+          }
+        />
+      </Sequence>
+      {/* helmet: goggles/visor snap shut before the ride */}
+      <Sequence from={VISOR_CLICK - 12} durationInFrames={36}><Audio src={staticFile("visor.wav")} volume={0.9} /></Sequence>
+      {/* howling gusts: second wind layer from the takeoff, peaks in the freefall, carries into the tunnel */}
+      <Sequence from={DROP + 4} durationInFrames={VIDEO_END - DROP - 4}>
+        <Audio
+          src={staticFile("wind_gusts.wav")}
+          volume={(f) =>
+            interpolate(
+              f + DROP + 4,
+              [DROP + 4, WIND_IN, WIND_IN + 20, REVEAL - 6, REVEAL + 10, VIDEO_END - 20, VIDEO_END],
+              [0, 0.35, 0.65, 0.65, 0.4, 0.35, 0],
+              { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.inOut(Easing.sin) },
+            )
+          }
+        />
+      </Sequence>
+      {/* clothes flapping in the freefall and in the tunnel airflow */}
+      <Sequence from={WIND_IN - 6} durationInFrames={VIDEO_END - WIND_IN - 10}>
+        <Audio
+          src={staticFile("flap.wav")}
+          volume={(f) =>
+            interpolate(f, [0, 14, REVEAL - WIND_IN, VIDEO_END - WIND_IN - 34, VIDEO_END - WIND_IN - 10], [0, 0.55, 0.55, 0.35, 0], {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
             })
           }
         />
