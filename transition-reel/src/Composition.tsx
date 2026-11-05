@@ -67,7 +67,7 @@ const TAKEOFF_FRAME = 135.3;
 // Music versions. kickSec = the first bass kick of the drop in the track; it is placed on the takeoff.
 export type MusicProps = { music: string; kickSec: number; bpm: number; volume: number };
 export const MUSIC_V1: MusicProps = { music: "music.mp3", kickSec: 70.47, bpm: 150, volume: 0.9 }; // OLLiGAN - Get Up (Gear Up)
-export const MUSIC_V2: MusicProps = { music: "music2.mp3", kickSec: 35.33, bpm: 136, volume: 0.85 }; // Leo de Nada - Gravity Line
+export const MUSIC_V2: MusicProps = { music: "music2.mp3", kickSec: 75.41, bpm: 93, volume: 0.9 }; // Korshun - Own the Moment
 
 const textStyle: React.CSSProperties = {
   fontFamily,
