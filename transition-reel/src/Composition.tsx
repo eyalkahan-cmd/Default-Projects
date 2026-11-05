@@ -68,6 +68,7 @@ const TAKEOFF_FRAME = 135.3;
 export type MusicProps = { music: string; kickSec: number; bpm: number; volume: number };
 export const MUSIC_V1: MusicProps = { music: "music.mp3", kickSec: 70.47, bpm: 150, volume: 0.9 }; // OLLiGAN - Get Up (Gear Up)
 export const MUSIC_V2: MusicProps = { music: "music2.mp3", kickSec: 41.82, bpm: 93, volume: 0.9 }; // Korshun - Own the Moment
+export const MUSIC_V3: MusicProps = { music: "music3.mp3", kickSec: 104.0, bpm: 105, volume: 0.9 }; // Ikoliks - Break It Down
 
 const textStyle: React.CSSProperties = {
   fontFamily,
@@ -781,6 +782,15 @@ export const MyComposition = () => {
         id="TransitionReelV2"
         component={Reel}
         defaultProps={MUSIC_V2}
+        durationInFrames={END}
+        fps={FPS}
+        width={W}
+        height={H}
+      />
+      <Composition
+        id="TransitionReelV3"
+        component={Reel}
+        defaultProps={MUSIC_V3}
         durationInFrames={END}
         fps={FPS}
         width={W}

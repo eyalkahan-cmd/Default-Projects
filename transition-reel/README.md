@@ -11,7 +11,10 @@ Music: "Get Up (Gear Up) – Instrumental" by OLLiGAN (Artlist, licensed under t
 Off-road riding SFX: "Mountain Biking – Riding on Dirt Road, Fast" by Marcello Del Monaco (Artlist), under the ride (from 3s) up to the takeoff; wind bed "Under the Weather – Freezing Wind" by DT Sound (Artlist) runs over the freefall shot and eases out before the FlyBox reveal. Whoosh, boom, riser and snap are synthesized by `audio/make_sfx.py`.
 
 ### Version 2 – different music (`TransitionReelV2`)
-Same edit with "Own the Moment" by Korshun (Artlist, 93 BPM). The heavy section of the track starts at 41.82s and lands exactly on the takeoff, and it runs through to the end of the reel; the groove before it plays under the hook and the ride. The CTA pulse follows the track's tempo. Music versions are defined in `MUSIC_V1` / `MUSIC_V2` in `src/Composition.tsx`.
+Same edit with "Own the Moment" by Korshun (Artlist, 93 BPM). The heavy section of the track starts at 41.82s and lands exactly on the takeoff, and it runs through to the end of the reel; the groove before it plays under the hook and the ride. The CTA pulse follows the track's tempo. Music versions are defined in `MUSIC_V1` / `MUSIC_V2` / `MUSIC_V3` in `src/Composition.tsx`.
+
+### Version 3 – "Break It Down" by Ikoliks (`TransitionReelV3`)
+Artlist, 105 BPM. The drum roll at the end of the build runs under the riser and the heavy section (104.0s) lands on the takeoff, running to the end of the reel.
 
 ```bash
 npm i
@@ -19,4 +22,5 @@ npm run frames
 npx remotion studio
 npx remotion render TransitionReel out/transition-reel.mp4 --codec=h264 --crf=18
 npx remotion render TransitionReelV2 out/transition-reel-music2.mp4 --codec=h264 --crf=18
+npx remotion render TransitionReelV3 out/transition-reel-music3.mp4 --codec=h264 --crf=18
 ```
