@@ -27,7 +27,8 @@
     "dev": "remotion studio",
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
-    "lint": "eslint src && tsc"
+    "lint": "eslint src && tsc",
+    "frames": "mkdir -p public/frames && ffmpeg -v error -y -i public/transition.mp4 -q:v 2 -start_number 0 public/frames/f%03d.jpg"
   },
   "allowScripts": {
     "esbuild": false

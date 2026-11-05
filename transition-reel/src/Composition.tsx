@@ -6,7 +6,6 @@ import {
   Easing,
   Img,
   interpolate,
-  OffthreadVideo,
   Sequence,
   spring,
   staticFile,
@@ -28,17 +27,36 @@ const RED = "#E63946";
 // ---------- Timeline (frames @30fps) ----------
 const HOOK_END = 54; // hook: two photos
 const ZOOM_END = 66; // photo 1 flies to full screen
-// Speed-ramped segments of the AI transition clip (src = seconds in the source clip)
-const SEGMENTS = [
-  { from: 66, src: 0.0, rate: 1.25, len: 70 }, // riding to the ramp
-  { from: 136, src: 2.9, rate: 0.5, len: 90 }, // takeoff + flip in slow-mo (DROP)
-  { from: 226, src: 4.4, rate: 1.0, len: 54 }, // freefall morphs into the tunnel
-  { from: 280, src: 6.2, rate: 0.8, len: 68 }, // tunnel reveal
-];
-const VIDEO_START = SEGMENTS[0].from;
+// Time remap of the AI transition clip: speed (x realtime) per output frame,
+// with eased (smootherstep) ramps instead of hard speed cuts.
+const SRC_FPS = 24;
+const SRC_FRAMES = 193;
+const smoother = (x: number) => {
+  const t = Math.min(1, Math.max(0, x));
+  return t * t * t * (t * (t * 6 - 15) + 10);
+};
+const RAMP_OUT = [196, 246]; // slow-mo -> realtime, eased in/out
+const speedAt = (f: number) => {
+  if (f < 136) return 1.25; // riding to the ramp
+  if (f < RAMP_OUT[0]) return 0.5; // takeoff + flip in slow-mo (DROP)
+  if (f < RAMP_OUT[1]) return 0.5 + 0.5 * smoother((f - RAMP_OUT[0]) / (RAMP_OUT[1] - RAMP_OUT[0]));
+  if (f < 276) return 1.0; // freefall morphs into the tunnel
+  if (f < 306) return 1.0 - 0.25 * smoother((f - 276) / 30); // settle into the tunnel
+  return 0.75;
+};
+const VIDEO_START = 66;
 const VIDEO_END = 348;
+// source time (seconds) for every output frame of the clip
+const SRC_TIME: number[] = [];
+{
+  let t = 0;
+  for (let f = VIDEO_START; f < VIDEO_END; f++) {
+    SRC_TIME[f] = Math.min(t, (SRC_FRAMES - 1) / SRC_FPS);
+    t += speedAt(f) / FPS;
+  }
+}
 const DROP = 136;
-const REVEAL = 262;
+const REVEAL = 260;
 const END = 438;
 // Music: the drop of the track (70.27s) lands on the takeoff (DROP)
 const MUSIC_DROP_SEC = 70.27;
@@ -284,30 +302,26 @@ const TransitionVideo: React.FC = () => {
   const shakeY = Math.cos(frame * 3.3) * 22 * hit;
   const punch = 1 + 0.14 * hit;
   // slow push-in during the slow-mo
-  const push = interpolate(frame, [DROP, DROP + 90], [1, 1.08], {
+  const push = interpolate(frame, [DROP, RAMP_OUT[0], RAMP_OUT[1]], [1, 1.07, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
+    easing: Easing.inOut(Easing.sin),
   });
+  const visible = frame >= VIDEO_START && frame < VIDEO_END;
+  const srcPos = visible ? SRC_TIME[frame] * SRC_FPS : 0;
+  const f0 = Math.floor(srcPos);
+  const f1 = Math.min(SRC_FRAMES - 1, f0 + 1);
+  const frameSrc = (n: number) => staticFile(`frames/f${String(n).padStart(3, "0")}.jpg`);
+  const imgStyle: React.CSSProperties = { position: "absolute", width: "100%", height: "100%", objectFit: "cover" };
+  if (!visible) return null;
 
   return (
     <AbsoluteFill
       style={{
-        transform: `translate(${shakeX}px, ${shakeY}px) scale(${punch * (frame < DROP + 90 ? push : 1)})`,
+        transform: `translate(${shakeX}px, ${shakeY}px) scale(${punch * push})`,
       }}
     >
-      {SEGMENTS.map((s) => (
-        <Sequence key={s.from} from={s.from} durationInFrames={s.len} layout="none">
-          <AbsoluteFill>
-            <OffthreadVideo
-              src={staticFile("transition.mp4")}
-              trimBefore={Math.round(s.src * FPS)}
-              playbackRate={s.rate}
-              muted
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-            />
-          </AbsoluteFill>
-        </Sequence>
-      ))}
+      <Img src={frameSrc(Math.round(srcPos) > f0 ? f1 : f0)} style={imgStyle} />
     </AbsoluteFill>
   );
 };
@@ -425,8 +439,8 @@ const CAPTIONS: { from: number; to: number; text: React.ReactNode; size?: number
   { from: 70, to: 136, text: "מתחיל באופניים..." },
   { from: 136, to: 182, text: "קפיצה", size: 190, color: YELLOW },
   { from: 182, to: 226, text: "נפילה חופשית..." },
-  { from: 226, to: 262, text: "רגע..." },
-  { from: 262, to: VIDEO_END, text: <span style={{ direction: "ltr", unicodeBidi: "isolate" }}>FlyBox!</span>, size: 180, color: YELLOW },
+  { from: 226, to: REVEAL, text: "רגע..." },
+  { from: REVEAL, to: VIDEO_END, text: <span style={{ direction: "ltr", unicodeBidi: "isolate" }}>FlyBox!</span>, size: 180, color: YELLOW },
 ];
 
 const Caption: React.FC<{ text: React.ReactNode; size?: number; color?: string; dur: number }> = ({
