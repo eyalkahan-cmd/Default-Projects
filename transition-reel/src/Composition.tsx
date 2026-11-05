@@ -58,6 +58,7 @@ const SRC_TIME: number[] = [];
 const DROP = 136;
 const REVEAL = 260;
 const END = 438;
+const WIND_IN = 198; // wind starts fading in ~1s before "רגע..." (226)
 // Music: the drop of the track (70.27s) lands on the takeoff (DROP)
 const MUSIC_DROP_SEC = 70.27;
 const MUSIC_START_SEC = MUSIC_DROP_SEC - DROP / FPS;
@@ -728,9 +729,22 @@ export const Reel: React.FC = () => {
         <Audio
           src={staticFile("bike.wav")}
           volume={(f) =>
-            interpolate(f, [0, 12, DROP - VIDEO_START - 6, DROP - VIDEO_START + 2, DROP - VIDEO_START + 6], [0, 0.28, 0.5, 0.5, 0], {
+            interpolate(f, [0, 12, DROP - VIDEO_START - 6, DROP - VIDEO_START + 2, DROP - VIDEO_START + 6], [0, 0.45, 0.8, 0.8, 0], {
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
+            })
+          }
+        />
+      </Sequence>
+      {/* air / wind bed while he floats: eases in before "רגע...", carries into the tunnel, eases out on the end card */}
+      <Sequence from={WIND_IN} durationInFrames={196}>
+        <Audio
+          src={staticFile("wind.wav")}
+          volume={(f) =>
+            interpolate(f, [0, 34, 100, 176], [0, 0.8, 0.8, 0], {
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+              easing: Easing.inOut(Easing.sin),
             })
           }
         />
